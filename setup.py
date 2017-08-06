@@ -33,7 +33,9 @@ setup_requires = [
     'autosemver~=0.0,>=0.5.1',
 ]
 
-install_requires = []
+install_requires = [
+    'six~=1.0,>=1.10.0',
+]
 
 docs_require = []
 
