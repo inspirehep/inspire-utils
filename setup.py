@@ -30,7 +30,7 @@ from setuptools import find_packages, setup
 URL = 'https://github.com/inspirehep/inspire-utils'
 
 setup_requires = [
-    'autosemver~=0.0,>=0.5.1',
+    'autosemver~=0.0,>=0.5.2',
 ]
 
 install_requires = [
