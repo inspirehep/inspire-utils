@@ -30,7 +30,7 @@ from setuptools import find_packages, setup
 URL = 'https://github.com/inspirehep/inspire-utils'
 
 setup_requires = [
-    'autosemver~=0.0,>=0.5.1',
+    'autosemver~=0.0,>=0.5.2',
 ]
 
 install_requires = [
@@ -74,17 +74,17 @@ setup(
     tests_require=tests_require,
     extras_require=extras_require,
     classifiers=[
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-        'Topic :: Software Development :: Libraries :: Python Modules',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
-        'Development Status :: 4 - Beta',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 )
