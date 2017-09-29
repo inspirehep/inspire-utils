@@ -34,6 +34,8 @@ setup_requires = [
 ]
 
 install_requires = [
+    'babel~=2.0,>=2.5.1',
+    'python-dateutil~=2.0,>=2.6.1',
     'six~=1.0,>=1.10.0',
 ]
 
