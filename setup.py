@@ -29,6 +29,8 @@ from setuptools import find_packages, setup
 
 URL = 'https://github.com/inspirehep/inspire-utils'
 
+readme = open('README.rst').read()
+
 setup_requires = [
     'autosemver~=0.0,>=0.5.2',
 ]
@@ -72,6 +74,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     platforms='any',
+    description=__doc__,
+    long_description=readme,
     setup_requires=setup_requires,
     install_requires=install_requires,
     tests_require=tests_require,
