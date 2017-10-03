@@ -199,6 +199,11 @@ def normalize_date(date, **kwargs):
     This is a convenience wrapper around :ref:`PartialDate`, which should be
     used instead if more features are needed.
 
+    Note:
+        When ``date`` is ``None`` this returns ``None`` instead of raising
+        an exception because this makes ``DoJSON``'s code simpler, as it
+        already knows how to strip ``None`` values at the end.
+
     Args:
         date(str): date to normalize
         **kwargs: these are passed to the `dateutil.parser.parse` function
@@ -214,10 +219,14 @@ def normalize_date(date, **kwargs):
         ValueError: when the date cannot be parsed or no year is present.
 
     Examples:
+        >>> normalize_date(None)
         >>> normalize_date('30 Jun 1686')
         '1686-06-30'
 
     """
+    if date is None:
+        return
+
     return PartialDate.parse(date, **kwargs).dumps()
 
 
