@@ -141,6 +141,10 @@ def test_normalize_date_raises_on_unparseable_dates():
         normalize_date('Foo')
 
 
+def test_normalize_date_returns_none_on_none():
+    assert normalize_date(None) is None
+
+
 def test_earliest_date():
     expected = '1686-06-30'
     result = earliest_date(['1686-06', '1686-06-30'])
