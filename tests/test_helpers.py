@@ -22,7 +22,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-from inspire_utils.helpers import force_list, maybe_int
+from inspire_utils.helpers import force_list, maybe_int, remove_tags
 
 
 def test_force_list_returns_empty_list_on_none():
@@ -62,3 +62,34 @@ def test_maybe_int_returns_int_if_possible():
 
 def test_maybe_int_returns_none_otherwise():
     assert maybe_int('216+337') is None
+
+
+def test_remove_tags_allowed_trees_strip():
+    allowed_trees = ('b',)
+    strip = '@class="hidden"'
+    snippet = '<p><b><i>Only</i></b> this text remains.<span class="hidden">Not this one.</span></p>'
+
+    result = remove_tags(snippet, allowed_trees=allowed_trees, strip=strip)
+    expected = u'<b><i>Only</i></b> this text remains.'
+
+    assert result == expected
+
+
+def test_remove_tags_allowed_tags_strip():
+    allowed_tags = ('b',)
+    strip = '@class="hidden"'
+    snippet = '<p><b><i>Only</i></b> this text remains.<span class="hidden">Not this one.</span></p>'
+
+    result = remove_tags(snippet, allowed_tags=allowed_tags, strip=strip)
+    expected = u'<b>Only</b> this text remains.'
+
+    assert result == expected
+
+
+def test_remove_tags_unicode():
+    snippet = u'<p>😋</p>'
+
+    result = remove_tags(snippet)
+    expected = u'😋'
+
+    assert result == expected
