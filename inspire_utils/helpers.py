@@ -22,6 +22,10 @@
 
 from __future__ import absolute_import, division, print_function
 
+from lxml import etree
+
+import six
+
 
 def force_list(data):
     """Force ``data`` to become a list.
@@ -84,3 +88,60 @@ def maybe_int(el):
         return int(el)
     except (TypeError, ValueError):
         pass
+
+
+def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
+    """Selectively remove tags.
+
+    This removes all tags in ``dirty``, stripping also the contents of tags
+    matching the XPath selector in ``strip``, and keeping all tags that are
+    subtags of tags in ``allowed_trees`` and tags in ``allowed_tags``.
+
+    Args:
+        dirty(Union[str, scrapy.selector.Selector, lxml.etree._Element]): the
+            input to clean up.
+        allowed_tags(Container): tags to be kept in the output, but not necessarily
+            its subtags.
+        allowed_trees(Container): tags to be kept, along with all its subtags,
+            in the output.
+        strip(str): optional xpath selector. If it matches a tag, its
+            contents will also be stripped.
+
+    Returns:
+        str: the textual content of ``dirty``, with some tags kept and some text
+        removed.
+
+    Examples:
+        >>> tag = '<p><b><i>Only</i></b> this text remains.<span class="hidden">Not this one.</span></p>'
+        >>> remove_tags(tag, allowed_tree=('b',), strip='@class="hidden"')
+        u'<b><i>Only</i></b> this text remains.'
+        >>> remove_tags(tag, allowed_tags=('b',), strip='@class="hidden"')
+        u'<b>Only</b> this text remains.'
+    """
+    if isinstance(dirty, six.string_types):
+        element = etree.fromstring(u''.join(('<DUMMYROOTTAG>', dirty, '</DUMMYROOTTAG>')))
+    elif isinstance(dirty, etree._Element):
+        element = dirty
+    else:  # assuming scrapy Selector
+        element = dirty.root
+
+    if element.tag in allowed_trees:
+        return etree.tostring(element, encoding='unicode')
+
+    if strip and element.xpath(strip):
+        return u''
+
+    subtext = u''.join(
+        remove_tags(child, allowed_tags=allowed_tags, allowed_trees=allowed_trees, strip=strip)
+        for child in element
+    )
+    text = element.text or u''
+    tail = element.tail or u''
+
+    if element.tag in allowed_tags:
+        for child in element:
+            element.remove(child)
+        element.text = subtext
+        return etree.tostring(element, encoding='unicode')
+
+    return u''.join((text, subtext, tail))
