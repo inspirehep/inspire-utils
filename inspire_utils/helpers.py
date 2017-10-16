@@ -145,7 +145,7 @@ def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
     if element.tag in allowed_tags:
         for child in element:
             element.remove(child)
-        element.text = subtext
+        element.text = u''.join((text, subtext))
         return etree.tostring(element, encoding='unicode')
 
     return u''.join((text, subtext, tail))
