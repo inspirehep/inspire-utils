@@ -105,7 +105,8 @@ def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
         allowed_trees(Container): tags to be kept, along with all its subtags,
             in the output.
         strip(str): optional xpath selector. If it matches a tag, its
-            contents will also be stripped.
+            contents will also be stripped. Useful axes are ``@`` for attribute access
+            and ``self`` to select a given tag.
 
     Returns:
         str: the textual content of ``dirty``, with some tags kept and some text
@@ -116,6 +117,8 @@ def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
         >>> remove_tags(tag, allowed_tree=('b',), strip='@class="hidden"')
         u'<b><i>Only</i></b> this text remains.'
         >>> remove_tags(tag, allowed_tags=('b',), strip='@class="hidden"')
+        u'<b>Only</b> this text remains.'
+        >>> remove_tags(tag, allowed_tags=('b',), strip='self::span')
         u'<b>Only</b> this text remains.'
     """
     if isinstance(dirty, six.string_types):
@@ -128,15 +131,16 @@ def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
     if element.tag in allowed_trees:
         return etree.tostring(element, encoding='unicode')
 
+    tail = element.tail or u''
+
     if strip and element.xpath(strip):
-        return u''
+        return tail
 
     subtext = u''.join(
         remove_tags(child, allowed_tags=allowed_tags, allowed_trees=allowed_trees, strip=strip)
         for child in element
     )
     text = element.text or u''
-    tail = element.tail or u''
 
     if element.tag in allowed_tags:
         for child in element:
