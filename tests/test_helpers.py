@@ -93,3 +93,13 @@ def test_remove_tags_unicode():
     expected = u'😋'
 
     assert result == expected
+
+
+def test_remove_tags_strip_keeps_tails():
+    strip = 'self::foo'
+    snippet = '<foo>This goes</foo> but this remains.'
+
+    result = remove_tags(snippet, strip=strip)
+    expected = u' but this remains.'
+
+    assert result == expected
