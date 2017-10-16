@@ -86,6 +86,17 @@ def test_remove_tags_allowed_tags_strip():
     assert result == expected
 
 
+def test_remove_tags_allowed_tags_strip_preserves_text():
+    allowed_tags = ('i',)
+    strip = '@class="hidden"'
+    snippet = '<p><b><i>Only</i></b> this text remains.<span class="hidden">Not this one.</span></p>'
+
+    result = remove_tags(snippet, allowed_tags=allowed_tags, strip=strip)
+    expected = u'<i>Only</i> this text remains.'
+
+    assert result == expected
+
+
 def test_remove_tags_unicode():
     snippet = u'<p>😋</p>'
 
