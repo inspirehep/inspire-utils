@@ -22,7 +22,12 @@
 
 from __future__ import absolute_import, division, print_function
 
-from inspire_utils.helpers import force_list, maybe_int, remove_tags
+from inspire_utils.helpers import (
+    force_list,
+    maybe_float,
+    maybe_int,
+    remove_tags,
+)
 
 
 def test_force_list_returns_empty_list_on_none():
@@ -51,6 +56,17 @@ def test_force_list_does_not_touch_lists():
     result = force_list(['foo', 'bar', 'baz'])
 
     assert expected == result
+
+
+def test_maybe_float_returns_float_if_possible():
+    expected = 35.0499505
+    result = maybe_float('35.0499505')
+
+    assert expected == result
+
+
+def test_maybe_float_returns_none_otherwise():
+    assert maybe_float(('35.0499505', '137.052276')) is None
 
 
 def test_maybe_int_returns_int_if_possible():

@@ -70,6 +70,26 @@ def force_list(data):
     return data
 
 
+def maybe_float(el):
+    """Return a ``float`` if possible, otherwise ``None``.
+
+    Args:
+        el: any Python object.
+
+    Returns:
+        float: a ``float`` parsed from the object, or ``None``.
+
+    Examples:
+        >>> maybe_float('35.0499505')
+        35.0499505
+
+    """
+    try:
+        return float(el)
+    except (TypeError, ValueError):
+        pass
+
+
 def maybe_int(el):
     """Return an ``int`` if possible, otherwise ``None``.
 
