@@ -184,7 +184,7 @@ def _generate_non_lastnames_variations(non_lastnames):
         non_lastnames[idx] = (u'', non_lastname[0], non_lastname)
 
     # Generate the cartesian product of the transformed non lastnames and flatten them.
-    return [(u' '.join(variation)).strip() for variation in product(*non_lastnames)]
+    return [(u' '.join(filter(None, variation))).strip() for variation in product(*non_lastnames)]
 
 
 def _generate_lastnames_variations(lastnames):

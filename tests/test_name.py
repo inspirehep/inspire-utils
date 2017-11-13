@@ -155,6 +155,14 @@ def test_generate_name_variations_with_two_non_lastnames():
     assert set(result) == expected_name_variations
 
 
+def test_generate_name_variations_with_more_than_two_non_lastnames_does_not_add_extra_spaces():
+    name = 'Ellis, John Richard Philip'
+
+    result = generate_name_variations(name)
+
+    assert 'Ellis, John  Philip' not in set(result)
+
+
 def test_generate_name_variations_with_two_lastnames():
     name = u'Caro Estevez, David'
     expected = {
