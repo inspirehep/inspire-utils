@@ -24,13 +24,17 @@ from __future__ import absolute_import, division, print_function
 
 from itertools import product
 
-import six
+import logging
 from nameparser import HumanName
 from nameparser.config import Constants
+import six
 from unidecode import unidecode
 
+LOGGER = logging.getLogger(__name__)
 
 _LASTNAME_NON_LASTNAME_SEPARATORS = [u' ', u', ']
+_NAMES_MAX_NUMBER_THRESHOLD = 5
+"""Threshold for skipping the combinatorial expansion of names (when generating name variations). """
 
 
 def _prepare_nameparser_constants():
@@ -176,6 +180,7 @@ def _generate_non_lastnames_variations(non_lastnames):
     # Generate name transformations in place for all non lastnames. Transformations include:
     # 1. Drop non last name, 2. use initial, 3. use full non lastname
     for idx, non_lastname in enumerate(non_lastnames):
+        non_lastname = non_lastname.capitalize()
         non_lastnames[idx] = (u'', non_lastname[0], non_lastname)
 
     # Generate the cartesian product of the transformed non lastnames and flatten them.
@@ -193,7 +198,7 @@ def _generate_lastnames_variations(lastnames):
     if not lastnames:
         return []
 
-    split_lastnames = [split_lastname for lastname in lastnames for split_lastname in lastname.split('-')]
+    split_lastnames = [split_lastname.capitalize() for lastname in lastnames for split_lastname in lastname.split('-')]
 
     lastnames_variations = [split_lastnames[0]]  # Always have the first lastname as a variation.
     if len(split_lastnames) > 1:
@@ -235,8 +240,19 @@ def generate_name_variations(name):
         return [name]
 
     name_variations = set()
+    non_lastnames = parsed_name.first_list + parsed_name.middle_list
+
+    # This is needed because due to erroneous data (e.g. having many authors in a single authors field) ends up
+    # requiring a lot of memory (due to combinatorial expansion of all non lastnames).
+    # The policy is to use the input as a name variation, since this data will have to be curated.
+    if len(non_lastnames) > _NAMES_MAX_NUMBER_THRESHOLD or len(parsed_name.last_list) > _NAMES_MAX_NUMBER_THRESHOLD:
+        LOGGER.error('Skipping name variations generation - too many names in: "%s"', name, extra={
+            'stack': True,
+        })
+        return [name]
+
     non_lastnames_variations = \
-        _generate_non_lastnames_variations(non_lastnames=parsed_name.first_list + parsed_name.middle_list)
+        _generate_non_lastnames_variations(non_lastnames)
     lastnames_variations = _generate_lastnames_variations(parsed_name.last_list)
 
     # Create variations where lastnames comes first and is separated from non lastnames either by space or comma.
