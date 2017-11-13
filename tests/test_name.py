@@ -288,3 +288,25 @@ def test_generate_name_variations_capitalizes_first_letters():
     result = generate_name_variations(name)
 
     assert set(result) == expected
+
+
+def test_generate_name_variations_works_with_two_consecutive_commas():
+    name = 'Perelstein,, Maxim'
+    expected = {
+        # Lastname only
+        'Perelstein',
+        # Lastnames first and then non lastnames
+        'Perelstein M',
+        'Perelstein, M',
+        'Perelstein Maxim',
+        'Perelstein, Maxim',
+        # Non lastnames first and then lastnames
+        'Maxim Perelstein',
+        'Maxim, Perelstein',
+        'M Perelstein',
+        'M, Perelstein',
+    }
+
+    result = generate_name_variations(name)
+
+    assert set(result) == expected

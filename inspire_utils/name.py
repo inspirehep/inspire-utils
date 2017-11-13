@@ -184,7 +184,10 @@ def _generate_non_lastnames_variations(non_lastnames):
         non_lastnames[idx] = (u'', non_lastname[0], non_lastname)
 
     # Generate the cartesian product of the transformed non lastnames and flatten them.
-    return [(u' '.join(filter(None, variation))).strip() for variation in product(*non_lastnames)]
+    return [
+        (u' '.join(var_elem for var_elem in variation if var_elem)).strip()
+        for variation in product(*non_lastnames)
+    ]
 
 
 def _generate_lastnames_variations(lastnames):
@@ -239,7 +242,15 @@ def generate_name_variations(name):
         return [name]
 
     name_variations = set()
-    non_lastnames = parsed_name.first_list + parsed_name.middle_list
+
+    # We need to filter out empty entries, since HumanName for this name `Perelstein,, Maxim` returns a first_list with
+    # an empty string element.
+    non_lastnames = [
+        non_lastname
+        for non_lastname
+        in parsed_name.first_list + parsed_name.middle_list + parsed_name.suffix_list
+        if non_lastname
+    ]
 
     # This is needed because due to erroneous data (e.g. having many authors in a single authors field) ends up
     # requiring a lot of memory (due to combinatorial expansion of all non lastnames).
