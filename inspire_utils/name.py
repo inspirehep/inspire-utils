@@ -191,7 +191,7 @@ def _generate_lastnames_variations(lastnames):
     """Generate variations for lastnames.
 
     Note:
-        This method follows the assumption that the first last
+        This method follows the assumption that the first last name is the main one.
         E.g. For 'Caro Estevez', this method generates: ['Caro', 'Caro Estevez'].
         In the case the lastnames are dashed, it splits them in two.
     """
@@ -221,14 +221,13 @@ def generate_name_variations(name):
         Uses `unidecode` for doing unicode characters transliteration to ASCII ones. This was chosen so that we can map
         both full names of authors in HEP records and user's input to the same space and thus make exact queries work.
     """
-    def _update_name_variations_with_product(set_a, set_b, non_lastnames_idx_in_product_result):
+    def _update_name_variations_with_product(set_a, set_b):
         name_variations.update([
             unidecode(
                 (names_variation[0] + separator + names_variation[1]).strip(''.join(_LASTNAME_NON_LASTNAME_SEPARATORS))
             )
             for names_variation
             in product(set_a, set_b)
-            if names_variation[non_lastnames_idx_in_product_result]  # Don't generate only lastnames as variations.
             for separator
             in _LASTNAME_NON_LASTNAME_SEPARATORS
         ])
@@ -256,9 +255,9 @@ def generate_name_variations(name):
     lastnames_variations = _generate_lastnames_variations(parsed_name.last_list)
 
     # Create variations where lastnames comes first and is separated from non lastnames either by space or comma.
-    _update_name_variations_with_product(lastnames_variations, non_lastnames_variations, 1)
+    _update_name_variations_with_product(lastnames_variations, non_lastnames_variations)
 
     # Second part of transformations - having the lastnames in the end.
-    _update_name_variations_with_product(non_lastnames_variations, lastnames_variations, 0)
+    _update_name_variations_with_product(non_lastnames_variations, lastnames_variations)
 
     return list(name_variations)
