@@ -24,13 +24,17 @@ from __future__ import absolute_import, division, print_function
 
 from itertools import product
 
-import six
+import logging
 from nameparser import HumanName
 from nameparser.config import Constants
+import six
 from unidecode import unidecode
 
+LOGGER = logging.getLogger(__name__)
 
 _LASTNAME_NON_LASTNAME_SEPARATORS = [u' ', u', ']
+_NAMES_MAX_NUMBER_THRESHOLD = 5
+"""Threshold for skipping the combinatorial expansion of names (when generating name variations). """
 
 
 def _prepare_nameparser_constants():
@@ -176,24 +180,28 @@ def _generate_non_lastnames_variations(non_lastnames):
     # Generate name transformations in place for all non lastnames. Transformations include:
     # 1. Drop non last name, 2. use initial, 3. use full non lastname
     for idx, non_lastname in enumerate(non_lastnames):
+        non_lastname = non_lastname.capitalize()
         non_lastnames[idx] = (u'', non_lastname[0], non_lastname)
 
     # Generate the cartesian product of the transformed non lastnames and flatten them.
-    return [(u' '.join(variation)).strip() for variation in product(*non_lastnames)]
+    return [
+        (u' '.join(var_elem for var_elem in variation if var_elem)).strip()
+        for variation in product(*non_lastnames)
+    ]
 
 
 def _generate_lastnames_variations(lastnames):
     """Generate variations for lastnames.
 
     Note:
-        This method follows the assumption that the first last
+        This method follows the assumption that the first last name is the main one.
         E.g. For 'Caro Estevez', this method generates: ['Caro', 'Caro Estevez'].
         In the case the lastnames are dashed, it splits them in two.
     """
     if not lastnames:
         return []
 
-    split_lastnames = [split_lastname for lastname in lastnames for split_lastname in lastname.split('-')]
+    split_lastnames = [split_lastname.capitalize() for lastname in lastnames for split_lastname in lastname.split('-')]
 
     lastnames_variations = [split_lastnames[0]]  # Always have the first lastname as a variation.
     if len(split_lastnames) > 1:
@@ -216,14 +224,13 @@ def generate_name_variations(name):
         Uses `unidecode` for doing unicode characters transliteration to ASCII ones. This was chosen so that we can map
         both full names of authors in HEP records and user's input to the same space and thus make exact queries work.
     """
-    def _update_name_variations_with_product(set_a, set_b, non_lastnames_idx_in_product_result):
+    def _update_name_variations_with_product(set_a, set_b):
         name_variations.update([
             unidecode(
                 (names_variation[0] + separator + names_variation[1]).strip(''.join(_LASTNAME_NON_LASTNAME_SEPARATORS))
             )
             for names_variation
             in product(set_a, set_b)
-            if names_variation[non_lastnames_idx_in_product_result]  # Don't generate only lastnames as variations.
             for separator
             in _LASTNAME_NON_LASTNAME_SEPARATORS
         ])
@@ -235,14 +242,33 @@ def generate_name_variations(name):
         return [name]
 
     name_variations = set()
+
+    # We need to filter out empty entries, since HumanName for this name `Perelstein,, Maxim` returns a first_list with
+    # an empty string element.
+    non_lastnames = [
+        non_lastname
+        for non_lastname
+        in parsed_name.first_list + parsed_name.middle_list + parsed_name.suffix_list
+        if non_lastname
+    ]
+
+    # This is needed because due to erroneous data (e.g. having many authors in a single authors field) ends up
+    # requiring a lot of memory (due to combinatorial expansion of all non lastnames).
+    # The policy is to use the input as a name variation, since this data will have to be curated.
+    if len(non_lastnames) > _NAMES_MAX_NUMBER_THRESHOLD or len(parsed_name.last_list) > _NAMES_MAX_NUMBER_THRESHOLD:
+        LOGGER.error('Skipping name variations generation - too many names in: "%s"', name, extra={
+            'stack': True,
+        })
+        return [name]
+
     non_lastnames_variations = \
-        _generate_non_lastnames_variations(non_lastnames=parsed_name.first_list + parsed_name.middle_list)
+        _generate_non_lastnames_variations(non_lastnames)
     lastnames_variations = _generate_lastnames_variations(parsed_name.last_list)
 
     # Create variations where lastnames comes first and is separated from non lastnames either by space or comma.
-    _update_name_variations_with_product(lastnames_variations, non_lastnames_variations, 1)
+    _update_name_variations_with_product(lastnames_variations, non_lastnames_variations)
 
     # Second part of transformations - having the lastnames in the end.
-    _update_name_variations_with_product(non_lastnames_variations, lastnames_variations, 0)
+    _update_name_variations_with_product(non_lastnames_variations, lastnames_variations)
 
     return list(name_variations)

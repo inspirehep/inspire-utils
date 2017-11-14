@@ -23,6 +23,7 @@
 from __future__ import absolute_import, division, print_function
 
 import pytest
+from mock import patch
 
 from inspire_utils.name import normalize_name, generate_name_variations
 
@@ -114,6 +115,7 @@ def test_normalize_name_handles_titles(input_author_name, expected):
 def test_generate_name_variations_with_two_non_lastnames():
     name = 'Ellis, John Richard'
     expected_name_variations = {
+        'Ellis',
         'Ellis J',
         'Ellis J R',
         'Ellis J Richard',
@@ -153,9 +155,20 @@ def test_generate_name_variations_with_two_non_lastnames():
     assert set(result) == expected_name_variations
 
 
+def test_generate_name_variations_with_more_than_two_non_lastnames_does_not_add_extra_spaces():
+    name = 'Ellis, John Richard Philip'
+
+    result = generate_name_variations(name)
+
+    assert 'Ellis, John  Philip' not in set(result)
+
+
 def test_generate_name_variations_with_two_lastnames():
     name = u'Caro Estevez, David'
     expected = {
+        # Lastnames only
+        'Caro',
+        'Caro Estevez',
         # Lastnames first and then non lastnames
         u'Caro Estevez D',
         u'Caro Estevez David',
@@ -184,6 +197,9 @@ def test_generate_name_variations_with_two_lastnames():
 def test_generate_name_variations_with_three_lastnames_dashed_ignores_the_dash():
     name = u'Caro-Estévez Martínez, David'
     expected = {
+        # Lastnames only
+        'Caro',
+        'Caro Estevez Martinez',
         # Lastnames first and then non lastnames
         u'Caro Estevez Martinez D',
         u'Caro Estevez Martinez David',
@@ -212,6 +228,8 @@ def test_generate_name_variations_with_three_lastnames_dashed_ignores_the_dash()
 def test_generate_name_variations_with_firstname_as_initial():
     name = 'Smith, J'
     expected = {
+        # Lastname only
+        'Smith',
         # Lastnames first and then non lastnames
         'Smith J',
         'Smith, J',
@@ -229,6 +247,64 @@ def test_generate_name_variations_with_only_one_name():
     name = 'Jimmy'
     expected = {
         'Jimmy',
+    }
+
+    result = generate_name_variations(name)
+
+    assert set(result) == expected
+
+
+def test_generate_name_variations_with_many_names_defers_generating_variations():
+    import logging
+    logger = logging.getLogger('inspire_utils.name')
+    with patch.object(logger, 'error') as mock_error:
+        many_names_as_one_author = 'Tseng, Farrukh Azfar Todd Huffman Thilo Pauly'
+
+        result = generate_name_variations(many_names_as_one_author)
+
+        assert result == [many_names_as_one_author]
+
+        args, _ = mock_error.call_args
+        assert args[0].startswith('Skipping name variations generation - too many names')
+
+
+def test_generate_name_variations_capitalizes_first_letters():
+    name = 'mele, salvatore'
+    expected = {
+        # Lastname only
+        'Mele',
+        # Lastnames first and then non lastnames
+        'Mele S',
+        'Mele, S',
+        'Mele Salvatore',
+        'Mele, Salvatore',
+        # Non lastnames first and then lastnames
+        'Salvatore Mele',
+        'Salvatore, Mele',
+        'S Mele',
+        'S, Mele',
+    }
+
+    result = generate_name_variations(name)
+
+    assert set(result) == expected
+
+
+def test_generate_name_variations_works_with_two_consecutive_commas():
+    name = 'Perelstein,, Maxim'
+    expected = {
+        # Lastname only
+        'Perelstein',
+        # Lastnames first and then non lastnames
+        'Perelstein M',
+        'Perelstein, M',
+        'Perelstein Maxim',
+        'Perelstein, Maxim',
+        # Non lastnames first and then lastnames
+        'Maxim Perelstein',
+        'Maxim, Perelstein',
+        'M Perelstein',
+        'M, Perelstein',
     }
 
     result = generate_name_variations(name)
