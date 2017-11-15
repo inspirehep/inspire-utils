@@ -239,7 +239,7 @@ def generate_name_variations(name):
 
     # Handle rare-case of single-name
     if len(parsed_name) == 1:
-        return [name]
+        return [name.capitalize()]
 
     name_variations = set()
 
