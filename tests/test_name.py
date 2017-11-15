@@ -254,6 +254,17 @@ def test_generate_name_variations_with_only_one_name():
     assert set(result) == expected
 
 
+def test_generate_name_variations_with_one_name_does_capitalization():
+    name = 'jimmy'
+    expected = {
+        'Jimmy',
+    }
+
+    result = generate_name_variations(name)
+
+    assert set(result) == expected
+
+
 def test_generate_name_variations_with_many_names_defers_generating_variations():
     import logging
     logger = logging.getLogger('inspire_utils.name')
