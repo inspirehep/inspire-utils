@@ -24,13 +24,14 @@ from __future__ import absolute_import, division, print_function
 
 from itertools import product
 
-import logging
 from nameparser import HumanName
 from nameparser.config import Constants
 import six
 from unidecode import unidecode
 
-LOGGER = logging.getLogger(__name__)
+from .logging import getStackTraceLogger
+
+LOGGER = getStackTraceLogger(__name__)
 
 _LASTNAME_NON_LASTNAME_SEPARATORS = [u' ', u', ']
 _NAMES_MAX_NUMBER_THRESHOLD = 5
@@ -256,9 +257,7 @@ def generate_name_variations(name):
     # requiring a lot of memory (due to combinatorial expansion of all non lastnames).
     # The policy is to use the input as a name variation, since this data will have to be curated.
     if len(non_lastnames) > _NAMES_MAX_NUMBER_THRESHOLD or len(parsed_name.last_list) > _NAMES_MAX_NUMBER_THRESHOLD:
-        LOGGER.error('Skipping name variations generation - too many names in: "%s"', name, extra={
-            'stack': True,
-        })
+        LOGGER.error('Skipping name variations generation - too many names in: "%s"', name)
         return [name]
 
     non_lastnames_variations = \
