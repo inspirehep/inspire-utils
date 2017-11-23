@@ -67,7 +67,7 @@ class ParsedName(object):
         """Create a ParsedName instance.
 
         Args:
-            name (str): The name to be parsed (must be non empty nor None).
+            name (six.text_type): The name to be parsed (must be non empty nor None).
             constants (:class:`nameparser.config.Constants`): Configuration for `HumanName` instantiation.
                 (Can be None, if provided it overwrites the default one generated in
                 :method:`prepare_nameparser_constants`.)
@@ -76,6 +76,12 @@ class ParsedName(object):
             constants = ParsedName.constants
 
         self._parsed_name = HumanName(name, constants=constants)
+
+        # In the case of one name part, i.e. only lastname, name parser adds the name part in one of the first, middle,
+        # suffix fields (depending on input). For our use-case if a user types a name, usually would be a lastname.
+        if len(name.split()) == 1:
+            self._parsed_name.last = self._parsed_name.first + self._parsed_name.middle + self._parsed_name.suffix
+            self._parsed_name.first = ''
 
     def __len__(self):
         return len(self._parsed_name)
