@@ -67,20 +67,66 @@ class ParsedName(object):
         """Create a ParsedName instance.
 
         Args:
-            name (str): The name to be parsed (must be non empty nor None).
+            name (six.text_type): The name to be parsed (must be non empty nor None).
             constants (:class:`nameparser.config.Constants`): Configuration for `HumanName` instantiation.
                 (Can be None, if provided it overwrites the default one generated in
                 :method:`prepare_nameparser_constants`.)
         """
         if not constants:
             constants = ParsedName.constants
-        self.parsed_name = HumanName(name, constants=constants)
+
+        self._parsed_name = HumanName(name, constants=constants)
+
+        # In the case of one name part, i.e. only lastname, name parser adds the name part in one of the first, middle,
+        # suffix fields (depending on input). For our use-case if a user types a name, usually would be a lastname.
+        if len(name.split()) == 1:
+            self._parsed_name.last = self._parsed_name.first + self._parsed_name.middle + self._parsed_name.suffix
+            self._parsed_name.first = ''
+
+    def __len__(self):
+        return len(self._parsed_name)
 
     def __repr__(self):
-        return repr(self.parsed_name)
+        return repr(self._parsed_name)
 
     def __str__(self):
-        return str(self.parsed_name)
+        return str(self._parsed_name)
+
+    @property
+    def title(self):
+        return self._parsed_name.title
+
+    @property
+    def first(self):
+        return self._parsed_name.first
+
+    @property
+    def first_list(self):
+        return self._parsed_name.first_list
+
+    @property
+    def middle(self):
+        return self._parsed_name.middle
+
+    @property
+    def middle_list(self):
+        return self._parsed_name.middle_list
+
+    @property
+    def last(self):
+        return self._parsed_name.last
+
+    @property
+    def last_list(self):
+        return self._parsed_name.last_list
+
+    @property
+    def suffix(self):
+        return self._parsed_name.suffix
+
+    @property
+    def suffix_list(self):
+        return self._parsed_name.suffix_list
 
     @classmethod
     def loads(cls, name):
@@ -125,8 +171,8 @@ class ParsedName(object):
                        for letters in suffix.upper())
 
         # Create first and middle
-        first_name = _ensure_dotted_initials(self.parsed_name.first)
-        middle_name = _ensure_dotted_initials(self.parsed_name.middle)
+        first_name = _ensure_dotted_initials(self.first)
+        middle_name = _ensure_dotted_initials(self.middle)
 
         if _is_initial(first_name) and _is_initial(middle_name):
             normalized_names = u'{first_name}{middle_name}'
@@ -138,13 +184,13 @@ class ParsedName(object):
             middle_name=middle_name,
         )
 
-        if _is_roman_numeral(self.parsed_name.suffix):
-            suffix = self.parsed_name.suffix.upper()
+        if _is_roman_numeral(self.suffix):
+            suffix = self.suffix.upper()
         else:
-            suffix = _ensure_dotted_suffixes(self.parsed_name.suffix)
+            suffix = _ensure_dotted_suffixes(self.suffix)
 
         final_name = u', '.join(
-            part for part in (self.parsed_name.last, normalized_names.strip(), suffix)
+            part for part in (self.last, normalized_names.strip(), suffix)
             if part)
 
         # Replace unicode curly apostrophe to normal apostrophe.
@@ -236,7 +282,7 @@ def generate_name_variations(name):
             in _LASTNAME_NON_LASTNAME_SEPARATORS
         ])
 
-    parsed_name = ParsedName.loads(name).parsed_name
+    parsed_name = ParsedName.loads(name)
 
     # Handle rare-case of single-name
     if len(parsed_name) == 1:
