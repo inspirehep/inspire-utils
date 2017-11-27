@@ -63,6 +63,9 @@ class ParsedName(object):
     constants = _prepare_nameparser_constants()
     """The default constants configuration for `HumanName` to use for parsing all names."""
 
+    _SPLIT_SYMBOLS = ['.', ',', ' ', '-']
+    """Symbols that a name might contain and signify more than one name parts."""
+
     def __init__(self, name, constants=None):
         """Create a ParsedName instance.
 
@@ -76,12 +79,29 @@ class ParsedName(object):
             constants = ParsedName.constants
 
         self._parsed_name = HumanName(name, constants=constants)
+        self._parsed_name.capitalize()
 
         # In the case of one name part, i.e. only lastname, name parser adds the name part in one of the first, middle,
         # suffix fields (depending on input). For our use-case if a user types a name, usually would be a lastname.
-        if len(name.split()) == 1:
-            self._parsed_name.last = self._parsed_name.first + self._parsed_name.middle + self._parsed_name.suffix
+        if not self._has_more_than_one_parts(name):
+            self._parsed_name.last = ''.join([
+                getattr(self._parsed_name, attr, '')
+                for attr
+                in ('title', 'first', 'middle', 'suffix', 'nickname')
+            ])
             self._parsed_name.first = ''
+
+    def _has_more_than_one_parts(self, name):
+        """Check whether a name has more than one name parts.
+
+        Notes:
+            Striping suffix and prefix characters so that 'LastName.' doesn't seem as if it has two parts.
+        """
+        name = unidecode(name).strip(''.join(self._SPLIT_SYMBOLS))
+        for symbol in self._SPLIT_SYMBOLS:
+            if symbol in name:
+                return True
+        return False
 
     def __len__(self):
         return len(self._parsed_name)
@@ -227,7 +247,7 @@ def _generate_non_lastnames_variations(non_lastnames):
     # Generate name transformations in place for all non lastnames. Transformations include:
     # 1. Drop non last name, 2. use initial, 3. use full non lastname
     for idx, non_lastname in enumerate(non_lastnames):
-        non_lastname = non_lastname.capitalize()
+        non_lastname = non_lastname
         non_lastnames[idx] = (u'', non_lastname[0], non_lastname)
 
     # Generate the cartesian product of the transformed non lastnames and flatten them.
@@ -248,7 +268,7 @@ def _generate_lastnames_variations(lastnames):
     if not lastnames:
         return []
 
-    split_lastnames = [split_lastname.capitalize() for lastname in lastnames for split_lastname in lastname.split('-')]
+    split_lastnames = [split_lastname for lastname in lastnames for split_lastname in lastname.split('-')]
 
     lastnames_variations = [split_lastnames[0]]  # Always have the first lastname as a variation.
     if len(split_lastnames) > 1:
@@ -286,7 +306,7 @@ def generate_name_variations(name):
 
     # Handle rare-case of single-name
     if len(parsed_name) == 1:
-        return [name.capitalize()]
+        return [ParsedName.dumps(parsed_name)]
 
     name_variations = set()
 
@@ -304,7 +324,7 @@ def generate_name_variations(name):
     # The policy is to use the input as a name variation, since this data will have to be curated.
     if len(non_lastnames) > _NAMES_MAX_NUMBER_THRESHOLD or len(parsed_name.last_list) > _NAMES_MAX_NUMBER_THRESHOLD:
         LOGGER.error('Skipping name variations generation - too many names in: "%s"', name)
-        return [name]
+        return [ParsedName.dumps(parsed_name)]
 
     non_lastnames_variations = \
         _generate_non_lastnames_variations(non_lastnames)

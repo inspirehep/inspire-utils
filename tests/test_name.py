@@ -324,8 +324,32 @@ def test_generate_name_variations_works_with_two_consecutive_commas():
 
 
 def test_parsed_name_creates_lastname_with_only_on_name_part():
-    name = u'ellis'
+    name = 'ellis'
+    expected_name = 'Ellis'
+
     parsed_name = ParsedName(name)
 
     assert not all([parsed_name.first, parsed_name.middle, parsed_name.suffix])
-    assert parsed_name.last == name
+    assert parsed_name.last == expected_name
+
+
+@pytest.mark.parametrize('input_name, expected_name', [
+    (u'Γιώργος ', u'Γιώργος'),
+    (u'Γιώργος.', u'Γιώργος.'),
+    (u' Γιώργος', u'Γιώργος'),
+    (u'.Γιώργος', u'.Γιώργος'),
+])
+def test_parsed_name_converts_single_name_part_to_lastname(input_name, expected_name):
+    parsed_name = ParsedName.loads(input_name)
+
+    assert parsed_name.last == expected_name
+
+
+def test_parsed_name_recognizes_lastname_comma_firstname():
+    name = 'springel,v.'
+    expected_name = ('Springel', 'V.')
+
+    parsed_name = ParsedName.loads(name)
+
+    assert parsed_name.last == expected_name[0]
+    assert parsed_name.first == expected_name[1]
