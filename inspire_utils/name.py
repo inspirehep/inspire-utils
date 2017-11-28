@@ -83,6 +83,9 @@ class ParsedName(object):
             self._parsed_name.last = self._parsed_name.first + self._parsed_name.middle + self._parsed_name.suffix
             self._parsed_name.first = ''
 
+    def __iter__(self):
+        return self._parsed_name
+
     def __len__(self):
         return len(self._parsed_name)
 
