@@ -76,6 +76,7 @@ class ParsedName(object):
             constants = ParsedName.constants
 
         self._parsed_name = HumanName(name, constants=constants)
+        self._parsed_name.capitalize()
 
         # In the case of one name part, i.e. only lastname, name parser adds the name part in one of the first, middle,
         # suffix fields (depending on input). For our use-case if a user types a name, usually would be a lastname.
@@ -230,7 +231,6 @@ def _generate_non_lastnames_variations(non_lastnames):
     # Generate name transformations in place for all non lastnames. Transformations include:
     # 1. Drop non last name, 2. use initial, 3. use full non lastname
     for idx, non_lastname in enumerate(non_lastnames):
-        non_lastname = non_lastname.capitalize()
         non_lastnames[idx] = (u'', non_lastname[0], non_lastname)
 
     # Generate the cartesian product of the transformed non lastnames and flatten them.
@@ -251,7 +251,7 @@ def _generate_lastnames_variations(lastnames):
     if not lastnames:
         return []
 
-    split_lastnames = [split_lastname.capitalize() for lastname in lastnames for split_lastname in lastname.split('-')]
+    split_lastnames = [split_lastname for lastname in lastnames for split_lastname in lastname.split('-')]
 
     lastnames_variations = [split_lastnames[0]]  # Always have the first lastname as a variation.
     if len(split_lastnames) > 1:
@@ -289,7 +289,7 @@ def generate_name_variations(name):
 
     # Handle rare-case of single-name
     if len(parsed_name) == 1:
-        return [name.capitalize()]
+        return [parsed_name.dumps()]
 
     name_variations = set()
 

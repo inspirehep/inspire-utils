@@ -324,8 +324,10 @@ def test_generate_name_variations_works_with_two_consecutive_commas():
 
 
 def test_parsed_name_creates_lastname_with_only_on_name_part():
-    name = u'ellis'
+    name = 'ellis'
+    expected_name = 'Ellis'
+
     parsed_name = ParsedName(name)
 
     assert not all([parsed_name.first, parsed_name.middle, parsed_name.suffix])
-    assert parsed_name.last == name
+    assert parsed_name.last == expected_name
