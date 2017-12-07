@@ -25,7 +25,7 @@ from __future__ import absolute_import, division, print_function
 import pytest
 from mock import patch
 
-from inspire_utils.name import normalize_name, generate_name_variations, ParsedName
+from inspire_utils.name import normalize_name, generate_name_variations
 
 
 def test_normalize_name_full():
@@ -321,11 +321,3 @@ def test_generate_name_variations_works_with_two_consecutive_commas():
     result = generate_name_variations(name)
 
     assert set(result) == expected
-
-
-def test_parsed_name_creates_lastname_with_only_on_name_part():
-    name = u'ellis'
-    parsed_name = ParsedName(name)
-
-    assert not all([parsed_name.first, parsed_name.middle, parsed_name.suffix])
-    assert parsed_name.last == name
