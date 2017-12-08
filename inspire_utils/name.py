@@ -78,6 +78,24 @@ class ParsedName(object):
         self._parsed_name = HumanName(name, constants=constants)
         self._parsed_name.capitalize()
 
+        if self._is_initial(self.last):
+            self._swap_firstname_lastname()
+
+    def _swap_firstname_lastname(self):
+        """Swap firstname and lastname in cases where lastname is an initial
+
+        Notes:
+            In cases where input is a badly formatted name 'initial(Firstname), Lastname.' (e.g. 'W, Schoutens.')
+            ``HumanName`` recognizes it in swapped order due to the comma.
+            Additionally, if lastname part contains a dot, strips it (nonsensical for a lastname to end with a '.').
+        """
+        self._parsed_name.last, self._parsed_name.first = self.first, self.last
+        self._parsed_name.last = self._parsed_name.last.strip('.')
+
+    @staticmethod
+    def _is_initial(author_name):
+        return len(author_name) == 1 or u'.' in author_name
+
     def __iter__(self):
         return self._parsed_name
 
@@ -145,11 +163,9 @@ class ParsedName(object):
 
     def dumps(self):
         """Dump the name to string, after normalizing it."""
-        def _is_initial(author_name):
-            return len(author_name) == 1 or u'.' in author_name
 
         def _ensure_dotted_initials(author_name):
-            if _is_initial(author_name) \
+            if self._is_initial(author_name) \
                     and u'.' not in author_name:
                 seq = (author_name, u'.')
                 author_name = u''.join(seq)
@@ -172,7 +188,7 @@ class ParsedName(object):
         first_name = _ensure_dotted_initials(self.first)
         middle_name = _ensure_dotted_initials(self.middle)
 
-        if _is_initial(first_name) and _is_initial(middle_name):
+        if self._is_initial(first_name) and self._is_initial(middle_name):
             normalized_names = u'{first_name}{middle_name}'
         else:
             normalized_names = u'{first_name} {middle_name}'
