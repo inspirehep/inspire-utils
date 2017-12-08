@@ -112,6 +112,12 @@ def test_normalize_name_handles_titles(input_author_name, expected):
     assert normalize_name(input_author_name) == expected
 
 
+def test_normalize_name_handles_firstname_initial_comma_lastname():
+    expected = 'Schoutens, W.'
+
+    assert expected == normalize_name('W, Schoutens.')
+
+
 def test_generate_name_variations_with_two_non_lastnames():
     name = 'Ellis, John Richard'
     expected_name_variations = {
