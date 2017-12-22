@@ -135,7 +135,7 @@ class ParsedName(object):
             ValueError: when name is empty or None.
         """
         if not isinstance(name, six.string_types):
-            raise TypeError('arguments to {classname} must be of type {string_types}'.format(
+            raise TypeError(u'arguments to {classname} must be of type {string_types}'.format(
                 classname=cls.__name__, string_types=repr(six.string_types)
             ))
         if not name or name.isspace():

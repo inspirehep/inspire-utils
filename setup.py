@@ -57,6 +57,9 @@ tests_require = [
 extras_require = {
     'docs': docs_require,
     'tests': tests_require,
+    'tests:python_version=="2.7"': [
+        'unicode-string-literal~=1.0,>=1.1',
+    ],
 }
 
 extras_require['all'] = []
