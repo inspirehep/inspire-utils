@@ -53,7 +53,7 @@ class PartialDate(object):
     def __init__(self, year, month=None, day=None):
         well_typed = all(isinstance(part, int) or part is None for part in (year, month, day))
         if not well_typed:
-            raise TypeError('arguments to {classname} must be of type int or None'.format(
+            raise TypeError(u'arguments to {classname} must be of type int or None'.format(
                 classname=type(self).__name__))
         if year is None or year < 1000:
             raise ValueError('year must be an int >= 1000')
@@ -68,7 +68,7 @@ class PartialDate(object):
         self.day = day
 
     def __repr__(self):
-        return 'PartialDate(year={self.year}, month={self.month}, day={self.day})'.format(self=self)
+        return u'PartialDate(year={self.year}, month={self.month}, day={self.day})'.format(self=self)
 
     def __eq__(self, other):
         return self.year == other.year and self.month == other.month and self.day == other.day
@@ -110,7 +110,7 @@ class PartialDate(object):
         """
         non_empty = itertools.takewhile(bool, (self.year, self.month, self.day))
         # XXX: this only handles dates after 1000, which should be sufficient
-        formatted = ('{:02d}'.format(part) for part in non_empty)
+        formatted = (u'{:02d}'.format(part) for part in non_empty)
         date = '-'.join(formatted)
 
         return date
