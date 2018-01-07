@@ -36,12 +36,12 @@ setup_requires = [
 ]
 
 install_requires = [
+    'Unidecode~=1.0,>=1.0.22',
     'babel~=2.0,>=2.5.1',
     'lxml~=4.0,>=4.0.0',
     'nameparser~=0.0,>=0.5.3',
     'python-dateutil~=2.0,>=2.6.1',
     'six~=1.0,>=1.10.0',
-    'unidecode~=0.0,>=0.4.21',
 ]
 
 docs_require = []
