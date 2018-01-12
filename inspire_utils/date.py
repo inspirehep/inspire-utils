@@ -74,10 +74,12 @@ class PartialDate(object):
         return self.year == other.year and self.month == other.month and self.day == other.day
 
     def __lt__(self, other):
+        self_month = self.month or 99
+        self_day = self.day or 99
         other_month = other.month or 99
         other_day = other.day or 99
 
-        return (self.year, self.month, self.day) < (other.year, other_month, other_day)
+        return (self.year, self_month, self_day) < (other.year, other_month, other_day)
 
     def __str__(self):
         return self.pprint()
