@@ -55,11 +55,18 @@ def test_partial_date_equality():
     assert PartialDate(1686, 6) == PartialDate(1686, 6)
 
 
-def test_partial_dates_sorts_incomplete_dates_after_complete_dates():
+def test_partial_date_self_inequality():
+    date = PartialDate(1686)
+
+    assert not date < date
+
+
+def test_partial_date_sorts_incomplete_dates_after_complete_dates():
     complete = PartialDate(1686, 6, 30)
     incomplete = PartialDate(1686)
 
     assert complete < incomplete
+    assert not incomplete < complete
 
 
 def test_partial_date_loads():
