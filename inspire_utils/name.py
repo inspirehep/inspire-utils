@@ -200,7 +200,14 @@ class ParsedName(object):
         return final_name
 
     @classmethod
-    def from_parts(cls, first, last, middle=None, suffix=None, title=None):
+    def from_parts(
+        cls,
+        first=None,
+        last=None,
+        middle=None,
+        suffix=None,
+        title=None
+    ):
         name = HumanName()
         name.first = first
         name.middle = middle
