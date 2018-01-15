@@ -25,7 +25,11 @@ from __future__ import absolute_import, division, print_function
 import pytest
 from mock import patch
 
-from inspire_utils.name import normalize_name, generate_name_variations
+from inspire_utils.name import (
+    normalize_name,
+    generate_name_variations,
+    ParsedName,
+)
 
 
 def test_normalize_name_full():
@@ -321,3 +325,12 @@ def test_generate_name_variations_works_with_two_consecutive_commas():
     result = generate_name_variations(name)
 
     assert set(result) == expected
+
+
+def test_parsed_name_from_parts():
+    parsed_name = ParsedName.from_parts("John", "Smith", "Peter", "Jr", "Sir")
+
+    expected = "Smith, John Peter, Jr."
+    result = parsed_name.dumps()
+
+    assert result == expected

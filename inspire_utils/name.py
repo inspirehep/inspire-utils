@@ -67,7 +67,7 @@ class ParsedName(object):
         """Create a ParsedName instance.
 
         Args:
-            name (str): The name to be parsed (must be non empty nor None).
+            name (Union[str, HumanName]): The name to be parsed (must be non empty nor None).
             constants (:class:`nameparser.config.Constants`): Configuration for `HumanName` instantiation.
                 (Can be None, if provided it overwrites the default one generated in
                 :method:`prepare_nameparser_constants`.)
@@ -75,8 +75,11 @@ class ParsedName(object):
         if not constants:
             constants = ParsedName.constants
 
-        self._parsed_name = HumanName(name, constants=constants)
-        self._parsed_name.capitalize()
+        if isinstance(name, HumanName):
+            self._parsed_name = name
+        else:
+            self._parsed_name = HumanName(name, constants=constants)
+            self._parsed_name.capitalize()
 
     def __iter__(self):
         return self._parsed_name
@@ -195,6 +198,23 @@ class ParsedName(object):
         final_name = final_name.replace(u'’', '\'')
 
         return final_name
+
+    @classmethod
+    def from_parts(
+        cls,
+        first=None,
+        last=None,
+        middle=None,
+        suffix=None,
+        title=None
+    ):
+        name = HumanName()
+        name.first = first
+        name.middle = middle
+        name.last = last
+        name.suffix = suffix
+        name.title = title
+        return ParsedName(name)
 
 
 def normalize_name(name):
