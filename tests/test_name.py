@@ -119,39 +119,39 @@ def test_normalize_name_handles_titles(input_author_name, expected):
 def test_generate_name_variations_with_two_non_lastnames():
     name = 'Ellis, John Richard'
     expected_name_variations = {
-        'Ellis',
-        'Ellis J',
-        'Ellis J R',
-        'Ellis J Richard',
-        'Ellis John',
-        'Ellis John R',
-        'Ellis John Richard',
-        'Ellis R',
-        'Ellis Richard',
-        'Ellis, J',
-        'Ellis, J R',
-        'Ellis, J Richard',
-        'Ellis, John',
-        'Ellis, John R',
-        'Ellis, John Richard',
-        'Ellis, R',
-        'Ellis, Richard',
-        'J Ellis',
-        'J R Ellis',
-        'J Richard Ellis',
-        'John Ellis',
-        'John R Ellis',
-        'John Richard Ellis',
-        'R Ellis',
-        'Richard Ellis',
-        'J, Ellis',
-        'J R, Ellis',
-        'J Richard, Ellis',
-        'John, Ellis',
-        'John R, Ellis',
-        'John Richard, Ellis',
-        'R, Ellis',
-        'Richard, Ellis',
+        'ellis',
+        'ellis j',
+        'ellis j r',
+        'ellis j richard',
+        'ellis john',
+        'ellis john r',
+        'ellis john richard',
+        'ellis r',
+        'ellis richard',
+        'ellis, j',
+        'ellis, j r',
+        'ellis, j richard',
+        'ellis, john',
+        'ellis, john r',
+        'ellis, john richard',
+        'ellis, r',
+        'ellis, richard',
+        'j ellis',
+        'j r ellis',
+        'j richard ellis',
+        'john ellis',
+        'john r ellis',
+        'john richard ellis',
+        'r ellis',
+        'richard ellis',
+        'j, ellis',
+        'j r, ellis',
+        'j richard, ellis',
+        'john, ellis',
+        'john r, ellis',
+        'john richard, ellis',
+        'r, ellis',
+        'richard, ellis',
     }
 
     result = generate_name_variations(name)
@@ -164,33 +164,33 @@ def test_generate_name_variations_with_more_than_two_non_lastnames_does_not_add_
 
     result = generate_name_variations(name)
 
-    assert 'Ellis, John  Philip' not in set(result)
+    assert 'ellis, john  philip' not in set(result)
 
 
 def test_generate_name_variations_with_two_lastnames():
     name = u'Caro Estevez, David'
     expected = {
         # Lastnames only
-        'Caro',
-        'Caro Estevez',
+        u'caro',
+        u'caro estevez',
         # Lastnames first and then non lastnames
-        u'Caro Estevez D',
-        u'Caro Estevez David',
-        u'Caro Estevez, D',
-        u'Caro Estevez, David',
-        u'Caro D',
-        u'Caro, D',
-        u'Caro David',
-        u'Caro, David',
+        u'caro estevez d',
+        u'caro estevez david',
+        u'caro estevez, d',
+        u'caro estevez, david',
+        u'caro d',
+        u'caro, d',
+        u'caro david',
+        u'caro, david',
         # Non lastnames first and then lastnames
-        u'D Caro',
-        u'D, Caro',
-        u'D Caro Estevez',
-        u'D, Caro Estevez',
-        u'David Caro',
-        u'David, Caro',
-        u'David Caro Estevez',
-        u'David, Caro Estevez',
+        u'd caro',
+        u'd, caro',
+        u'd caro estevez',
+        u'd, caro estevez',
+        u'david caro',
+        u'david, caro',
+        u'david caro estevez',
+        u'david, caro estevez',
     }
 
     result = generate_name_variations(name)
@@ -202,26 +202,26 @@ def test_generate_name_variations_with_three_lastnames_dashed_ignores_the_dash()
     name = u'Caro-Estévez Martínez, David'
     expected = {
         # Lastnames only
-        'Caro',
-        'Caro Estevez Martinez',
+        u'caro',
+        u'caro estevez martinez',
         # Lastnames first and then non lastnames
-        u'Caro Estevez Martinez D',
-        u'Caro Estevez Martinez David',
-        u'Caro Estevez Martinez, D',
-        u'Caro Estevez Martinez, David',
-        u'Caro D',
-        u'Caro, D',
-        u'Caro David',
-        u'Caro, David',
+        u'caro estevez martinez d',
+        u'caro estevez martinez david',
+        u'caro estevez martinez, d',
+        u'caro estevez martinez, david',
+        u'caro d',
+        u'caro, d',
+        u'caro david',
+        u'caro, david',
         # Non lastnames first and then lastnames
-        u'D Caro',
-        u'D, Caro',
-        u'D Caro Estevez Martinez',
-        u'D, Caro Estevez Martinez',
-        u'David Caro',
-        u'David, Caro',
-        u'David Caro Estevez Martinez',
-        u'David, Caro Estevez Martinez',
+        u'd caro',
+        u'd, caro',
+        u'd caro estevez martinez',
+        u'd, caro estevez martinez',
+        u'david caro',
+        u'david, caro',
+        u'david caro estevez martinez',
+        u'david, caro estevez martinez'
     }
 
     result = generate_name_variations(name)
@@ -233,13 +233,13 @@ def test_generate_name_variations_with_firstname_as_initial():
     name = 'Smith, J'
     expected = {
         # Lastname only
-        'Smith',
+        u'smith',
         # Lastnames first and then non lastnames
-        'Smith J',
-        'Smith, J',
+        u'smith j',
+        u'smith, j',
         # Non lastnames first and then lastnames
-        'J Smith',
-        'J, Smith',
+        u'j smith',
+        u'j, smith',
     }
 
     result = generate_name_variations(name)
@@ -250,18 +250,7 @@ def test_generate_name_variations_with_firstname_as_initial():
 def test_generate_name_variations_with_only_one_name():
     name = 'Jimmy'
     expected = {
-        'Jimmy',
-    }
-
-    result = generate_name_variations(name)
-
-    assert set(result) == expected
-
-
-def test_generate_name_variations_with_one_name_does_capitalization():
-    name = 'jimmy'
-    expected = {
-        'Jimmy',
+        u'jimmy',
     }
 
     result = generate_name_variations(name)
@@ -287,17 +276,17 @@ def test_generate_name_variations_capitalizes_first_letters():
     name = 'mele, salvatore'
     expected = {
         # Lastname only
-        'Mele',
+        u'mele',
         # Lastnames first and then non lastnames
-        'Mele S',
-        'Mele, S',
-        'Mele Salvatore',
-        'Mele, Salvatore',
+        u'mele s',
+        u'mele, s',
+        u'mele salvatore',
+        u'mele, salvatore',
         # Non lastnames first and then lastnames
-        'Salvatore Mele',
-        'Salvatore, Mele',
-        'S Mele',
-        'S, Mele',
+        u'salvatore mele',
+        u'salvatore, mele',
+        u's mele',
+        u's, mele',
     }
 
     result = generate_name_variations(name)
@@ -309,20 +298,41 @@ def test_generate_name_variations_works_with_two_consecutive_commas():
     name = 'Perelstein,, Maxim'
     expected = {
         # Lastname only
-        'Perelstein',
+        u'perelstein',
         # Lastnames first and then non lastnames
-        'Perelstein M',
-        'Perelstein, M',
-        'Perelstein Maxim',
-        'Perelstein, Maxim',
+        u'perelstein m',
+        u'perelstein, m',
+        u'perelstein maxim',
+        u'perelstein, maxim',
         # Non lastnames first and then lastnames
-        'Maxim Perelstein',
-        'Maxim, Perelstein',
-        'M Perelstein',
-        'M, Perelstein',
+        u'maxim perelstein',
+        u'maxim, perelstein',
+        u'm perelstein',
+        u'm, perelstein',
     }
 
     result = generate_name_variations(name)
+
+    assert set(result) == expected
+
+
+def test_generate_name_variations_with_short_lastname_and_initial():
+    # Should not output something like `o y` or any similar variation.
+    name = 'Oz, Y'
+    expected = {
+        # Lastname only
+        u'oz',
+        # Lastnames first and then non lastnames
+        u'oz y',
+        u'oz, y',
+        # Non lastnames first and then lastnames
+        u'y oz',
+        u'y, oz',
+    }
+
+    result = generate_name_variations(name)
+
+    assert len(result) == len(expected)
 
     assert set(result) == expected
 
