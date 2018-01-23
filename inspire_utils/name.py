@@ -290,9 +290,9 @@ def generate_name_variations(name):
     """
     def _update_name_variations_with_product(set_a, set_b):
         name_variations.update([
-            unidecode(
-                (names_variation[0] + separator + names_variation[1]).strip(''.join(_LASTNAME_NON_LASTNAME_SEPARATORS))
-            )
+            unidecode((names_variation[0] +
+                       separator +
+                       names_variation[1]).strip(''.join(_LASTNAME_NON_LASTNAME_SEPARATORS))).lower()
             for names_variation
             in product(set_a, set_b)
             for separator
@@ -303,7 +303,7 @@ def generate_name_variations(name):
 
     # Handle rare-case of single-name
     if len(parsed_name) == 1:
-        return [parsed_name.dumps()]
+        return [parsed_name.dumps().lower()]
 
     name_variations = set()
 
