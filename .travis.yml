@@ -44,7 +44,7 @@ install:
   - travis_retry pip install -e .[tests]
 
 script:
-  - py.test inspire_utils tests
+  - ./run-tests.sh
 
 after_success:
   - coveralls
