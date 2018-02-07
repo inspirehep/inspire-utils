@@ -24,8 +24,18 @@
 
 from __future__ import absolute_import, division, print_function
 
+import os
+import pytest
 
-def test_config(monkeypatch, tmpdir):
+
+@pytest.fixture
+def restore_cwd():
+    cwd = os.getcwd()
+    yield
+    os.chdir(cwd)
+
+
+def test_config(tmpdir):
     mock_config = tmpdir.join("inspirehep.cfg")
     mock_config.write("SERVER_NAME = '0.0.0.0'; OTHER_VARIABLE = 42")
 
@@ -40,4 +50,45 @@ def test_config(monkeypatch, tmpdir):
     assert config['SERVER_NAME'] == '0.0.0.0'
     assert config['OTHER_VARIABLE'] == 42
     assert config.get('SOME_OTHER_DEFAULT') == 1234
-    assert config.get('NO_SUCH_VARIABLE', 'empty') == 'empty'
+    assert 'NOT_IN_CONFIG' not in config
+
+
+def test_config_empty_file(tmpdir):
+    mock_config = tmpdir.join("inspirehep.cfg")
+    mock_config.write("")
+
+    from inspire_utils.config import Config
+
+    config = Config()
+    config.load_pyfile(mock_config.strpath)
+
+    assert 'NOT_IN_CONFIG' not in config
+
+
+def test_config_inexistent_file(tmpdir):
+    mock_config = tmpdir.join("inspirehep.cfg")
+    mock_config.write("FOR_DELETION = 10")
+    mock_config.remove()
+
+    from inspire_utils.config import Config
+
+    config = Config()
+
+    with pytest.raises(IOError):
+        config.load_pyfile(mock_config.strpath)
+
+
+def test_load_config(restore_cwd, tmpdir):
+    mock_inspirehep_var_cfg = tmpdir.mkdir('var').mkdir('inspirehep-instance').join("inspirehep.cfg")
+    mock_inspirehep_var_cfg.write("SERVER_NAME = '0.0.0.0'")
+
+    mock_inspirehep_cfg = tmpdir.join("inspirehep.cfg")
+    mock_inspirehep_cfg.write("SERVER_NAME = '127.0.0.1'; OTHER_VARIABLE = 42")
+
+    from inspire_utils.config import load_config
+
+    os.chdir(tmpdir.strpath)
+    config = load_config()
+
+    assert config['SERVER_NAME'] == '127.0.0.1'
+    assert config['OTHER_VARIABLE'] == 42

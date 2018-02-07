@@ -24,6 +24,14 @@
 
 from __future__ import absolute_import, division, print_function
 
+import os
+
+
+DEFAULT_CONFIG_PATHS = (
+    './var/inspirehep-instance/inspirehep.cfg',
+    './inspirehep.cfg',
+)
+
 
 class Config(dict):
     def __init__(self, defaults=None):
@@ -37,3 +45,12 @@ class Config(dict):
         """
         with open(path) as config_file:
             exec(compile(config_file.read(), path, 'exec'), self)
+
+
+def load_config(paths=DEFAULT_CONFIG_PATHS):
+    config = Config()
+    for path in paths:
+        if os.path.isfile(path):
+            config.load_pyfile(path)
+
+    return config
