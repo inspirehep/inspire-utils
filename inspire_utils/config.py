@@ -20,7 +20,11 @@
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
 
-"""ORCID configuration loader."""
+"""INSPIRE configuration loader.
+
+Inspired by the Flask configuration loader:
+https://github.com/pallets/flask/blob/40745bb338c45498ca19010175f341332ab2eefb/flask/config.py
+"""
 
 from __future__ import absolute_import, division, print_function
 
