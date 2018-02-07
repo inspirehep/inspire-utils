@@ -65,7 +65,7 @@ class Config(dict):
             try:
                 exec(compile(contents, path, 'exec'), self)
             except Exception as e:
-                raise MalformedConfig(path, e.message)
+                raise MalformedConfig(path, six.text_type(e))
 
 
 def load_config(paths=DEFAULT_CONFIG_PATHS):
