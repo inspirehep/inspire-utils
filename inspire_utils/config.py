@@ -25,12 +25,22 @@
 from __future__ import absolute_import, division, print_function
 
 import os
+import six
 
 
 DEFAULT_CONFIG_PATHS = (
     './var/inspirehep-instance/inspirehep.cfg',
     './inspirehep.cfg',
 )
+
+
+class MalformedConfig(Exception):
+    def __init__(self, file_path, cause):
+        message = six.text_type("Malformed config at {}: {}").format(
+            file_path,
+            cause
+        )
+        super(MalformedConfig, self).__init__(message)
 
 
 class Config(dict):
@@ -44,7 +54,11 @@ class Config(dict):
             path (string): path to the python file
         """
         with open(path) as config_file:
-            exec(compile(config_file.read(), path, 'exec'), self)
+            contents = config_file.read()
+            try:
+                exec(compile(contents, path, 'exec'), self)
+            except Exception as e:
+                raise MalformedConfig(path, e.message)
 
 
 def load_config(paths=DEFAULT_CONFIG_PATHS):

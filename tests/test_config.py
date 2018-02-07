@@ -27,6 +27,8 @@ from __future__ import absolute_import, division, print_function
 import os
 import pytest
 
+from inspire_utils.config import Config, load_config, MalformedConfig
+
 
 @pytest.fixture
 def restore_cwd():
@@ -38,8 +40,6 @@ def restore_cwd():
 def test_config(tmpdir):
     mock_config = tmpdir.join("inspirehep.cfg")
     mock_config.write("SERVER_NAME = '0.0.0.0'; OTHER_VARIABLE = 42")
-
-    from inspire_utils.config import Config
 
     config = Config(defaults={
         'SERVER_NAME': '127.0.0.1',
@@ -57,8 +57,6 @@ def test_config_empty_file(tmpdir):
     mock_config = tmpdir.join("inspirehep.cfg")
     mock_config.write("")
 
-    from inspire_utils.config import Config
-
     config = Config()
     config.load_pyfile(mock_config.strpath)
 
@@ -70,11 +68,19 @@ def test_config_inexistent_file(tmpdir):
     mock_config.write("FOR_DELETION = 10")
     mock_config.remove()
 
-    from inspire_utils.config import Config
-
     config = Config()
 
     with pytest.raises(IOError):
+        config.load_pyfile(mock_config.strpath)
+
+
+def test_config_invalid_file(tmpdir):
+    mock_config = tmpdir.join("inspirehep.cfg")
+    mock_config.write("this is py#0n G1|3|3er1sh")
+
+    config = Config()
+
+    with pytest.raises(MalformedConfig):
         config.load_pyfile(mock_config.strpath)
 
 
@@ -84,8 +90,6 @@ def test_load_config(restore_cwd, tmpdir):
 
     mock_inspirehep_cfg = tmpdir.join("inspirehep.cfg")
     mock_inspirehep_cfg.write("SERVER_NAME = '127.0.0.1'; OTHER_VARIABLE = 42")
-
-    from inspire_utils.config import load_config
 
     os.chdir(tmpdir.strpath)
     config = load_config()
