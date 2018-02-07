@@ -36,6 +36,13 @@ DEFAULT_CONFIG_PATHS = (
 
 class MalformedConfig(Exception):
     def __init__(self, file_path, cause):
+        """Exception to be raised if pased file is invalid.
+
+        Args:
+            file_path (string): path to bad config
+            cause (string): reason of failure, i.e. what exactly was the
+                problem while parsing
+        """
         message = six.text_type("Malformed config at {}: {}").format(
             file_path,
             cause
@@ -62,6 +69,14 @@ class Config(dict):
 
 
 def load_config(paths=DEFAULT_CONFIG_PATHS):
+    """Attempt to load config from paths, in order.
+
+    Args:
+        paths (List[string]): list of paths to python files
+
+    Return:
+        Config: loaded config
+    """
     config = Config()
     for path in paths:
         if os.path.isfile(path):
