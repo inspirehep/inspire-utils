@@ -37,6 +37,11 @@ from inspire_utils.urls import ensure_scheme, record_url_by_pattern
         ('inspirehep.net', None, 'http://inspirehep.net'),
         ('inspirehep.net', 'custom+http', 'custom+http://inspirehep.net'),
         (u'ïnśpirę.nẽt', 'https', u'https://ïnśpirę.nẽt'),
+        ('http://inspirehep.net/path', None, 'http://inspirehep.net/path'),
+        ('inspirehep.net/path', None, 'http://inspirehep.net/path'),
+        ('//inspirehep.net/path', None, 'http://inspirehep.net/path'),
+        ('/path/somewhere', None, 'http:///path/somewhere'),
+        ('http:///path/somewhere', None, 'http:///path/somewhere'),
     ],
     ids=[
         'scheme already present',
@@ -44,6 +49,11 @@ from inspire_utils.urls import ensure_scheme, record_url_by_pattern
         'add default scheme',
         'add custom scheme',
         'unicode',
+        'with scheme and with path',
+        'no scheme, with path',
+        'explicit netloc',
+        'with scheme, no netloc',
+        'without scheme, no netloc',
     ]
 )
 def test_ensure_scheme(url, scheme, expected):

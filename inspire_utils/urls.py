@@ -25,7 +25,7 @@
 from __future__ import absolute_import, division, print_function
 
 from six import text_type
-from six.moves.urllib.parse import urlsplit, urlunsplit
+from six.moves.urllib.parse import urlsplit, urlunsplit, SplitResult
 
 
 def ensure_scheme(url, default_scheme='http'):
@@ -38,11 +38,17 @@ def ensure_scheme(url, default_scheme='http'):
     Returns:
         string: URL with a scheme
     """
-    parsed = urlsplit(url)
-    if not parsed.scheme and not parsed.netloc:
-        url = '//%s' % url
+    parsed = urlsplit(url, scheme=default_scheme)
+    if not parsed.netloc:
+        parsed = SplitResult(
+            scheme=parsed.scheme,
+            netloc=parsed.path,
+            path='',
+            query=parsed.query,
+            fragment=parsed.fragment
+        )
 
-    return urlunsplit(urlsplit(url, scheme=default_scheme))
+    return urlunsplit(parsed)
 
 
 def record_url_by_pattern(pattern, recid):
