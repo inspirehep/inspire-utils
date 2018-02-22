@@ -24,27 +24,25 @@
 
 from __future__ import absolute_import, division, print_function
 
-import re
-
 from six import text_type
+from six.moves.urllib.parse import urlsplit, urlunsplit
 
 
-def ensure_scheme(url, default_schema='http'):
+def ensure_scheme(url, default_scheme='http'):
     """Adds a scheme to a url if not present.
 
-    Scheme is defined in section 3.1 of http://www.ietf.org/rfc/rfc2396.txt
-
     Args:
-        url (string): a url
-        default_schema (string): a scheme to be added
+        url (string): a url, assumed to start with netloc
+        default_scheme (string): a scheme to be added
 
     Returns:
         string: URL with a scheme
     """
-    if not re.match(r'^[a-zA-Z][a-zA-Z+\-.0-9]*://', url):
-        url = '%s://%s' % (default_schema, url)
+    parsed = urlsplit(url)
+    if not parsed.scheme and not parsed.netloc:
+        url = '//%s' % url
 
-    return url
+    return urlunsplit(urlsplit(url, scheme=default_scheme))
 
 
 def record_url_by_pattern(pattern, recid):

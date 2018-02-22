@@ -20,7 +20,7 @@
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
 
-"""Description"""
+"""Tests for URL utils."""
 
 from __future__ import absolute_import, division, print_function
 
@@ -48,7 +48,7 @@ from inspire_utils.urls import ensure_scheme, record_url_by_pattern
 )
 def test_ensure_scheme(url, scheme, expected):
     if scheme:
-        assert ensure_scheme(url, default_schema=scheme) == expected
+        assert ensure_scheme(url, default_scheme=scheme) == expected
     else:
         assert ensure_scheme(url) == expected
 
