@@ -62,5 +62,4 @@ def record_url_by_pattern(pattern, recid):
     Returns:
         string: built record URL
     """
-    recid = text_type(recid)
     return text_type(ensure_scheme(pattern)).format(recid=recid)
