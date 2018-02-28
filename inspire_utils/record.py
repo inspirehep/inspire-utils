@@ -80,3 +80,25 @@ def get_value(record, key, default=None):
         except KeyError:
             return default
     return value
+
+
+def get_values_for_schema(elements, schema):
+    """Return all values from elements having a given schema.
+
+    Args:
+        elements(Iterable[dict]): an iterable of elements, which are all dicts
+            having at least the ``schema`` and ``value`` keys.
+        schema(str): the schema that the values need to follow.
+
+    Returns:
+        list: all values conforming to the given schema.
+
+    Example:
+        >>> elements = [
+        ...     {'schema': 'TWITTER', 'value': 's_w_hawking'},
+        ...     {'schema': 'WIKIPEDIA', 'value': 'Stephen_Hawking'}
+        ... ]
+        >>> get_values_for_schema(elements, 'TWITTER')
+        ['s_w_hawking']
+    """
+    return [element['value'] for element in elements if element['schema'] == schema]

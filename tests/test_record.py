@@ -22,7 +22,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-from inspire_utils.record import get_value
+from inspire_utils.record import get_value, get_values_for_schema
 
 
 def test_get_value_returns_all_values():
@@ -71,3 +71,12 @@ def test_get_value_allows_slices_in_paths():
     result = get_value(record, 'titles.title[:]')
 
     assert expected == result
+
+
+def test_get_values_for_schema():
+    elements = [
+        {'schema': 'good', 'value': 'first'},
+        {'schema': 'bad', 'value': 'second'},
+        {'schema': 'good', 'value': 'third'},
+    ]
+    assert get_values_for_schema(elements, 'good') == ['first', 'third']
