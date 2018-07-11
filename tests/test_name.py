@@ -172,6 +172,7 @@ def test_generate_name_variations_with_two_lastnames():
     expected = {
         # Lastnames only
         u'caro',
+        u'estevez',
         u'caro estevez',
         # Lastnames first and then non lastnames
         u'caro estevez d',
@@ -182,13 +183,21 @@ def test_generate_name_variations_with_two_lastnames():
         u'caro, d',
         u'caro david',
         u'caro, david',
+        u'estevez d',
+        u'estevez david',
+        u'estevez, d',
+        u'estevez, david',
         # Non lastnames first and then lastnames
         u'd caro',
         u'd, caro',
+        u'd estevez',
+        u'd, estevez',
         u'd caro estevez',
         u'd, caro estevez',
         u'david caro',
         u'david, caro',
+        u'david estevez',
+        u'david, estevez',
         u'david caro estevez',
         u'david, caro estevez',
     }
@@ -203,6 +212,8 @@ def test_generate_name_variations_with_three_lastnames_dashed_ignores_the_dash()
     expected = {
         # Lastnames only
         u'caro',
+        u'estevez',
+        u'martinez',
         u'caro estevez martinez',
         # Lastnames first and then non lastnames
         u'caro estevez martinez d',
@@ -213,13 +224,29 @@ def test_generate_name_variations_with_three_lastnames_dashed_ignores_the_dash()
         u'caro, d',
         u'caro david',
         u'caro, david',
+        u'estevez d',
+        u'estevez, d',
+        u'estevez david',
+        u'estevez, david',
+        u'martinez d',
+        u'martinez, d',
+        u'martinez david',
+        u'martinez, david',
         # Non lastnames first and then lastnames
         u'd caro',
         u'd, caro',
+        u'd estevez',
+        u'd, estevez',
+        u'd martinez',
+        u'd, martinez',
         u'd caro estevez martinez',
         u'd, caro estevez martinez',
         u'david caro',
         u'david, caro',
+        u'david estevez',
+        u'david, estevez',
+        u'david martinez',
+        u'david, martinez',
         u'david caro estevez martinez',
         u'david, caro estevez martinez'
     }
