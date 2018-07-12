@@ -267,7 +267,7 @@ def _generate_lastnames_variations(lastnames):
 
     split_lastnames = [split_lastname for lastname in lastnames for split_lastname in lastname.split('-')]
 
-    lastnames_variations = [split_lastnames[0]]  # Always have the first lastname as a variation.
+    lastnames_variations = split_lastnames
     if len(split_lastnames) > 1:
         # Generate lastnames concatenation if there are more than one lastname after split.
         lastnames_variations.append(u' '.join([lastname for lastname in split_lastnames]))
