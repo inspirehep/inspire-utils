@@ -101,4 +101,4 @@ def get_values_for_schema(elements, schema):
         >>> get_values_for_schema(elements, 'TWITTER')
         ['s_w_hawking']
     """
-    return [element['value'] for element in elements if element['schema'] == schema]
+    return [element['value'] for element in elements if element.get('schema') == schema]

@@ -80,3 +80,13 @@ def test_get_values_for_schema():
         {'schema': 'good', 'value': 'third'},
     ]
     assert get_values_for_schema(elements, 'good') == ['first', 'third']
+
+
+def test_get_values_for_schema_with_missing_key():
+    elements = [
+        {'schema': 'good', 'value': 'first'},
+        {'schema': 'bad', 'value': 'second'},
+        {'schema': 'good', 'value': 'third'},
+        {'value': 'third'},
+    ]
+    assert get_values_for_schema(elements, 'good') == ['first', 'third']
