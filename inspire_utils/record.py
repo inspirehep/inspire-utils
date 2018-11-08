@@ -22,10 +22,12 @@
 
 from __future__ import absolute_import, division, print_function
 
+from six import string_types
+
 import re
 
 
-SPLIT_KEY_PATTERN = re.compile('\.|\[')
+SPLIT_KEY_PATTERN = re.compile(r'\.|\[')
 
 
 def get_value(record, key, default=None):
@@ -43,7 +45,9 @@ def get_value(record, key, default=None):
             1000000 loops, best of 3: 598 ns per loop
     """
     def getitem(k, v, default):
-        if isinstance(v, dict):
+        if isinstance(v, string_types):
+            raise KeyError
+        elif isinstance(v, dict):
             return v[k]
         elif ']' in k:
             k = k[:-1].replace('n', '-1')
