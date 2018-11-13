@@ -22,7 +22,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-from itertools import product
+from itertools import product, chain
 
 from nameparser import HumanName
 from nameparser.config import Constants
@@ -171,19 +171,17 @@ class ParsedName(object):
             return all(letters in valid_roman_numerals
                        for letters in suffix.upper())
 
-        # Create first and middle
-        first_name = _ensure_dotted_initials(self.first)
-        middle_name = _ensure_dotted_initials(self.middle)
+        first_and_middle_names = iter(_ensure_dotted_initials(name) for name in chain(self.first_list, self.middle_list))
+        prev = next(first_and_middle_names)
+        names_with_spaces = [prev]
 
-        if _is_initial(first_name) and _is_initial(middle_name):
-            normalized_names = u'{first_name}{middle_name}'
-        else:
-            normalized_names = u'{first_name} {middle_name}'
+        for name in first_and_middle_names:
+            if not _is_initial(name) or not _is_initial(prev):
+                names_with_spaces.append(' ')
+            prev = name
+            names_with_spaces.append(prev)
 
-        normalized_names = normalized_names.format(
-            first_name=first_name,
-            middle_name=middle_name,
-        )
+        normalized_names = u''.join(names_with_spaces)
 
         if _is_roman_numeral(self.suffix):
             suffix = self.suffix.upper()
