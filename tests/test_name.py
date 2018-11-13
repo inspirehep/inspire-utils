@@ -371,3 +371,19 @@ def test_parsed_name_from_parts():
     result = parsed_name.dumps()
 
     assert result == expected
+
+
+def test_normalize_name_handles_multiple_middle_names():
+    expected = 'Almeida, C.A.S.'
+
+    assert expected == normalize_name('Almeida, C. A. S.')
+    assert expected == normalize_name('Almeida, C. A.S.')
+    assert expected == normalize_name('Almeida, C.A. S.')
+    assert expected == normalize_name('Almeida, C.A.S.')
+
+
+def test_normalize_name_handles_multiple_middle_names_with_and_without_initials():
+    expected = 'Smith, J.A. Peter J.'
+
+    assert expected == normalize_name('Smith, J. A. Peter J.')
+    assert expected == normalize_name('Smith, J.A. Peter J.')
