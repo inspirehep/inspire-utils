@@ -22,7 +22,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-from itertools import product, chain
+from itertools import product
 
 from nameparser import HumanName
 from nameparser.config import Constants
@@ -94,24 +94,21 @@ class ParsedName(object):
         return str(self._parsed_name)
 
     @property
-    def title(self):
-        return self._parsed_name.title
+    def first_initials(self):
+        return u' '.join(self.first_initials_list)
 
     @property
     def first(self):
-        return self._parsed_name.first
+        return u'{} {}'.format(self._parsed_name.first, self._parsed_name.middle)
+
+    @property
+    def first_initials_list(self):
+        names = self.first_list
+        return [(name[0] + u'.') for name in names]
 
     @property
     def first_list(self):
-        return self._parsed_name.first_list
-
-    @property
-    def middle(self):
-        return self._parsed_name.middle
-
-    @property
-    def middle_list(self):
-        return self._parsed_name.middle_list
+        return self._parsed_name.first_list + self._parsed_name.middle_list
 
     @property
     def last(self):
@@ -171,7 +168,7 @@ class ParsedName(object):
             return all(letters in valid_roman_numerals
                        for letters in suffix.upper())
 
-        first_and_middle_names = iter(_ensure_dotted_initials(name) for name in chain(self.first_list, self.middle_list))
+        first_and_middle_names = iter(_ensure_dotted_initials(name) for name in self.first_list)
         prev = next(first_and_middle_names)
         names_with_spaces = [prev]
 
@@ -196,6 +193,32 @@ class ParsedName(object):
         final_name = final_name.replace(u'’', '\'')
 
         return final_name
+
+    def pprint(self, initials_only=False):
+        """Pretty print the name.
+
+        Args:
+            initials_only (bool): ``True`` if we want the first names to be displayed with
+            only the initial followed by a dot. ``False`` otherwise.
+
+        Examples:
+            >>> ParsedName('Lieber, Stanley Martin').pprint()
+            u'Stanley Martin Lieber'
+            >>> ParsedName('Lieber, Stanley Martin').pprint(initials_only=True)
+            u'S. M. Lieber'
+            >>> ParsedName('Downey, Robert Jr.').pprint(initials_only=True)
+            u'R. Downey Jr.'
+
+        """
+        last_name = self.last
+        suffixes = self.suffix
+
+        if initials_only:
+            first_names = self.first_initials_list
+        else:
+            first_names = self.first_list
+
+        return u'{} {} {}'.format(u' '.join(first_names), last_name, suffixes).strip()
 
     @classmethod
     def from_parts(
@@ -310,7 +333,7 @@ def generate_name_variations(name):
     non_lastnames = [
         non_lastname
         for non_lastname
-        in parsed_name.first_list + parsed_name.middle_list + parsed_name.suffix_list
+        in parsed_name.first_list + parsed_name.suffix_list
         if non_lastname
     ]
 
@@ -332,3 +355,24 @@ def generate_name_variations(name):
     _update_name_variations_with_product(non_lastnames_variations, lastnames_variations)
 
     return list(name_variations)
+
+
+def format_name(name, initials_only=False):
+    """Format a schema-compliant name string in a human-friendy format.
+
+    This is a convenience wrapper around :ref:`ParsedName`, which should be
+    used instead if more features are needed.
+
+    Args:
+        name (str): The name to format, in pretty much any format.
+        initials_only (bool): ``True`` if we want the first names to be displayed with only the initial followed by a dot. ``False`` otherwise.
+
+    Examples:
+    >>> format_name('Lieber, Stanley Martin')
+    u'Stanley Martin Lieber'
+    >>> format_name('Lieber, Stanley Martin', initials_only=True)
+    u'S. M. Lieber'
+    >>> format_name('Downey, Robert Jr.', initials_only=True)
+    u'R. Downey Jr.'
+    """
+    return ParsedName.loads(name).pprint(initials_only)
