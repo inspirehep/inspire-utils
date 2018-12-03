@@ -27,6 +27,7 @@ from mock import patch
 
 from inspire_utils.name import (
     normalize_name,
+    format_name,
     generate_name_variations,
     ParsedName,
 )
@@ -387,3 +388,40 @@ def test_normalize_name_handles_multiple_middle_names_with_and_without_initials(
 
     assert expected == normalize_name('Smith, J. A. Peter J.')
     assert expected == normalize_name('Smith, J.A. Peter J.')
+
+
+def test_format_author_name():
+    expected = 'Stanley Martin Lieber'
+
+    assert expected == format_name('Lieber, Stanley Martin')
+
+    expected = 'Robert Downey Jr.'
+
+    assert expected == format_name('Downey, Robert Jr.')
+
+
+def test_format_author_name_with_initials():
+    expected = 'S. M. Lieber'
+
+    assert expected == format_name('Lieber, Stanley Martin', initials_only=True)
+
+
+def test_parsed_name_initials():
+    parsed_name = ParsedName("Holland, Tom Stanley")
+    expected = "T. S."
+
+    assert expected == parsed_name.first_initials
+
+    expected = [
+        "T.",
+        "S."
+    ]
+
+    assert expected == parsed_name.first_initials_list
+
+
+def test_unicode_characters_in_format_name():
+    assert format_name('Cañas, Ramón') == u'Ramón Cañas'
+    assert format_name('Süß, Jörg') == u'Jörg Süß'
+    assert format_name('Møller, Kyösti') == u'Kyösti Møller'
+    assert format_name('Varejão, François') == u'François Varejão'
