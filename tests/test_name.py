@@ -395,7 +395,7 @@ def test_format_author_name():
 
     assert expected == format_name('Lieber, Stanley Martin')
 
-    expected = 'Robert Downey Jr.'
+    expected = 'Robert Downey, Jr.'
 
     assert expected == format_name('Downey, Robert Jr.')
 

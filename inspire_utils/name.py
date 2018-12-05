@@ -99,7 +99,7 @@ class ParsedName(object):
 
     @property
     def first(self):
-        return u'{} {}'.format(self._parsed_name.first, self._parsed_name.middle)
+        return u'{} {}'.format(self._parsed_name.first, self._parsed_name.middle).strip()
 
     @property
     def first_initials_list(self):
@@ -211,14 +211,14 @@ class ParsedName(object):
 
         """
         last_name = self.last
-        suffixes = self.suffix
+        suffixes = ', ' + self.suffix if self.suffix else ''
 
         if initials_only:
-            first_names = self.first_initials_list
+            first_names = self.first_initials
         else:
-            first_names = self.first_list
+            first_names = self.first
 
-        return u'{} {} {}'.format(u' '.join(first_names), last_name, suffixes).strip()
+        return u'{} {}{}'.format(first_names, last_name, suffixes)
 
     @classmethod
     def from_parts(
