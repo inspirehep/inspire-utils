@@ -425,3 +425,9 @@ def test_unicode_characters_in_format_name():
     assert format_name('Süß, Jörg') == u'Jörg Süß'
     assert format_name('Møller, Kyösti') == u'Kyösti Møller'
     assert format_name('Varejão, François') == u'François Varejão'
+
+
+def test_first_names_are_never_printed_with_initials_only_if_no_last_name():
+    expected = u'Jimmy'
+
+    assert expected == format_name('Jimmy', initials_only=True)

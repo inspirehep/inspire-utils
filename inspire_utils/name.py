@@ -213,12 +213,12 @@ class ParsedName(object):
         last_name = self.last
         suffixes = ', ' + self.suffix if self.suffix else ''
 
-        if initials_only:
+        if initials_only and last_name != u'':
             first_names = self.first_initials
         else:
             first_names = self.first
 
-        return u'{} {}{}'.format(first_names, last_name, suffixes)
+        return u'{} {}{}'.format(first_names, last_name, suffixes).strip()
 
     @classmethod
     def from_parts(
