@@ -169,7 +169,12 @@ class ParsedName(object):
                        for letters in suffix.upper())
 
         first_and_middle_names = iter(_ensure_dotted_initials(name) for name in self.first_list)
-        prev = next(first_and_middle_names)
+        try:
+            prev = next(first_and_middle_names)
+        except StopIteration:
+            LOGGER.warning(u"Cannot process %s properly",
+                           self._parsed_name.original)
+            prev = self._parsed_name.original
         names_with_spaces = [prev]
 
         for name in first_and_middle_names:

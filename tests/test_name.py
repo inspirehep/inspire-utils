@@ -297,7 +297,8 @@ def test_generate_name_variations_with_many_names_defers_generating_variations()
         assert result == [many_names_as_one_author]
 
         args, _ = mock_error.call_args
-        assert args[0].startswith('Skipping name variations generation - too many names')
+        assert args[0].startswith(
+            'Skipping name variations generation - too many names')
 
 
 def test_generate_name_variations_capitalizes_first_letters():
@@ -418,6 +419,16 @@ def test_parsed_name_initials():
     ]
 
     assert expected == parsed_name.first_initials_list
+
+
+def test_parsed_wrong_names_and_not_fail():
+    names = [
+        (u'Proffesor.M.', u'Proffesor.M.'),
+        (u'ˇ Sirˇ', u'Sirˇ, ˇ.'),
+    ]
+
+    for name, expected in names:
+        assert ParsedName(name).dumps() == expected
 
 
 def test_unicode_characters_in_format_name():
