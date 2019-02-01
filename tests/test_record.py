@@ -83,6 +83,17 @@ def test_get_value_returns_none_if_inner_key_does_not_exist_on_string():
     assert result is None
 
 
+def test_get_value_works_on_lists():
+    record = [
+        {'foo': 'bar'},
+    ]
+
+    expected = ['bar']
+    result = get_value(record, 'foo')
+
+    assert expected == result
+
+
 def test_get_values_for_schema():
     elements = [
         {'schema': 'good', 'value': 'first'},
