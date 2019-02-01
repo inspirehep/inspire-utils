@@ -70,6 +70,11 @@ def get_value(record, key, default=None):
                     continue
             return tmp
 
+    # Wrap a top-level list in a dict
+    if isinstance(record, list):
+        record = {'record': record}
+        key = '.'.join(['record', key])
+
     # Check if we are using python regular keys
     try:
         return record[key]
