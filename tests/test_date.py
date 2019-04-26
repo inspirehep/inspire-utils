@@ -157,3 +157,11 @@ def test_earliest_date():
     result = earliest_date(['1686-06', '1686-06-30'])
 
     assert expected == result
+
+
+def test_earliest_date_missing_month_and_day_with_full_date():
+    assert earliest_date(["2000"], full_date=True) == "2000-01-01"
+
+
+def test_earliest_date_missing_month_and_day_without_full_date():
+    assert earliest_date(["2000"]) == "2000"

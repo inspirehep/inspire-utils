@@ -241,10 +241,21 @@ def format_date(date):
     return PartialDate.loads(date).pprint()
 
 
-def earliest_date(dates):
+def earliest_date(dates, full_date=False):
     """Return the earliest among the schema-compliant dates.
 
     This is a convenience wrapper around :ref:`PartialDate`, which should be
     used instead if more features are needed.
+
+    Args:
+        dates(list): List of dates from which oldest/earliest one will be returned
+        full_date(bool): Adds month and/or day as "01" if they are missing
+    Returns:
+        str: Earliest date from provided list
     """
-    return min(PartialDate.loads(date) for date in dates).dumps()
+    min_date = min(PartialDate.loads(date) for date in dates)
+    if not min_date.month and full_date:
+        min_date.month = 1
+    if not min_date.day and full_date:
+        min_date.day = 1
+    return min_date.dumps()
