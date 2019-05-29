@@ -189,7 +189,7 @@ class PartialDate(object):
 
         """
         if not self.month:
-            return dates.format_date(datetime.date(self.year, 1, 1), 'YYYY', locale='en')
+            return dates.format_date(datetime.date(self.year, 1, 1), 'yyyy', locale='en')
         if not self.day:
             return dates.format_date(datetime.date(self.year, self.month, 1), 'MMM, YYYY', locale='en')
         return dates.format_date(datetime.date(self.year, self.month, self.day), 'MMM d, YYYY', locale='en')

@@ -165,3 +165,10 @@ def test_earliest_date_missing_month_and_day_with_full_date():
 
 def test_earliest_date_missing_month_and_day_without_full_date():
     assert earliest_date(["2000"]) == "2000"
+
+
+def test_format_date_only_year_regression_iso_week_misuse():
+    expected = u'1993'
+    result = format_date('1993')
+
+    assert expected == result
