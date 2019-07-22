@@ -346,7 +346,7 @@ def generate_name_variations(name):
     # requiring a lot of memory (due to combinatorial expansion of all non lastnames).
     # The policy is to use the input as a name variation, since this data will have to be curated.
     if len(non_lastnames) > _NAMES_MAX_NUMBER_THRESHOLD or len(parsed_name.last_list) > _NAMES_MAX_NUMBER_THRESHOLD:
-        LOGGER.error('Skipping name variations generation - too many names in: "%s"', name)
+        LOGGER.warning('Skipping name variations generation - too many names in: "%s"', name)
         return [name]
 
     non_lastnames_variations = \

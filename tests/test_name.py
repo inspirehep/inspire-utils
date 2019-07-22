@@ -289,14 +289,14 @@ def test_generate_name_variations_with_only_one_name():
 def test_generate_name_variations_with_many_names_defers_generating_variations():
     import logging
     logger = logging.getLogger('inspire_utils.name')
-    with patch.object(logger, 'error') as mock_error:
+    with patch.object(logger, 'warning') as mock_warning:
         many_names_as_one_author = 'Tseng, Farrukh Azfar Todd Huffman Thilo Pauly'
 
         result = generate_name_variations(many_names_as_one_author)
 
         assert result == [many_names_as_one_author]
 
-        args, _ = mock_error.call_args
+        args, _ = mock_warning.call_args
         assert args[0].startswith(
             'Skipping name variations generation - too many names')
 
