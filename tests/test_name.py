@@ -407,6 +407,12 @@ def test_format_author_name_with_initials():
     assert expected == format_name('Lieber, Stanley Martin', initials_only=True)
 
 
+def test_format_author_name_with_initials_with_all_caps_name():
+    expected = 'T. S. Holland'
+
+    assert expected == format_name('HOLLAND, TOM STANLEY', initials_only=True)
+
+
 def test_parsed_name_initials():
     parsed_name = ParsedName("Holland, Tom Stanley")
     expected = "T. S."
