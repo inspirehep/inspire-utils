@@ -104,7 +104,7 @@ class ParsedName(object):
     @property
     def first_initials_list(self):
         names = self.first_list
-        return [(name[0] + u'.') for name in names]
+        return [(name[0] + u'.') for name in names if name]
 
     @property
     def first_list(self):
