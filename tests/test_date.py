@@ -29,6 +29,7 @@ from inspire_utils.date import (
     earliest_date,
     format_date,
     normalize_date,
+    fill_missing_date_parts
 )
 
 
@@ -85,6 +86,16 @@ def test_partial_date_pprints_when_cast_to_str():
     expected = 'Jun, 1686'
 
     assert expected == str(PartialDate(1686, 6))
+
+
+def test_partial_date_pprints_correct_date():
+    expected_full = 'Jan 1, 1890'
+    expected_no_day = 'Jan, 1890'
+    expected_no_month = '1890'
+
+    assert expected_full == PartialDate(1890, 1, 1).pprint()
+    assert expected_no_day == PartialDate(1890, 1).pprint()
+    assert expected_no_month == PartialDate(1890).pprint()
 
 
 def test_format_date():
@@ -159,16 +170,22 @@ def test_earliest_date():
     assert expected == result
 
 
-def test_earliest_date_missing_month_and_day_with_full_date():
-    assert earliest_date(["2000"], full_date=True) == "2000-01-01"
-
-
-def test_earliest_date_missing_month_and_day_without_full_date():
-    assert earliest_date(["2000"]) == "2000"
-
-
 def test_format_date_only_year_regression_iso_week_misuse():
     expected = u'1993'
     result = format_date('1993')
+
+    assert expected == result
+
+
+def test_fill_missing_date_parts_adds_day():
+    expected = "2019-06-01"
+    result = fill_missing_date_parts("2019-06")
+
+    assert expected == result
+
+
+def test_fill_missing_date_parts_adds_month_and_day():
+    expected = "2019-01-01"
+    result = fill_missing_date_parts("2019")
 
     assert expected == result
