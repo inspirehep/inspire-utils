@@ -191,8 +191,8 @@ class PartialDate(object):
         if not self.month:
             return dates.format_date(datetime.date(self.year, 1, 1), 'yyyy', locale='en')
         if not self.day:
-            return dates.format_date(datetime.date(self.year, self.month, 1), 'MMM, YYYY', locale='en')
-        return dates.format_date(datetime.date(self.year, self.month, self.day), 'MMM d, YYYY', locale='en')
+            return dates.format_date(datetime.date(self.year, self.month, 1), 'MMM, yyyy', locale='en')
+        return dates.format_date(datetime.date(self.year, self.month, self.day), 'MMM d, yyyy', locale='en')
 
 
 def normalize_date(date, **kwargs):
@@ -241,7 +241,7 @@ def format_date(date):
     return PartialDate.loads(date).pprint()
 
 
-def earliest_date(dates, full_date=False):
+def earliest_date(dates):
     """Return the earliest among the schema-compliant dates.
 
     This is a convenience wrapper around :ref:`PartialDate`, which should be
@@ -249,13 +249,22 @@ def earliest_date(dates, full_date=False):
 
     Args:
         dates(list): List of dates from which oldest/earliest one will be returned
-        full_date(bool): Adds month and/or day as "01" if they are missing
     Returns:
         str: Earliest date from provided list
     """
     min_date = min(PartialDate.loads(date) for date in dates)
-    if not min_date.month and full_date:
-        min_date.month = 1
-    if not min_date.day and full_date:
-        min_date.day = 1
     return min_date.dumps()
+
+
+def fill_missing_date_parts(date):
+    """Sets missing day and/or month to 1. Useful to avoid errors when saving to DB."""
+
+    if date is None:
+        return
+
+    date_obj = PartialDate.loads(date)
+    if not date_obj.month:
+        date_obj.month = 1
+    if not date_obj.day:
+        date_obj.day = 1
+    return date_obj.dumps()
