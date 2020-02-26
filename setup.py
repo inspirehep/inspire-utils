@@ -38,7 +38,7 @@ setup_requires = [
 install_requires = [
     'Unidecode~=1.0,>=1.0.22',
     'babel~=2.0,>=2.5.1',
-    'lxml~=4.0,>=4.0.0',
+    'lxml~=4.0,>=4.4.0',
     'nameparser~=0.0,>=0.5.3',
     'python-dateutil~=2.0,>=2.6.1',
     'six~=1.0,>=1.10.0',
@@ -97,6 +97,8 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
