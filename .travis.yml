@@ -32,6 +32,7 @@ cache: pip
 python:
   - 2.7
   - 3.6
+  - 3.8
 
 matrix:
   fast_finish: true
