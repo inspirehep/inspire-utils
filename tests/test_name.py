@@ -448,3 +448,7 @@ def test_first_names_are_never_printed_with_initials_only_if_no_last_name():
     expected = u'Jimmy'
 
     assert expected == format_name('Jimmy', initials_only=True)
+
+
+def test_first_name__with_dash_is_initialized_correctly():
+    assert u'Z. Y. Yin' == format_name('Zhao-Yu Yin', initials_only=True)
