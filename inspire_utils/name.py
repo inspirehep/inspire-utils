@@ -81,6 +81,8 @@ class ParsedName(object):
             self._parsed_name = HumanName(name, constants=constants)
             self._parsed_name.capitalize()
 
+        self._parsed_name.first = self._parsed_name.first.replace("-", " ")
+
     def __iter__(self):
         return self._parsed_name
 
