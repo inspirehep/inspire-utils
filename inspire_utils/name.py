@@ -22,6 +22,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+import itertools
 from itertools import product
 
 from nameparser import HumanName
@@ -81,8 +82,6 @@ class ParsedName(object):
             self._parsed_name = HumanName(name, constants=constants)
             self._parsed_name.capitalize()
 
-        self._parsed_name.first = self._parsed_name.first.replace("-", " ")
-
     def __iter__(self):
         return self._parsed_name
 
@@ -105,8 +104,8 @@ class ParsedName(object):
 
     @property
     def first_initials_list(self):
-        names = self.first_list
-        return [(name[0] + u'.') for name in names if name]
+        names_no_dash_list = itertools.chain.from_iterable(name.split("-") for name in self.first_list)
+        return [(name[0] + u'.') for name in names_no_dash_list if name]
 
     @property
     def first_list(self):

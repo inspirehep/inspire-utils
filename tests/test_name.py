@@ -450,5 +450,12 @@ def test_first_names_are_never_printed_with_initials_only_if_no_last_name():
     assert expected == format_name('Jimmy', initials_only=True)
 
 
-def test_first_name__with_dash_is_initialized_correctly():
+def test_first_name_with_dash_is_initialized_correctly():
     assert u'Z. Y. Yin' == format_name('Zhao-Yu Yin', initials_only=True)
+
+
+def test_first_name_with_dash_is_printed_with_dash_and_initialized_correctly():
+    expected = "Huang-Wei Pan"
+    parsed_name = ParsedName.loads(expected)
+    result = " ".join(parsed_name.first_list + parsed_name.last_list)
+    assert expected == result
