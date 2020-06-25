@@ -105,7 +105,8 @@ class ParsedName(object):
     @property
     def first_initials_list(self):
         names_no_dash_list = itertools.chain.from_iterable(name.split("-") for name in self.first_list)
-        return [(name[0] + u'.') for name in names_no_dash_list if name]
+        names_split_on_dot = itertools.chain.from_iterable(name.split('.') for name in names_no_dash_list)
+        return [(name[0] + u'.') for name in names_split_on_dot if name]
 
     @property
     def first_list(self):
