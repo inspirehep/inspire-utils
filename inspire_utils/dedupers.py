@@ -25,7 +25,7 @@ from __future__ import absolute_import, division, print_function
 import six
 
 
-def dedupe_list(l):
+def dedupe_list(list_with_duplicates):
     """Remove duplicates from a list preserving the order.
 
     We might be tempted to use the list(set(l)) idiom, but it doesn't preserve
@@ -33,7 +33,7 @@ def dedupe_list(l):
     """
     result = []
 
-    for el in l:
+    for el in list_with_duplicates:
         if el not in result:
             result.append(el)
 

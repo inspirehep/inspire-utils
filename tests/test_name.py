@@ -459,3 +459,7 @@ def test_first_name_with_dash_is_printed_with_dash_and_initialized_correctly():
     parsed_name = ParsedName.loads(expected)
     result = " ".join(parsed_name.first_list + parsed_name.last_list)
     assert expected == result
+
+
+def test_first_name_initials_without_whitespace_is_initialized_correctly():
+    assert u'M. A. M. G. Garcia' == format_name('Miguel A-M.G. Garcia', initials_only=True)
