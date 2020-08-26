@@ -463,3 +463,7 @@ def test_first_name_with_dash_is_printed_with_dash_and_initialized_correctly():
 
 def test_first_name_initials_without_whitespace_is_initialized_correctly():
     assert u'M. A. M. G. Garcia' == format_name('Miguel A-M.G. Garcia', initials_only=True)
+
+
+def test_last_name_recognized_correctly_regression_test():
+    assert u"De Sousa Vieira" == ParsedName.loads('De Sousa Vieira, M.C.').last

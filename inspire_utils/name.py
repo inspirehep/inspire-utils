@@ -46,12 +46,14 @@ def _prepare_nameparser_constants():
     Configuration is the same for all names (i.e. instances).
     """
     constants = Constants()
-    roman_numeral_suffixes = [u'v', u'vi', u'vii', u'viii', u'ix', u'x',
+    roman_numeral_suffixes = [u'vi', u'vii', u'viii', u'ix', u'x', u'xi',
                               u'xii', u'xiii', u'xiv', u'xv']
     titles = [u'Dr', u'Prof', u'Professor', u'Sir', u'Editor', u'Ed', u'Mr',
               u'Mrs', u'Ms', u'Chair', u'Co-Chair', u'Chairs', u'co-Chairs']
     constants.titles.remove(*constants.titles).add(*titles)
     constants.suffix_not_acronyms.add(*roman_numeral_suffixes)
+    constants.suffixes_prefixes_titles.remove(*constants.suffixes_prefixes_titles)
+    constants.suffix_acronyms.remove(*constants.suffix_acronyms)
     return constants
 
 
