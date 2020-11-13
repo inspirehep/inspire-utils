@@ -23,7 +23,8 @@
 from __future__ import absolute_import, division, print_function
 
 import itertools
-from itertools import product
+from itertools import product, chain
+import re
 
 from nameparser import HumanName
 from nameparser.config import Constants
@@ -31,6 +32,7 @@ import six
 from unidecode import unidecode
 
 from .logging import getStackTraceLogger
+from .query import wrap_queries_in_bool_clauses_if_more_than_one
 
 LOGGER = getStackTraceLogger(__name__)
 
@@ -82,7 +84,13 @@ class ParsedName(object):
             self._parsed_name = name
         else:
             self._parsed_name = HumanName(name, constants=constants)
+            self._parsed_name = HumanName(name, constants=constants)
             self._parsed_name.capitalize()
+
+        if ',' not in name and ('.' not in self.first_list[-1] or len(self.first_list[-1]) == 1):
+            self.maybe_only_last_name = True
+        else:
+            self.maybe_only_last_name = False
 
     def __iter__(self):
         return self._parsed_name
@@ -112,7 +120,7 @@ class ParsedName(object):
 
     @property
     def first_list(self):
-        return self._parsed_name.first_list + self._parsed_name.middle_list
+        return list(filter(None, self._parsed_name.first_list + self._parsed_name.middle_list))
 
     @property
     def last(self):
@@ -245,6 +253,104 @@ class ParsedName(object):
         name.suffix = suffix
         name.title = title
         return ParsedName(name)
+
+    def generate_es_query(self, keyword="authors"):
+        """Generates a query handling specifically authors.
+        Notes:
+            There are three main cases:
+            1) ``a Smith``
+            This will just generate a ``match`` query on ``last_name``
+            2) ``a John Smith``
+             This will just generate a ``match`` query on ``last_name`` and  a ``prefix`` query on ``first_name``
+             and a ``match`` query on the initial ``J``. This will return results from ``Smith, John`` and ``Smith, J``
+             but not from ``Smith, Jane``.
+            3) ``a J Smith``
+            This will just generate a ``match`` query on ``last_name`` and a match query on ``first_name.initials``.
+            Please note, cases such as ``J.D.`` have been properly handled by the tokenizer.
+        """
+        nested_query = {
+            "nested": {"path": keyword, "query": {"bool": {"must": []}}},
+        }
+
+        def _match_query_with_names_initials_analyzer_with_and_operator(field, value):
+            return {
+                "match": {
+                    field: {
+                        "query": value,
+                        "operator": "AND",
+                        "analyzer": "names_initials_analyzer",
+                    }
+                }
+            }
+
+        def _match_query_with_and_operator(field, value):
+            return {"match": {field: {"query": value, "operator": "AND"}}}
+
+        def _match_phrase_prefix_query(field, value):
+            return {
+                "match_phrase_prefix": {
+                    field: {"query": value, "analyzer": "names_analyzer"}
+                }
+            }
+
+        if len(self) == 1 and "." not in self.first:
+            # ParsedName returns first name if there is only one name i.e. `Smith`
+            # in our case we consider it as a lastname
+            last_name = self.first
+            query = _match_query_with_and_operator(
+                u"{}.last_name".format(keyword), last_name
+            )
+            nested_query["nested"]["query"]["bool"]["must"].append(query)
+            return nested_query
+
+        bool_query_build = [
+            _match_query_with_and_operator(u"{}.last_name".format(keyword), self.last)
+        ]
+        author_names = [
+            re.split(r"\.(?=[A-Za-z]|\s|$)", name) for name in self.first_list
+        ]
+        first_names = filter(None, chain.from_iterable(author_names))
+
+        should_query = []
+        for name in first_names:
+            name_query = []
+            if len(name) == 1 or "." in name:
+                name_query.append(
+                    _match_query_with_names_initials_analyzer_with_and_operator(
+                        u"{}.first_name.initials".format(keyword), name
+                    )
+                )
+            else:
+                name_query.extend(
+                    [
+                        _match_phrase_prefix_query(
+                            u"{}.first_name".format(keyword), name
+                        ),
+                        _match_query_with_names_initials_analyzer_with_and_operator(
+                            u"{}.first_name".format(keyword), name
+                        ),
+                    ]
+                )
+                if self.maybe_only_last_name:
+                    name_query.append(
+                        _match_query_with_and_operator(
+                            u"{}.full_name".format(keyword), str(self._parsed_name)
+                        )
+                    )
+            should_query.append(
+                wrap_queries_in_bool_clauses_if_more_than_one(
+                    name_query, use_must_clause=False
+                )
+            )
+
+        bool_query_build.append(
+            wrap_queries_in_bool_clauses_if_more_than_one(
+                should_query, use_must_clause=True
+            )
+        )
+
+        nested_query["nested"]["query"]["bool"]["must"].extend(bool_query_build)
+        return nested_query
 
 
 def normalize_name(name):
