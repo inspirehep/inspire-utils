@@ -1317,3 +1317,10 @@ def test_generate_es_query_works_for_unambigous_names():
     parsed_name = ParsedName(name)
     generated_es_query = parsed_name.generate_es_query()
     assert ordered(generated_es_query) == ordered(expected_query)
+
+
+def test_parsed_name_doesnt_produce_error_when_first_and_last_name_empty():
+    empty_parsed_name = ParsedName("")
+    parsed_name_with_title_only = ParsedName("Editor")
+    assert empty_parsed_name is not None
+    assert parsed_name_with_title_only is not None
