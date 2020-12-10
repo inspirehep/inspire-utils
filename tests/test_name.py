@@ -79,6 +79,11 @@ def test_normalize_name_handles_jimmy():  # http://jimmy.pink
     assert expected == normalize_name("Jimmy")
 
 
+def test_regression_name_with_comma():
+    expected = "Jessica"
+    assert expected == normalize_name("Jessica, ")
+
+
 def test_normalize_name_handles_unicode():
     expected = u"蕾拉"
 
