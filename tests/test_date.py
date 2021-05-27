@@ -29,9 +29,15 @@ from inspire_utils.date import (
     earliest_date,
     format_date,
     normalize_date,
-    fill_missing_date_parts
+    fill_missing_date_parts,
+    loads
 )
 
+
+
+def test_loads_validate_dates():
+    with pytest.raises(ValueError):
+        PartialDate(2015, 1, 1)
 
 def test_partial_date_accepts_valid_dates():
     PartialDate(1686, 6, 30)
