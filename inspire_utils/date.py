@@ -100,14 +100,18 @@ class PartialDate(object):
 
         """
 
-        parts = (int(part) for part in string.split('-'))
-        return cls(*parts)
+        date_parts = string.split('-')
+        # ['1989', '02', '22']
 
-        if len(day) != 2: 
+        if len(date_parts) == 2 and len(date_parts[1]) < 2:
+            raise ValueError('Month must be in MM format')
+
+        if len(date_parts) == 3 and len(date_parts[2]) < 2:
             raise ValueError('Day must be in DD format')
-        
-        if len(month) != 2:
-            raise ValueError('Month must be in MM format') 
+
+        parts = (int(part) for part in date_parts)
+
+        return cls(*parts)
 
     def dumps(self):
         """Dump the date for serialization into the record.
