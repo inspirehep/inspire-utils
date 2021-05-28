@@ -33,6 +33,16 @@ from inspire_utils.date import (
 )
 
 
+def test_loads_validate_dates_day():
+    with pytest.raises(ValueError):
+        PartialDate.loads('2015-10-1')
+
+
+def test_loads_validate_dates_month():
+    with pytest.raises(ValueError):
+        PartialDate.loads('2015-1-10')
+
+
 def test_partial_date_accepts_valid_dates():
     PartialDate(1686, 6, 30)
 
