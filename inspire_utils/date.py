@@ -99,7 +99,15 @@ class PartialDate(object):
             ValueError: month must be in 1..12
 
         """
-        parts = (int(part) for part in string.split('-'))
+
+        date_parts = string.split('-')
+
+        if len(date_parts) == 2 and len(date_parts[1]) < 2:
+            raise ValueError('Month must be in MM format')
+        if len(date_parts) == 3 and len(date_parts[2]) < 2:
+            raise ValueError('Day must be in DD format')
+        parts = (int(part) for part in date_parts)
+
         return cls(*parts)
 
     def dumps(self):

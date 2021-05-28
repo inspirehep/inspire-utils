@@ -86,7 +86,6 @@ class ParsedName(object):
             self._parsed_name = HumanName(name, constants=constants)
             self._parsed_name = HumanName(name, constants=constants)
             self._parsed_name.capitalize()
-
         if ',' not in name and (not self.first_list or (self.first_list and '.' not in self.first_list[-1])):
             self.maybe_only_last_name = True
         else:
@@ -181,13 +180,14 @@ class ParsedName(object):
                        for letters in suffix.upper())
 
         first_and_middle_names = iter(_ensure_dotted_initials(name) for name in self.first_list)
+
         try:
             prev = next(first_and_middle_names)
+            names_with_spaces = [prev]
         except StopIteration:
             LOGGER.warning(u"Cannot process %s properly",
                            self._parsed_name.original)
-            prev = self._parsed_name.original
-        names_with_spaces = [prev]
+            names_with_spaces = []
 
         for name in first_and_middle_names:
             if not _is_initial(name) or not _is_initial(prev):
