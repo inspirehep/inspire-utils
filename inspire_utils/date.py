@@ -102,9 +102,7 @@ class PartialDate(object):
 
         date_parts = string.split('-')
 
-        if len(date_parts) == 2 and len(date_parts[1]) < 2:
-            raise ValueError('Month must be in MM format')
-        if len(date_parts) == 3 and len(date_parts[1]) < 2:
+        if len(date_parts) >= 2 and len(date_parts[1]) < 2:
             raise ValueError('Month must be in MM format')
         if len(date_parts) == 3 and len(date_parts[2]) < 2:
             raise ValueError('Day must be in DD format')
