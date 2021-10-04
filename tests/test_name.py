@@ -115,7 +115,7 @@ def test_normalize_name_handles_suffixes(input_author_name, expected):
 
 @pytest.mark.parametrize(
     "input_author_name,expected",
-    [("Sir John Smith", "Smith, John"), ("Bao, Hon", "Bao, Hon")],
+    [("Sir John Smith", "Smith, John"), ("Bao, Hon", "Bao, Hon"), ("ed witten", "Witten, Ed")],
 )
 def test_normalize_name_handles_titles(input_author_name, expected):
     assert normalize_name(input_author_name) == expected
