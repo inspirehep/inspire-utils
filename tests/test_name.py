@@ -115,7 +115,8 @@ def test_normalize_name_handles_suffixes(input_author_name, expected):
 
 @pytest.mark.parametrize(
     "input_author_name,expected",
-    [("Sir John Smith", "Smith, John"), ("Bao, Hon", "Bao, Hon"), ("ed witten", "Witten, Ed")],
+    [("Sir John Smith", "Smith, John"),
+     ("Bao, Hon", "Bao, Hon"), ("ed witten", "Witten, Ed")],
 )
 def test_normalize_name_handles_titles(input_author_name, expected):
     assert normalize_name(input_author_name) == expected
@@ -410,7 +411,8 @@ def test_format_author_name():
 def test_format_author_name_with_initials():
     expected = "S. M. Lieber"
 
-    assert expected == format_name("Lieber, Stanley Martin", initials_only=True)
+    assert expected == format_name(
+        "Lieber, Stanley Martin", initials_only=True)
 
 
 def test_format_author_name_with_initials_with_all_caps_name():
@@ -1319,6 +1321,59 @@ def test_generate_es_query_works_for_unambigous_names():
         }
     }
 
+    parsed_name = ParsedName(name)
+    generated_es_query = parsed_name.generate_es_query()
+    assert ordered(generated_es_query) == ordered(expected_query)
+
+
+def test_generate_es_query_title_name():
+    name = "ed witten"
+    expected_query = {
+        'nested': {
+            'path': 'authors', 'query': {
+                'bool': {
+                    'must': [
+                        {
+                            'match': {
+                                u'authors.last_name': {
+                                    'operator': 'AND',
+                                    'query': u'Witten'
+                                }
+                            }
+                        }, {
+                            'bool': {
+                                'should': [
+                                    {
+                                        'match_phrase_prefix': {
+                                            u'authors.first_name': {
+                                                'query': u'Ed',
+                                                'analyzer': 'names_analyzer'
+                                            }
+                                        }
+                                    }, {
+                                        'match': {
+                                            u'authors.first_name': {
+                                                'operator': 'AND',
+                                                'query': u'Ed',
+                                                'analyzer': 'names_initials_analyzer'
+                                            }
+                                        }
+                                    }, {
+                                        'match': {
+                                            u'authors.full_name': {
+                                                'operator': 'AND',
+                                                'query': 'Ed Witten'
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
     parsed_name = ParsedName(name)
     generated_es_query = parsed_name.generate_es_query()
     assert ordered(generated_es_query) == ordered(expected_query)

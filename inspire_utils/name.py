@@ -86,6 +86,7 @@ class ParsedName(object):
             self._parsed_name = HumanName(name, constants=constants)
             if not self._parsed_name.first:
                 self._parsed_name.first = self._parsed_name.title
+                self._parsed_name.title = ''
             self._parsed_name.capitalize()
         if ',' not in name and (not self.first_list or (self.first_list and '.' not in self.first_list[-1])):
             self.maybe_only_last_name = True
