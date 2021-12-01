@@ -1384,3 +1384,80 @@ def test_parsed_name_doesnt_produce_error_when_first_and_last_name_empty():
     parsed_name_with_title_only = ParsedName("Editor")
     assert empty_parsed_name is not None
     assert parsed_name_with_title_only is not None
+
+
+def test_generate_es_name_query():
+    name = ParsedName("Anikin, Evgeny V.")
+    expected_query = {
+        "nested": {
+            "path": "authors",
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "authors.last_name": {
+                                    "query": "Anikin",
+                                    "operator": "AND",
+                                }
+                            }
+                        },
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "match_phrase": {
+                                            "authors.first_name": {"query": "Evgeny"}
+                                        }
+                                    },
+                                    {
+                                        "match_phrase": {
+                                            "authors.first_name": {"query": "Evgeny V."}
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                    ]
+                }
+            },
+        }
+    }
+
+    assert name.generate_es_name_query() == expected_query
+
+
+def test_generate_es_name_query_for_name_with_initials_only():
+    name = ParsedName("Anikin, E.")
+    expected_query = {
+        "nested": {
+            "path": "authors",
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "authors.last_name": {
+                                    "query": "Anikin",
+                                    "operator": "AND",
+                                }
+                            }
+                        },
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "match_phrase": {
+                                            "authors.first_name": {"query": "E."}
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                    ]
+                }
+            },
+        }
+    }
+
+    assert name.generate_es_name_query() == expected_query

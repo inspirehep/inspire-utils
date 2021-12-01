@@ -256,6 +256,41 @@ class ParsedName(object):
         name.title = title
         return ParsedName(name)
 
+    def generate_es_name_query(self):
+        nested_query = {
+            "nested": {"path": "authors", "query": {"bool": {"must": []}}},
+        }
+        bool_query_build = nested_query["nested"]["query"]["bool"]["must"]
+        last_name_query = {
+            "match": {"authors.last_name": {"query": self.last, "operator": "AND"}}
+        }
+        bool_query_build.append(last_name_query)
+
+        should_query = {"bool": {"should": []}}
+        should_query_build = should_query["bool"]["should"]
+        names_without_initilas = " ".join(
+            list(
+                filter(
+                    lambda name: len(name) > 2 and not name.endswith("."),
+                    self.first_list,
+                )
+            )
+        )
+        if names_without_initilas:
+            should_query_build.append(
+                {
+                    "match_phrase": {
+                        "authors.first_name": {"query": names_without_initilas}
+                    }
+                }
+            )
+        should_query_build.append(
+            {"match_phrase": {"authors.first_name": {"query": self.first}}}
+        )
+
+        bool_query_build.append(should_query)
+        return nested_query
+
     def generate_es_query(self, keyword="authors"):
         """Generates a query handling specifically authors.
         Notes:
