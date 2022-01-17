@@ -38,6 +38,11 @@ def test_loads_validate_dates_day():
         PartialDate.loads('2015-10-1')
 
 
+def test_loads_validate_dates_day_when_day_is_00():
+    with pytest.raises(ValueError):
+        PartialDate.loads('2015-10-00')
+
+
 def test_loads_validate_dates_month():
     with pytest.raises(ValueError):
         PartialDate.loads('2015-1-10')
