@@ -432,6 +432,19 @@ def test_parsed_name_initials():
     assert expected == parsed_name.first_initials_list
 
 
+@pytest.mark.parametrize(
+    "input_author_name,expected",
+    [("Lieber, Ed", "E. Lieber"),
+     ('Lieber, Ed Viktor', "E. V. Lieber"),
+     ('Lieber, Ed Jr.', "E. Lieber, Jr."),
+     ('Lieber, Ed Victor Jr.', "E. V. Lieber, Jr."),
+     ],
+)
+def test_format_author_name_with_initials_when_first_name_is_similar_to_title(input_author_name, expected):
+
+    assert expected == format_name(input_author_name, initials_only=True, without_titles=True)
+
+
 def test_parsed_wrong_names_and_not_fail():
     names = [
         (u"Proffesor.M.", u"Proffesor.M."),
