@@ -84,10 +84,28 @@ class ParsedName(object):
             self._parsed_name = name
         else:
             self._parsed_name = HumanName(name, constants=constants)
+
             if not self._parsed_name.first:
                 self._parsed_name.first = self._parsed_name.title
                 self._parsed_name.title = ''
+            # if lastname is mistakenly put as firstname because firstname is similar to title
+            if self._parsed_name.title and not self._parsed_name.last:
+                self._parsed_name.last = self._parsed_name.first
+                self._parsed_name.first = self._parsed_name.title
+                self._parsed_name.title = ''
+
+            if not self._parsed_name.middle and self._parsed_name.title == 'Ed':
+                # if author whos firstname is Ed (also a title) has a suffix also
+                if self._parsed_name.first.replace('.', '').lower() in constants.suffix_not_acronyms:
+                    self._parsed_name.suffix = self._parsed_name.first
+                    self._parsed_name.first = self._parsed_name.title
+                else:
+                    self._parsed_name.middle = self._parsed_name.first
+                    self._parsed_name.first = self._parsed_name.title
+                    self._parsed_name.title = ''
+
             self._parsed_name.capitalize()
+
         if ',' not in name and (not self.first_list or (self.first_list and '.' not in self.first_list[-1])):
             self.maybe_only_last_name = True
         else:
