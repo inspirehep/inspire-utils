@@ -68,7 +68,7 @@ class ParsedName(object):
     constants = _prepare_nameparser_constants()
     """The default constants configuration for `HumanName` to use for parsing all names."""
 
-    def __init__(self, name, constants=None):
+    def __init__(self, name, constants=None, without_titles=False):
         """Create a ParsedName instance.
 
         Args:
@@ -79,15 +79,20 @@ class ParsedName(object):
         """
         if not constants:
             constants = ParsedName.constants
+        if without_titles:
+            constants.titles = []
 
         if isinstance(name, HumanName):
             self._parsed_name = name
         else:
             self._parsed_name = HumanName(name, constants=constants)
+
             if not self._parsed_name.first:
                 self._parsed_name.first = self._parsed_name.title
                 self._parsed_name.title = ''
+
             self._parsed_name.capitalize()
+
         if ',' not in name and (not self.first_list or (self.first_list and '.' not in self.first_list[-1])):
             self.maybe_only_last_name = True
         else:
@@ -474,7 +479,7 @@ def generate_name_variations(name):
     return list(name_variations)
 
 
-def format_name(name, initials_only=False):
+def format_name(name, initials_only=False, without_titles=False):
     """Format a schema-compliant name string in a human-friendy format.
 
     This is a convenience wrapper around :ref:`ParsedName`, which should be
@@ -492,4 +497,4 @@ def format_name(name, initials_only=False):
     >>> format_name('Downey, Robert Jr.', initials_only=True)
     u'R. Downey Jr.'
     """
-    return ParsedName.loads(name).pprint(initials_only)
+    return ParsedName(name=name, without_titles=without_titles).loads(name).pprint(initials_only)
