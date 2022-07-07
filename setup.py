@@ -42,6 +42,8 @@ install_requires = [
     'nameparser~=0.0,>=0.5.3',
     'python-dateutil~=2.0,>=2.6.1',
     'six~=1.0,>=1.10.0',
+    'elasticsearch==7.1.0',
+    'elasticsearch-dsl~=7.1'
 ]
 
 docs_require = []
