@@ -24,7 +24,7 @@ from __future__ import absolute_import, division, print_function
 
 import re
 
-from elasticsearch_dsl import Q, Search
+from elasticsearch_dsl import Q
 from six import string_types
 
 from .dedupers import dedupe_list
@@ -516,7 +516,7 @@ def replace_undesirable_characters(line):
     return line
 
 
-def _match_lit_author_affiliation(raw_aff, current_search):
+def _match_lit_author_affiliation(raw_aff, literature_search_object):
     query = Q(
         "nested",
         path="authors",
@@ -527,7 +527,7 @@ def _match_lit_author_affiliation(raw_aff, current_search):
     )
     query_filters = Q("term", _collections="Literature") & Q("term", curated=True)
     result = (
-        Search(index="records-hep", using=current_search)
+        literature_search_object
         .query(query)
         .filter(query_filters)
         .highlight("authors.raw_affiliations.value", fragment_size=len(raw_aff))
@@ -588,12 +588,13 @@ def _extract_matched_aff_from_highlight(
             return [aff]
 
 
-def normalize_affiliations(data, current_seearch):
+def normalize_affiliations(data, literature_search_object):
     """
     Normalizes author raw affiliations in literature record.
     Params:
         data (dict): data contaning list of authors with affiliations to normalize
-        current_search (LocalProxy): Elasticsearch client
+        literature_search_object (elasticsearch_dsl.search.Search): Search request to elasticsearch.
+
     Returns:
         normalized_affiliations: list containing normalized affiliations for each author
         ambiguous_affiliations: not matched (not normalized) affiliations
@@ -612,7 +613,7 @@ def normalize_affiliations(data, current_seearch):
                 author_affiliations.extend(matched_affiliations[raw_aff])
                 continue
             matched_author_affiliations_hits = _match_lit_author_affiliation(
-                raw_aff, current_seearch
+                raw_aff, literature_search_object
             )
             matched_author_affiliations = _find_unambiguous_affiliation(
                 matched_author_affiliations_hits
