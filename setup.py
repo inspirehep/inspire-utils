@@ -43,7 +43,9 @@ install_requires = [
     'python-dateutil~=2.0,>=2.6.1',
     'six~=1.0,>=1.10.0',
     'elasticsearch==7.1.0',
-    'elasticsearch-dsl~=7.1'
+    'elasticsearch-dsl~=7.1',
+    'inspire-schemas==61.4.12',
+    'parsel>=1.5'
 ]
 
 docs_require = []
