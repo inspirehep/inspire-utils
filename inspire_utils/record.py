@@ -27,8 +27,10 @@ import re
 from elasticsearch_dsl import Q
 from six import string_types
 
+from .logging import getStackTraceLogger
 from .dedupers import dedupe_list
 
+LOGGER = getStackTraceLogger(__name__)
 SPLIT_KEY_PATTERN = re.compile(r"\.|\[")
 
 
@@ -531,7 +533,7 @@ def _match_lit_author_affiliation(raw_aff, literature_search_object):
         .query(query)
         .filter(query_filters)
         .highlight("authors.raw_affiliations.value", fragment_size=len(raw_aff))
-        .source(False)
+        .source(["control_number"])
         .params(size=20)
         .execute()
         .hits
@@ -563,6 +565,11 @@ def _find_unambiguous_affiliation(result):
                 matched_author_affs,
             )
         if matched_aff:
+            LOGGER.info(
+                u"Found matching affiliation, literature recid: {lit_recid}, matched affiliations: {matched_aff}".format(
+                    lit_recid=matched_author["control_number"], matched_aff=matched_aff
+                )
+            )
             return _clean_up_affiliation_data(matched_aff)
 
 
