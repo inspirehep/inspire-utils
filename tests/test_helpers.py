@@ -130,3 +130,12 @@ def test_remove_tags_strip_keeps_tails():
     expected = u' but this remains.'
 
     assert result == expected
+
+
+def test_remove_tags_works_with_special_chars():
+    allowed_tags = "DUMMYROOTTAG"
+    snippet = 'Proceedings, 14th International Conference on Accelerator & Large Experimental Physics Control Systems (ICALEPCS 2013)'
+
+    result = remove_tags(remove_tags(snippet, allowed_tags=allowed_tags))
+
+    assert result == snippet

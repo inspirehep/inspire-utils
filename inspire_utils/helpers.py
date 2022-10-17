@@ -23,6 +23,7 @@
 from __future__ import absolute_import, division, print_function
 
 from lxml import etree
+from xml.sax.saxutils import escape
 
 import six
 
@@ -142,7 +143,7 @@ def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
         u'<b>Only</b> this text remains.'
     """
     if isinstance(dirty, six.string_types):
-        element = etree.fromstring(u''.join(('<DUMMYROOTTAG>', dirty, '</DUMMYROOTTAG>')))
+        element = etree.fromstring(u''.join(('<DUMMYROOTTAG>', escape(dirty), '</DUMMYROOTTAG>')))
     elif isinstance(dirty, etree._Element):
         element = dirty
     else:  # assuming scrapy Selector
