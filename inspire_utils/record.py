@@ -27,8 +27,8 @@ import re
 from elasticsearch_dsl import Q
 from six import string_types
 
-from .logging import getStackTraceLogger
 from .dedupers import dedupe_list
+from .logging import getStackTraceLogger
 
 LOGGER = getStackTraceLogger(__name__)
 SPLIT_KEY_PATTERN = re.compile(r"\.|\[")
@@ -48,23 +48,28 @@ def get_value(record, key, default=None):
             >>> %timeit x = dd['a'][0]['b']
             1000000 loops, best of 3: 598 ns per loop
     """
+
     def getitem(k, v, default):
         if isinstance(v, string_types):
             raise KeyError
         elif isinstance(v, dict):
             return v[k]
-        elif ']' in k:
-            k = k[:-1].replace('n', '-1')
+        elif "]" in k:
+            k = k[:-1].replace("n", "-1")
             # Work around for list indexes and slices
             try:
                 return v[int(k)]
             except IndexError:
                 return default
             except ValueError:
-                return v[slice(*map(
-                    lambda x: int(x.strip()) if x.strip() else None,
-                    k.split(':')
-                ))]
+                return v[
+                    slice(
+                        *map(
+                            lambda x: int(x.strip()) if x.strip() else None,
+                            k.split(":"),
+                        )
+                    )
+                ]
         else:
             tmp = []
             for inner_v in v:
@@ -76,8 +81,8 @@ def get_value(record, key, default=None):
 
     # Wrap a top-level list in a dict
     if isinstance(record, list):
-        record = {'record': record}
-        key = '.'.join(['record', key])
+        record = {"record": record}
+        key = ".".join(["record", key])
 
     # Check if we are using python regular keys
     try:
@@ -114,389 +119,389 @@ def get_values_for_schema(elements, schema):
         >>> get_values_for_schema(elements, 'TWITTER')
         ['s_w_hawking']
     """
-    return [element['value'] for element in elements if element['schema'] == schema]
+    return [element["value"] for element in elements if element["schema"] == schema]
 
 
 UNDESIRABLE_CHAR_REPLACEMENTS = {
     # Control characters not allowed in XML:
-    u'\u2028': u"",
-    u'\u2029': u"",
-    u'\u202A': u"",
-    u'\u202B': u"",
-    u'\u202C': u"",
-    u'\u202D': u"",
-    u'\u202E': u"",
-    u'\u206A': u"",
-    u'\u206B': u"",
-    u'\u206C': u"",
-    u'\u206D': u"",
-    u'\u206E': u"",
-    u'\u206F': u"",
-    u'\uFFF9': u"",
-    u'\uFFFA': u"",
-    u'\uFFFB': u"",
-    u'\uFFFC': u"",
-    u'\uFEFF': u"",
+    "\u2028": "",
+    "\u2029": "",
+    "\u202A": "",
+    "\u202B": "",
+    "\u202C": "",
+    "\u202D": "",
+    "\u202E": "",
+    "\u206A": "",
+    "\u206B": "",
+    "\u206C": "",
+    "\u206D": "",
+    "\u206E": "",
+    "\u206F": "",
+    "\uFFF9": "",
+    "\uFFFA": "",
+    "\uFFFB": "",
+    "\uFFFC": "",
+    "\uFEFF": "",
     # Remove the result of a bad UTF-8 character
-    u'\uFFFF': u"",
+    "\uFFFF": "",
     # Language Tag Code Points:
-    u"\U000E0000": u"",
-    u"\U000E0001": u"",
-    u"\U000E0002": u"",
-    u"\U000E0003": u"",
-    u"\U000E0004": u"",
-    u"\U000E0005": u"",
-    u"\U000E0006": u"",
-    u"\U000E0007": u"",
-    u"\U000E0008": u"",
-    u"\U000E0009": u"",
-    u"\U000E000A": u"",
-    u"\U000E000B": u"",
-    u"\U000E000C": u"",
-    u"\U000E000D": u"",
-    u"\U000E000E": u"",
-    u"\U000E000F": u"",
-    u"\U000E0010": u"",
-    u"\U000E0011": u"",
-    u"\U000E0012": u"",
-    u"\U000E0013": u"",
-    u"\U000E0014": u"",
-    u"\U000E0015": u"",
-    u"\U000E0016": u"",
-    u"\U000E0017": u"",
-    u"\U000E0018": u"",
-    u"\U000E0019": u"",
-    u"\U000E001A": u"",
-    u"\U000E001B": u"",
-    u"\U000E001C": u"",
-    u"\U000E001D": u"",
-    u"\U000E001E": u"",
-    u"\U000E001F": u"",
-    u"\U000E0020": u"",
-    u"\U000E0021": u"",
-    u"\U000E0022": u"",
-    u"\U000E0023": u"",
-    u"\U000E0024": u"",
-    u"\U000E0025": u"",
-    u"\U000E0026": u"",
-    u"\U000E0027": u"",
-    u"\U000E0028": u"",
-    u"\U000E0029": u"",
-    u"\U000E002A": u"",
-    u"\U000E002B": u"",
-    u"\U000E002C": u"",
-    u"\U000E002D": u"",
-    u"\U000E002E": u"",
-    u"\U000E002F": u"",
-    u"\U000E0030": u"",
-    u"\U000E0031": u"",
-    u"\U000E0032": u"",
-    u"\U000E0033": u"",
-    u"\U000E0034": u"",
-    u"\U000E0035": u"",
-    u"\U000E0036": u"",
-    u"\U000E0037": u"",
-    u"\U000E0038": u"",
-    u"\U000E0039": u"",
-    u"\U000E003A": u"",
-    u"\U000E003B": u"",
-    u"\U000E003C": u"",
-    u"\U000E003D": u"",
-    u"\U000E003E": u"",
-    u"\U000E003F": u"",
-    u"\U000E0040": u"",
-    u"\U000E0041": u"",
-    u"\U000E0042": u"",
-    u"\U000E0043": u"",
-    u"\U000E0044": u"",
-    u"\U000E0045": u"",
-    u"\U000E0046": u"",
-    u"\U000E0047": u"",
-    u"\U000E0048": u"",
-    u"\U000E0049": u"",
-    u"\U000E004A": u"",
-    u"\U000E004B": u"",
-    u"\U000E004C": u"",
-    u"\U000E004D": u"",
-    u"\U000E004E": u"",
-    u"\U000E004F": u"",
-    u"\U000E0050": u"",
-    u"\U000E0051": u"",
-    u"\U000E0052": u"",
-    u"\U000E0053": u"",
-    u"\U000E0054": u"",
-    u"\U000E0055": u"",
-    u"\U000E0056": u"",
-    u"\U000E0057": u"",
-    u"\U000E0058": u"",
-    u"\U000E0059": u"",
-    u"\U000E005A": u"",
-    u"\U000E005B": u"",
-    u"\U000E005C": u"",
-    u"\U000E005D": u"",
-    u"\U000E005E": u"",
-    u"\U000E005F": u"",
-    u"\U000E0060": u"",
-    u"\U000E0061": u"",
-    u"\U000E0062": u"",
-    u"\U000E0063": u"",
-    u"\U000E0064": u"",
-    u"\U000E0065": u"",
-    u"\U000E0066": u"",
-    u"\U000E0067": u"",
-    u"\U000E0068": u"",
-    u"\U000E0069": u"",
-    u"\U000E006A": u"",
-    u"\U000E006B": u"",
-    u"\U000E006C": u"",
-    u"\U000E006D": u"",
-    u"\U000E006E": u"",
-    u"\U000E006F": u"",
-    u"\U000E0070": u"",
-    u"\U000E0071": u"",
-    u"\U000E0072": u"",
-    u"\U000E0073": u"",
-    u"\U000E0074": u"",
-    u"\U000E0075": u"",
-    u"\U000E0076": u"",
-    u"\U000E0077": u"",
-    u"\U000E0078": u"",
-    u"\U000E0079": u"",
-    u"\U000E007A": u"",
-    u"\U000E007B": u"",
-    u"\U000E007C": u"",
-    u"\U000E007D": u"",
-    u"\U000E007E": u"",
-    u"\U000E007F": u"",
+    "\U000E0000": "",
+    "\U000E0001": "",
+    "\U000E0002": "",
+    "\U000E0003": "",
+    "\U000E0004": "",
+    "\U000E0005": "",
+    "\U000E0006": "",
+    "\U000E0007": "",
+    "\U000E0008": "",
+    "\U000E0009": "",
+    "\U000E000A": "",
+    "\U000E000B": "",
+    "\U000E000C": "",
+    "\U000E000D": "",
+    "\U000E000E": "",
+    "\U000E000F": "",
+    "\U000E0010": "",
+    "\U000E0011": "",
+    "\U000E0012": "",
+    "\U000E0013": "",
+    "\U000E0014": "",
+    "\U000E0015": "",
+    "\U000E0016": "",
+    "\U000E0017": "",
+    "\U000E0018": "",
+    "\U000E0019": "",
+    "\U000E001A": "",
+    "\U000E001B": "",
+    "\U000E001C": "",
+    "\U000E001D": "",
+    "\U000E001E": "",
+    "\U000E001F": "",
+    "\U000E0020": "",
+    "\U000E0021": "",
+    "\U000E0022": "",
+    "\U000E0023": "",
+    "\U000E0024": "",
+    "\U000E0025": "",
+    "\U000E0026": "",
+    "\U000E0027": "",
+    "\U000E0028": "",
+    "\U000E0029": "",
+    "\U000E002A": "",
+    "\U000E002B": "",
+    "\U000E002C": "",
+    "\U000E002D": "",
+    "\U000E002E": "",
+    "\U000E002F": "",
+    "\U000E0030": "",
+    "\U000E0031": "",
+    "\U000E0032": "",
+    "\U000E0033": "",
+    "\U000E0034": "",
+    "\U000E0035": "",
+    "\U000E0036": "",
+    "\U000E0037": "",
+    "\U000E0038": "",
+    "\U000E0039": "",
+    "\U000E003A": "",
+    "\U000E003B": "",
+    "\U000E003C": "",
+    "\U000E003D": "",
+    "\U000E003E": "",
+    "\U000E003F": "",
+    "\U000E0040": "",
+    "\U000E0041": "",
+    "\U000E0042": "",
+    "\U000E0043": "",
+    "\U000E0044": "",
+    "\U000E0045": "",
+    "\U000E0046": "",
+    "\U000E0047": "",
+    "\U000E0048": "",
+    "\U000E0049": "",
+    "\U000E004A": "",
+    "\U000E004B": "",
+    "\U000E004C": "",
+    "\U000E004D": "",
+    "\U000E004E": "",
+    "\U000E004F": "",
+    "\U000E0050": "",
+    "\U000E0051": "",
+    "\U000E0052": "",
+    "\U000E0053": "",
+    "\U000E0054": "",
+    "\U000E0055": "",
+    "\U000E0056": "",
+    "\U000E0057": "",
+    "\U000E0058": "",
+    "\U000E0059": "",
+    "\U000E005A": "",
+    "\U000E005B": "",
+    "\U000E005C": "",
+    "\U000E005D": "",
+    "\U000E005E": "",
+    "\U000E005F": "",
+    "\U000E0060": "",
+    "\U000E0061": "",
+    "\U000E0062": "",
+    "\U000E0063": "",
+    "\U000E0064": "",
+    "\U000E0065": "",
+    "\U000E0066": "",
+    "\U000E0067": "",
+    "\U000E0068": "",
+    "\U000E0069": "",
+    "\U000E006A": "",
+    "\U000E006B": "",
+    "\U000E006C": "",
+    "\U000E006D": "",
+    "\U000E006E": "",
+    "\U000E006F": "",
+    "\U000E0070": "",
+    "\U000E0071": "",
+    "\U000E0072": "",
+    "\U000E0073": "",
+    "\U000E0074": "",
+    "\U000E0075": "",
+    "\U000E0076": "",
+    "\U000E0077": "",
+    "\U000E0078": "",
+    "\U000E0079": "",
+    "\U000E007A": "",
+    "\U000E007B": "",
+    "\U000E007C": "",
+    "\U000E007D": "",
+    "\U000E007E": "",
+    "\U000E007F": "",
     # Musical Notation Scoping
-    u"\U0001D173": u"",
-    u"\U0001D174": u"",
-    u"\U0001D175": u"",
-    u"\U0001D176": u"",
-    u"\U0001D177": u"",
-    u"\U0001D178": u"",
-    u"\U0001D179": u"",
-    u"\U0001D17A": u"",
-    u'\u0000': u"",  # NULL
-    u'\u0001': u"",  # START OF HEADING
+    "\U0001D173": "",
+    "\U0001D174": "",
+    "\U0001D175": "",
+    "\U0001D176": "",
+    "\U0001D177": "",
+    "\U0001D178": "",
+    "\U0001D179": "",
+    "\U0001D17A": "",
+    "\u0000": "",  # NULL
+    "\u0001": "",  # START OF HEADING
     # START OF TEXT & END OF TEXT:
-    u'\u0002': u"",
-    u'\u0003': u"",
-    u'\u0004': u"",  # END OF TRANSMISSION
+    "\u0002": "",
+    "\u0003": "",
+    "\u0004": "",  # END OF TRANSMISSION
     # ENQ and ACK
-    u'\u0005': u"",
-    u'\u0006': u"",
-    u'\u0007': u"",  # BELL
-    u'\u0008': u"",  # BACKSPACE
+    "\u0005": "",
+    "\u0006": "",
+    "\u0007": "",  # BELL
+    "\u0008": "",  # BACKSPACE
     # SHIFT-IN & SHIFT-OUT
-    u'\u000E': u"",
-    u'\u000F': u"",
+    "\u000E": "",
+    "\u000F": "",
     # Other controls:
-    u'\u0010': u"",  # DATA LINK ESCAPE
-    u'\u0011': u"",  # DEVICE CONTROL ONE
-    u'\u0012': u"",  # DEVICE CONTROL TWO
-    u'\u0013': u"",  # DEVICE CONTROL THREE
-    u'\u0014': u"",  # DEVICE CONTROL FOUR
-    u'\u0015': u"",  # NEGATIVE ACK
-    u'\u0016': u"",  # SYNCRONOUS IDLE
-    u'\u0017': u"",  # END OF TRANSMISSION BLOCK
-    u'\u0018': u"",  # CANCEL
-    u'\u0019': u"",  # END OF MEDIUM
-    u'\u001A': u"",  # SUBSTITUTE
-    u'\u001B': u"",  # ESCAPE
-    u'\u001C': u"",  # INFORMATION SEPARATOR FOUR (file separator)
-    u'\u001D': u"",  # INFORMATION SEPARATOR THREE (group separator)
-    u'\u001E': u"",  # INFORMATION SEPARATOR TWO (record separator)
-    u'\u001F': u"",  # INFORMATION SEPARATOR ONE (unit separator)
+    "\u0010": "",  # DATA LINK ESCAPE
+    "\u0011": "",  # DEVICE CONTROL ONE
+    "\u0012": "",  # DEVICE CONTROL TWO
+    "\u0013": "",  # DEVICE CONTROL THREE
+    "\u0014": "",  # DEVICE CONTROL FOUR
+    "\u0015": "",  # NEGATIVE ACK
+    "\u0016": "",  # SYNCRONOUS IDLE
+    "\u0017": "",  # END OF TRANSMISSION BLOCK
+    "\u0018": "",  # CANCEL
+    "\u0019": "",  # END OF MEDIUM
+    "\u001A": "",  # SUBSTITUTE
+    "\u001B": "",  # ESCAPE
+    "\u001C": "",  # INFORMATION SEPARATOR FOUR (file separator)
+    "\u001D": "",  # INFORMATION SEPARATOR THREE (group separator)
+    "\u001E": "",  # INFORMATION SEPARATOR TWO (record separator)
+    "\u001F": "",  # INFORMATION SEPARATOR ONE (unit separator)
     # \r -> remove it
-    u'\r': u"",
+    "\r": "",
     # Some ff from tex:
-    u'\u0013\u0010': u'\u00ED',
-    u'\x0b': u'ff',
+    "\u0013\u0010": "\u00ED",
+    "\x0b": "ff",
     # fi from tex:
-    u'\x0c': u'fi',
+    "\x0c": "fi",
     # ligatures from TeX:
-    u'\ufb00': u'ff',
-    u'\ufb01': u'fi',
-    u'\ufb02': u'fl',
-    u'\ufb03': u'ffi',
-    u'\ufb04': u'ffl',
+    "\ufb00": "ff",
+    "\ufb01": "fi",
+    "\ufb02": "fl",
+    "\ufb03": "ffi",
+    "\ufb04": "ffl",
     # Superscripts from TeX
-    u'\u2212': u'-',
-    u'\u2013': u'-',
+    "\u2212": "-",
+    "\u2013": "-",
     # Word style speech marks:
-    u'\u201c ': u'"',
-    u'\u201d': u'"',
-    u'\u201c': u'"',
+    "\u201c ": '"',
+    "\u201d": '"',
+    "\u201c": '"',
     # pdftotext has problems with umlaut and prints it as diaeresis
     # followed by a letter:correct it
     # (Optional space between char and letter - fixes broken
     # line examples)
-    u'\u00A8 a': u'\u00E4',
-    u'\u00A8 e': u'\u00EB',
-    u'\u00A8 i': u'\u00EF',
-    u'\u00A8 o': u'\u00F6',
-    u'\u00A8 u': u'\u00FC',
-    u'\u00A8 y': u'\u00FF',
-    u'\u00A8 A': u'\u00C4',
-    u'\u00A8 E': u'\u00CB',
-    u'\u00A8 I': u'\u00CF',
-    u'\u00A8 O': u'\u00D6',
-    u'\u00A8 U': u'\u00DC',
-    u'\u00A8 Y': u'\u0178',
-    u'\xA8a': u'\u00E4',
-    u'\xA8e': u'\u00EB',
-    u'\xA8i': u'\u00EF',
-    u'\xA8o': u'\u00F6',
-    u'\xA8u': u'\u00FC',
-    u'\xA8y': u'\u00FF',
-    u'\xA8A': u'\u00C4',
-    u'\xA8E': u'\u00CB',
-    u'\xA8I': u'\u00CF',
-    u'\xA8O': u'\u00D6',
-    u'\xA8U': u'\u00DC',
-    u'\xA8Y': u'\u0178',
+    "\u00A8 a": "\u00E4",
+    "\u00A8 e": "\u00EB",
+    "\u00A8 i": "\u00EF",
+    "\u00A8 o": "\u00F6",
+    "\u00A8 u": "\u00FC",
+    "\u00A8 y": "\u00FF",
+    "\u00A8 A": "\u00C4",
+    "\u00A8 E": "\u00CB",
+    "\u00A8 I": "\u00CF",
+    "\u00A8 O": "\u00D6",
+    "\u00A8 U": "\u00DC",
+    "\u00A8 Y": "\u0178",
+    "\xA8a": "\u00E4",
+    "\xA8e": "\u00EB",
+    "\xA8i": "\u00EF",
+    "\xA8o": "\u00F6",
+    "\xA8u": "\u00FC",
+    "\xA8y": "\u00FF",
+    "\xA8A": "\u00C4",
+    "\xA8E": "\u00CB",
+    "\xA8I": "\u00CF",
+    "\xA8O": "\u00D6",
+    "\xA8U": "\u00DC",
+    "\xA8Y": "\u0178",
     # More umlaut mess to correct:
-    u'\x7fa': u'\u00E4',
-    u'\x7fe': u'\u00EB',
-    u'\x7fi': u'\u00EF',
-    u'\x7fo': u'\u00F6',
-    u'\x7fu': u'\u00FC',
-    u'\x7fy': u'\u00FF',
-    u'\x7fA': u'\u00C4',
-    u'\x7fE': u'\u00CB',
-    u'\x7fI': u'\u00CF',
-    u'\x7fO': u'\u00D6',
-    u'\x7fU': u'\u00DC',
-    u'\x7fY': u'\u0178',
-    u'\x7f a': u'\u00E4',
-    u'\x7f e': u'\u00EB',
-    u'\x7f i': u'\u00EF',
-    u'\x7f o': u'\u00F6',
-    u'\x7f u': u'\u00FC',
-    u'\x7f y': u'\u00FF',
-    u'\x7f A': u'\u00C4',
-    u'\x7f E': u'\u00CB',
-    u'\x7f I': u'\u00CF',
-    u'\x7f O': u'\u00D6',
-    u'\x7f U': u'\u00DC',
-    u'\x7f Y': u'\u0178',
+    "\x7fa": "\u00E4",
+    "\x7fe": "\u00EB",
+    "\x7fi": "\u00EF",
+    "\x7fo": "\u00F6",
+    "\x7fu": "\u00FC",
+    "\x7fy": "\u00FF",
+    "\x7fA": "\u00C4",
+    "\x7fE": "\u00CB",
+    "\x7fI": "\u00CF",
+    "\x7fO": "\u00D6",
+    "\x7fU": "\u00DC",
+    "\x7fY": "\u0178",
+    "\x7f a": "\u00E4",
+    "\x7f e": "\u00EB",
+    "\x7f i": "\u00EF",
+    "\x7f o": "\u00F6",
+    "\x7f u": "\u00FC",
+    "\x7f y": "\u00FF",
+    "\x7f A": "\u00C4",
+    "\x7f E": "\u00CB",
+    "\x7f I": "\u00CF",
+    "\x7f O": "\u00D6",
+    "\x7f U": "\u00DC",
+    "\x7f Y": "\u0178",
     # pdftotext: fix accute accent:
-    u'\x13a': u'\u00E1',
-    u'\x13e': u'\u00E9',
-    u'\x13i': u'\u00ED',
-    u'\x13o': u'\u00F3',
-    u'\x13u': u'\u00FA',
-    u'\x13y': u'\u00FD',
-    u'\x13A': u'\u00C1',
-    u'\x13E': u'\u00C9',
-    u'\x13I': u'\u00CD',
-    u'\x13ı': u'\u00ED',  # Lower case turkish 'i' (dotless i)
-    u'\x13O': u'\u00D3',
-    u'\x13U': u'\u00DA',
-    u'\x13Y': u'\u00DD',
-    u'\x13 a': u'\u00E1',
-    u'\x13 e': u'\u00E9',
-    u'\x13 i': u'\u00ED',
-    u'\x13 o': u'\u00F3',
-    u'\x13 u': u'\u00FA',
-    u'\x13 y': u'\u00FD',
-    u'\x13 A': u'\u00C1',
-    u'\x13 E': u'\u00C9',
-    u'\x13 I': u'\u00CD',
-    u'\x13 ı': u'\u00ED',
-    u'\x13 O': u'\u00D3',
-    u'\x13 U': u'\u00DA',
-    u'\x13 Y': u'\u00DD',
-    u'\u00B4 a': u'\u00E1',
-    u'\u00B4 e': u'\u00E9',
-    u'\u00B4 i': u'\u00ED',
-    u'\u00B4 o': u'\u00F3',
-    u'\u00B4 u': u'\u00FA',
-    u'\u00B4 y': u'\u00FD',
-    u'\u00B4 A': u'\u00C1',
-    u'\u00B4 E': u'\u00C9',
-    u'\u00B4 I': u'\u00CD',
-    u'\u00B4 ı': u'\u00ED',
-    u'\u00B4 O': u'\u00D3',
-    u'\u00B4 U': u'\u00DA',
-    u'\u00B4 Y': u'\u00DD',
-    u'\u00B4a': u'\u00E1',
-    u'\u00B4e': u'\u00E9',
-    u'\u00B4i': u'\u00ED',
-    u'\u00B4o': u'\u00F3',
-    u'\u00B4u': u'\u00FA',
-    u'\u00B4y': u'\u00FD',
-    u'\u00B4A': u'\u00C1',
-    u'\u00B4E': u'\u00C9',
-    u'\u00B4I': u'\u00CD',
-    u'\u00B4ı': u'\u00ED',
-    u'\u00B4O': u'\u00D3',
-    u'\u00B4U': u'\u00DA',
-    u'\u00B4Y': u'\u00DD',
+    "\x13a": "\u00E1",
+    "\x13e": "\u00E9",
+    "\x13i": "\u00ED",
+    "\x13o": "\u00F3",
+    "\x13u": "\u00FA",
+    "\x13y": "\u00FD",
+    "\x13A": "\u00C1",
+    "\x13E": "\u00C9",
+    "\x13I": "\u00CD",
+    "\x13ı": "\u00ED",  # Lower case turkish 'i' (dotless i)
+    "\x13O": "\u00D3",
+    "\x13U": "\u00DA",
+    "\x13Y": "\u00DD",
+    "\x13 a": "\u00E1",
+    "\x13 e": "\u00E9",
+    "\x13 i": "\u00ED",
+    "\x13 o": "\u00F3",
+    "\x13 u": "\u00FA",
+    "\x13 y": "\u00FD",
+    "\x13 A": "\u00C1",
+    "\x13 E": "\u00C9",
+    "\x13 I": "\u00CD",
+    "\x13 ı": "\u00ED",
+    "\x13 O": "\u00D3",
+    "\x13 U": "\u00DA",
+    "\x13 Y": "\u00DD",
+    "\u00B4 a": "\u00E1",
+    "\u00B4 e": "\u00E9",
+    "\u00B4 i": "\u00ED",
+    "\u00B4 o": "\u00F3",
+    "\u00B4 u": "\u00FA",
+    "\u00B4 y": "\u00FD",
+    "\u00B4 A": "\u00C1",
+    "\u00B4 E": "\u00C9",
+    "\u00B4 I": "\u00CD",
+    "\u00B4 ı": "\u00ED",
+    "\u00B4 O": "\u00D3",
+    "\u00B4 U": "\u00DA",
+    "\u00B4 Y": "\u00DD",
+    "\u00B4a": "\u00E1",
+    "\u00B4e": "\u00E9",
+    "\u00B4i": "\u00ED",
+    "\u00B4o": "\u00F3",
+    "\u00B4u": "\u00FA",
+    "\u00B4y": "\u00FD",
+    "\u00B4A": "\u00C1",
+    "\u00B4E": "\u00C9",
+    "\u00B4I": "\u00CD",
+    "\u00B4ı": "\u00ED",
+    "\u00B4O": "\u00D3",
+    "\u00B4U": "\u00DA",
+    "\u00B4Y": "\u00DD",
     # pdftotext: fix grave accent:
-    u'\u0060 a': u'\u00E0',
-    u'\u0060 e': u'\u00E8',
-    u'\u0060 i': u'\u00EC',
-    u'\u0060 o': u'\u00F2',
-    u'\u0060 u': u'\u00F9',
-    u'\u0060 A': u'\u00C0',
-    u'\u0060 E': u'\u00C8',
-    u'\u0060 I': u'\u00CC',
-    u'\u0060 O': u'\u00D2',
-    u'\u0060 U': u'\u00D9',
-    u'\u0060a': u'\u00E0',
-    u'\u0060e': u'\u00E8',
-    u'\u0060i': u'\u00EC',
-    u'\u0060o': u'\u00F2',
-    u'\u0060u': u'\u00F9',
-    u'\u0060A': u'\u00C0',
-    u'\u0060E': u'\u00C8',
-    u'\u0060I': u'\u00CC',
-    u'\u0060O': u'\u00D2',
-    u'\u0060U': u'\u00D9',
-    u'a´': u'á',
-    u'i´': u'í',
-    u'e´': u'é',
-    u'u´': u'ú',
-    u'o´': u'ó',
+    "\u0060 a": "\u00E0",
+    "\u0060 e": "\u00E8",
+    "\u0060 i": "\u00EC",
+    "\u0060 o": "\u00F2",
+    "\u0060 u": "\u00F9",
+    "\u0060 A": "\u00C0",
+    "\u0060 E": "\u00C8",
+    "\u0060 I": "\u00CC",
+    "\u0060 O": "\u00D2",
+    "\u0060 U": "\u00D9",
+    "\u0060a": "\u00E0",
+    "\u0060e": "\u00E8",
+    "\u0060i": "\u00EC",
+    "\u0060o": "\u00F2",
+    "\u0060u": "\u00F9",
+    "\u0060A": "\u00C0",
+    "\u0060E": "\u00C8",
+    "\u0060I": "\u00CC",
+    "\u0060O": "\u00D2",
+    "\u0060U": "\u00D9",
+    "a´": "á",
+    "i´": "í",
+    "e´": "é",
+    "u´": "ú",
+    "o´": "ó",
     # \02C7 : caron
-    u'\u02C7C': u'\u010C',
-    u'\u02C7c': u'\u010D',
-    u'\u02C7S': u'\u0160',
-    u'\u02C7s': u'\u0161',
-    u'\u02C7Z': u'\u017D',
-    u'\u02C7z': u'\u017E',
+    "\u02C7C": "\u010C",
+    "\u02C7c": "\u010D",
+    "\u02C7S": "\u0160",
+    "\u02C7s": "\u0161",
+    "\u02C7Z": "\u017D",
+    "\u02C7z": "\u017E",
     # \027 : aa (a with ring above)
-    u'\u02DAa': u'\u00E5',
-    u'\u02DAA': u'\u00C5',
+    "\u02DAa": "\u00E5",
+    "\u02DAA": "\u00C5",
     # \030 : cedilla
-    u'\u0327c': u'\u00E7',
-    u'\u0327C': u'\u00C7',
-    u'¸c': u'ç',
+    "\u0327c": "\u00E7",
+    "\u0327C": "\u00C7",
+    "¸c": "ç",
     # \02DC : tilde
-    u'\u02DCn': u'\u00F1',
-    u'\u02DCN': u'\u00D1',
-    u'\u02DCo': u'\u00F5',
-    u'\u02DCO': u'\u00D5',
-    u'\u02DCa': u'\u00E3',
-    u'\u02DCA': u'\u00C3',
-    u'\u02DCs': u'\u0303s',  # Combining tilde with 's'
+    "\u02DCn": "\u00F1",
+    "\u02DCN": "\u00D1",
+    "\u02DCo": "\u00F5",
+    "\u02DCO": "\u00D5",
+    "\u02DCa": "\u00E3",
+    "\u02DCA": "\u00C3",
+    "\u02DCs": "\u0303s",  # Combining tilde with 's'
     # Circumflex accent (caret accent)
-    u'aˆ': u'â',
-    u'iˆ': u'î',
-    u'eˆ': u'ê',
-    u'uˆ': u'û',
-    u'oˆ': u'ô',
-    u'ˆa': u'â',
-    u'ˆi': u'î',
-    u'ˆe': u'ê',
-    u'ˆu': u'û',
-    u'ˆo': u'ô',
+    "aˆ": "â",
+    "iˆ": "î",
+    "eˆ": "ê",
+    "uˆ": "û",
+    "oˆ": "ô",
+    "ˆa": "â",
+    "ˆi": "î",
+    "ˆe": "ê",
+    "ˆu": "û",
+    "ˆo": "ô",
 }
 
 UNDESIRABLE_STRING_REPLACEMENTS = [
-    (u'\u201c ', '"'),
+    ("\u201c ", '"'),
 ]
 
 
@@ -523,14 +528,14 @@ def _match_lit_author_affiliation(raw_aff, literature_search_object):
         "nested",
         path="authors",
         query=(
-            Q("match", authors__raw_affiliations__value=raw_aff) & Q("exists", field="authors.affiliations.value")
+            Q("match", authors__raw_affiliations__value=raw_aff) &
+            Q("exists", field="authors.affiliations.value")
         ),
         inner_hits={},
     )
     query_filters = Q("term", _collections="Literature") & Q("term", curated=True)
     result = (
-        literature_search_object
-        .query(query)
+        literature_search_object.query(query)
         .filter(query_filters)
         .highlight("authors.raw_affiliations.value", fragment_size=len(raw_aff))
         .source(["control_number"])
@@ -550,7 +555,7 @@ def _clean_up_affiliation_data(affiliations):
     return cleaned_affiliations
 
 
-def _find_unambiguous_affiliation(result):
+def _find_unambiguous_affiliation(result, wf_id):
     for matched_author in result:
         matched_author_data = matched_author.meta.inner_hits.authors.hits[0].to_dict()
         matched_author_raw_affs = matched_author_data["raw_affiliations"]
@@ -565,11 +570,16 @@ def _find_unambiguous_affiliation(result):
                 matched_author_affs,
             )
         if matched_aff:
-            LOGGER.info(
-                u"Found matching affiliation, literature recid: {lit_recid}, matched affiliations: {matched_aff}".format(
-                    lit_recid=matched_author["control_number"], matched_aff=matched_aff
-                )
+            message = u"Found matching affiliation, literature recid: {lit_recid}, raw_affiliations: {matched_author_raw_affs}, matched affiliations: {matched_aff}".format(
+                lit_recid=matched_author["control_number"],
+                matched_author_raw_affs=matched_author_raw_affs,
+                matched_aff=matched_aff,
             )
+            if wf_id:
+                message += u" workflow_id: {workflow_id}".format(
+                    workflow_id=wf_id
+                )
+            LOGGER.info(message)
             return _clean_up_affiliation_data(matched_aff)
 
 
@@ -595,7 +605,7 @@ def _extract_matched_aff_from_highlight(
             return [aff]
 
 
-def normalize_affiliations(data, literature_search_object):
+def normalize_affiliations(data, literature_search_object, **kwargs):
     """
     Normalizes author raw affiliations in literature record.
     Params:
@@ -606,6 +616,7 @@ def normalize_affiliations(data, literature_search_object):
         normalized_affiliations: list containing normalized affiliations for each author
         ambiguous_affiliations: not matched (not normalized) affiliations
     """
+    wf_id = kwargs.get('wf_id')
     matched_affiliations = {}
     normalized_affiliations = []
     ambiguous_affiliations = []
@@ -623,7 +634,7 @@ def normalize_affiliations(data, literature_search_object):
                 raw_aff, literature_search_object
             )
             matched_author_affiliations = _find_unambiguous_affiliation(
-                matched_author_affiliations_hits
+                matched_author_affiliations_hits, wf_id
             )
             if matched_author_affiliations:
                 matched_affiliations[raw_aff] = matched_author_affiliations
