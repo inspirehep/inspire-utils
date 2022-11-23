@@ -33,6 +33,7 @@ readme = open('README.rst').read()
 
 setup_requires = [
     'autosemver~=0.0,>=0.5.2',
+    'urllib3==1.26.12'
 ]
 
 install_requires = [
@@ -43,7 +44,8 @@ install_requires = [
     'python-dateutil~=2.0,>=2.6.1',
     'six~=1.0,>=1.10.0',
     'elasticsearch==7.1.0',
-    'elasticsearch-dsl~=7.1'
+    'elasticsearch-dsl~=7.1',
+    'urllib3==1.26.12'
 ]
 
 docs_require = []
