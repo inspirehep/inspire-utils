@@ -116,7 +116,8 @@ class ParsedName(object):
 
     @property
     def first(self):
-        return u'{} {}'.format(self._parsed_name.first, self._parsed_name.middle).strip()
+        name = u'{} {}'.format(self._parsed_name.first, self._parsed_name.middle).strip()
+        return name.strip('.')
 
     @property
     def first_initials_list(self):
@@ -126,7 +127,9 @@ class ParsedName(object):
 
     @property
     def first_list(self):
-        return list(filter(None, self._parsed_name.first_list + self._parsed_name.middle_list))
+        first_and_middle_names = self._parsed_name.first_list + self._parsed_name.middle_list
+        names = [name for name in first_and_middle_names if name and name != '.']
+        return names
 
     @property
     def last(self):
