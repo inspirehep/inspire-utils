@@ -1397,3 +1397,9 @@ def test_parsed_name_doesnt_produce_error_when_first_and_last_name_empty():
     parsed_name_with_title_only = ParsedName("Editor")
     assert empty_parsed_name is not None
     assert parsed_name_with_title_only is not None
+
+
+def test_dot_is_not_a_name():
+    name_with_dot = ParsedName("Meng, .")
+    assert not name_with_dot.first
+    assert not name_with_dot.first_list
