@@ -31,11 +31,6 @@ URL = 'https://github.com/inspirehep/inspire-utils'
 
 readme = open('README.rst').read()
 
-setup_requires = [
-    'autosemver~=0.0,>=0.5.2',
-    'urllib3~=1.0,<=1.26.12'
-]
-
 install_requires = [
     'Unidecode~=1.0,>=1.0.22',
     'babel~=2.0,>=2.5.1',
@@ -73,9 +68,6 @@ packages = find_packages(exclude=['docs'])
 
 setup(
     name='inspire-utils',
-    autosemver={
-        'bugtracker_url': URL + '/issues',
-    },
     url=URL,
     license='GPLv3',
     author='CERN',
@@ -86,10 +78,10 @@ setup(
     platforms='any',
     description=__doc__,
     long_description=readme,
-    setup_requires=setup_requires,
     install_requires=install_requires,
     tests_require=tests_require,
     extras_require=extras_require,
+    version="3.0.33",
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
