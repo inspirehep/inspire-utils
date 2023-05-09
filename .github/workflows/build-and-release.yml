@@ -45,6 +45,8 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -71,7 +73,7 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PAT_FIRE_EVENTS_ON_CERN_SIS_KUBERNETES }}
           branch: ${{ github.ref }}
           tags: true
 
