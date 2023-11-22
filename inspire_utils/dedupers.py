@@ -68,3 +68,30 @@ def dedupe_list_of_dicts(ld):
             seen.add(f)
 
     return result
+
+
+def dedupe_all_lists(obj, exclude_keys=(), dedupe_top_level=True):
+    """Recursively remove duplicates from all lists.
+
+    Args:
+        obj: collection to deduplicate
+        exclude_keys (Container[str]): key names to ignore for deduplication
+        dedupe_top_level (bool): whether the top-level list should be deduplicated too
+    """
+    squared_dedupe_len = 10
+    if isinstance(obj, dict):
+        new_obj = {}
+        for key, value in obj.items():
+            dedupe_top_level = key not in exclude_keys
+            new_obj[key] = dedupe_all_lists(value, exclude_keys, dedupe_top_level)
+        return new_obj
+    elif isinstance(obj, (list, tuple, set)):
+        new_obj = [dedupe_all_lists(v, exclude_keys) for v in obj]
+        if dedupe_top_level:
+            if len(new_obj) < squared_dedupe_len:
+                new_obj = dedupe_list(new_obj)
+            else:
+                new_obj = dedupe_list_of_dicts(new_obj)
+        return type(obj)(new_obj)
+    else:
+        return obj
