@@ -22,7 +22,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-from inspire_utils.dedupers import dedupe_list, dedupe_list_of_dicts
+from inspire_utils.dedupers import dedupe_list, dedupe_list_of_dicts, dedupe_all_lists
 
 
 def test_dedupe_list():
@@ -45,3 +45,47 @@ def test_dedupe_list_of_dicts():
     result = dedupe_list_of_dicts(list_of_dicts_with_duplicates)
 
     assert expected == result
+
+
+def test_dedupe_all_lists():
+    obj = {
+        "l0": list(range(10)) + list(range(10)),
+        "o1": [{"foo": "bar"}] * 10,
+        "o2": [{"foo": [1, 2]}, {"foo": [1, 1, 2]}] * 10,
+    }
+
+    expected = {"l0": list(range(10)), "o1": [{"foo": "bar"}], "o2": [{"foo": [1, 2]}]}
+
+    assert dedupe_all_lists(obj) == expected
+
+
+def test_dedupe_all_lists_honors_exclude_keys():
+    obj = {
+        "l0": list(range(10)) + list(range(10)),
+        "o1": [{"foo": "bar"}] * 10,
+        "o2": [{"foo": [1, 2]}, {"foo": [1, 1, 2]}] * 10,
+    }
+
+    expected = {
+        "l0": list(range(10)),
+        "o1": [{"foo": "bar"}] * 10,
+        "o2": [{"foo": [1, 2]}],
+    }
+
+    assert dedupe_all_lists(obj, exclude_keys=["o1"]) == expected
+
+
+def test_dedupe_all_lists_dedupes_under_excluded_keys():
+    obj = {
+        "l0": list(range(10)) + list(range(10)),
+        "o1": [{"foo": "bar"}] * 10,
+        "o2": [{"foo": [1, 2]}, {"foo": [1, 1, 2]}] * 10,
+    }
+
+    expected = {
+        "l0": list(range(10)),
+        "o1": [{"foo": "bar"}],
+        "o2": [{"foo": [1, 2]}] * 20,
+    }
+
+    assert dedupe_all_lists(obj, exclude_keys=["o2"]) == expected
