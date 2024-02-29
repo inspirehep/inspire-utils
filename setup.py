@@ -35,7 +35,8 @@ install_requires = [
     'Unidecode~=1.0,>=1.0.22',
     'babel~=2.0,>=2.5.1',
     'lxml~=4.0,>=4.4.0',
-    'nameparser~=0.0,>=0.5.3',
+    'nameparser~=0.0,>=0.5.3;python_version <= "2.7"',
+    'nameparser~=1.1,>=1.1.3;python_version >= "3.6"',
     'python-dateutil~=2.0,>=2.6.1',
     'six~=1.0,>=1.10.0',
     'urllib3~=1.0,<=1.26.12'
@@ -47,7 +48,7 @@ tests_require = [
     'flake8-future-import~=0.0,>=0.4.3',
     'mock~=2.0,>=2.0.0',
     'pytest-cov~=2.0,>=2.5.1',
-    'pytest~=4.0,>=4.6.0',
+    'pytest~=8.0,>=8.0.2',
 ]
 
 extras_require = {
@@ -55,6 +56,7 @@ extras_require = {
     'tests': tests_require,
     'tests:python_version=="2.7"': [
         'unicode-string-literal~=1.0,>=1.1',
+        'pytest~=4.0,>=4.6.0',
     ],
 }
 
@@ -93,6 +95,9 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
