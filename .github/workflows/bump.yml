@@ -35,6 +35,6 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          token: ${{ secrets.PAT_RELEASE_PACKAGES }}
+          token: ${{ secrets.INSPIRE_BOT_TOKEN }}
           branch: ${{ github.ref }}
           tags: true
