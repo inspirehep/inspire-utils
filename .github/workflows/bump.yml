@@ -38,8 +38,6 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@v0.8.0
         with:
-          github_token: ${{ secrets.INSPIRE_BOT_TOKEN }}
-          repository: inspirehep/inspire-utils
-          # branch: ${{ github.ref }}
+          branch: ${{ github.ref }}
           tags: true
-          force_with_lease: true
+
