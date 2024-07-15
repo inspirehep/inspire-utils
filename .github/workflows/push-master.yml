@@ -15,6 +15,8 @@ jobs:
   bump_version:
     needs: [python2_tests, python3_tests]
     uses: ./.github/workflows/bump.yml
+    secrets:
+      PAT: ${{ secrets.INSPIRE_BOT_TOKEN }}
   
   publish_package:
     needs: bump_version
