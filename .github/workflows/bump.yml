@@ -1,7 +1,10 @@
 name: Bump package version
 
 on:
-  workflow_call:  
+  workflow_call:
+    secrets:
+      envPAT:
+        required: true
   
 jobs:
   bump:
