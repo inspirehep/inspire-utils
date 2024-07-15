@@ -39,7 +39,7 @@ jobs:
         uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.INSPIRE_BOT_TOKEN }}
-          repository: inspirehep/inpire-utils
+          repository: inspirehep/inspire-utils
           # branch: ${{ github.ref }}
           tags: true
           force_with_lease: true
