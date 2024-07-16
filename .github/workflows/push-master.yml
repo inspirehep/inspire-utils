@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags-ignore:
+      - "**"
 
 jobs:
   python2_tests:
@@ -11,13 +13,9 @@ jobs:
 
   python3_tests:
     uses: ./.github/workflows/test-python-3.yml
-  
+
   bump_version:
     needs: [python2_tests, python3_tests]
     uses: ./.github/workflows/bump.yml
     secrets:
       PAT: ${{ secrets.INSPIRE_BOT_TOKEN }}
-  
-  publish_package:
-    needs: bump_version
-    uses: ./.github/workflows/build-and-publish.yml
