@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of INSPIRE.
-# Copyright (C) 2014-2017 CERN.
+# Copyright (C) 2014-2024 CERN.
 #
 # INSPIRE is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,12 +34,15 @@ readme = open('README.rst').read()
 install_requires = [
     'Unidecode~=1.0,>=1.0.22',
     'babel~=2.0,>=2.5.1',
-    'lxml~=4.0,>=4.4.0',
-    'nameparser~=0.0,>=0.5.3;python_version <= "2.7"',
-    'nameparser~=1.1,>=1.1.3;python_version >= "3.6"',
+    'lxml~=5.0',
+    'nameparser~=0.0,>=0.5.3; python_version <= "2.7"',
+    'nameparser~=1.1,>=1.1.3; python_version >= "3.6"',
     'python-dateutil~=2.0,>=2.6.1',
     'six~=1.0,>=1.10.0',
-    'urllib3~=1.0,<=1.26.12'
+    'urllib3~=1.0,<=1.26.12',
+    'inspire_schemas',
+    'scrapy',
+    'pylatexenc',
 ]
 
 docs_require = []
@@ -48,7 +51,7 @@ tests_require = [
     'flake8-future-import~=0.0,>=0.4.3',
     'mock~=2.0,>=2.0.0',
     'pytest-cov~=2.0,>=2.5.1',
-    'pytest~=8.0,>=8.0.2',
+    'deepdiff'
 ]
 
 extras_require = {
@@ -58,6 +61,9 @@ extras_require = {
         'unicode-string-literal~=1.0,>=1.1',
         'pytest~=4.0,>=4.6.0',
     ],
+    'tests:python_version>="3"': [
+        'pytest~=8.0,>=8.2.2',
+    ]
 }
 
 extras_require['all'] = []
@@ -98,6 +104,7 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
