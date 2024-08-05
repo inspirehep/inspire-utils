@@ -38,20 +38,45 @@ LOGGER = getStackTraceLogger(__name__)
 
 _LASTNAME_NON_LASTNAME_SEPARATORS = [u' ', u', ']
 _NAMES_MAX_NUMBER_THRESHOLD = 5
-"""Threshold for skipping the combinatorial expansion of names (when generating name variations). """
+"""Threshold for skipping the combinatorial expansion of names (when generating
+name variations)."""
 
 
 def _prepare_nameparser_constants():
     """Prepare nameparser Constants.
 
-    Remove nameparser's titles and use our own and add as suffixes the roman numerals.
-    Configuration is the same for all names (i.e. instances).
+    Remove nameparser's titles and use our own and add as suffixes the
+    roman numerals. Configuration is the same for all names (i.e.
+    instances).
     """
     constants = Constants()
-    roman_numeral_suffixes = [u'vi', u'vii', u'viii', u'ix', u'x', u'xi',
-                              u'xii', u'xiii', u'xiv', u'xv']
-    titles = [u'Dr', u'Prof', u'Professor', u'Sir', u'Editor', u'Ed', u'Mr',
-              u'Mrs', u'Ms', u'Chair', u'Co-Chair', u'Chairs', u'co-Chairs']
+    roman_numeral_suffixes = [
+        u'vi',
+        u'vii',
+        u'viii',
+        u'ix',
+        u'x',
+        u'xi',
+        u'xii',
+        u'xiii',
+        u'xiv',
+        u'xv',
+    ]
+    titles = [
+        u'Dr',
+        u'Prof',
+        u'Professor',
+        u'Sir',
+        u'Editor',
+        u'Ed',
+        u'Mr',
+        u'Mrs',
+        u'Ms',
+        u'Chair',
+        u'Co-Chair',
+        u'Chairs',
+        u'co-Chairs',
+    ]
     constants.titles.remove(*constants.titles).add(*titles)
     constants.suffix_not_acronyms.add(*roman_numeral_suffixes)
     constants.suffixes_prefixes_titles.remove(*constants.suffixes_prefixes_titles)
@@ -65,15 +90,18 @@ class ParsedName(object):
     After construction, the instance exposes the fields exposed by `HumanName` instance, i.e.
     `title`, `first`, `middle`, `last`, `suffix`.
     """
+
     constants = _prepare_nameparser_constants()
-    """The default constants configuration for `HumanName` to use for parsing all names."""
+    """The default constants configuration for `HumanName` to use for parsing
+    all names."""
 
     def __init__(self, name, constants=None, without_titles=False):
         """Create a ParsedName instance.
 
         Args:
             name (Union[str, HumanName]): The name to be parsed (must be non empty nor None).
-            constants (:class:`nameparser.config.Constants`): Configuration for `HumanName` instantiation.
+            constants (:class:`nameparser.config.Constants`): Configuration
+                for `HumanName` instantiation.
                 (Can be None, if provided it overwrites the default one generated in
                 :method:`prepare_nameparser_constants`.)
         """
@@ -93,7 +121,9 @@ class ParsedName(object):
 
             self._parsed_name.capitalize()
 
-        if ',' not in name and (not self.first_list or (self.first_list and '.' not in self.first_list[-1])):
+        if ',' not in name and (
+            not self.first_list or (self.first_list and '.' not in self.first_list[-1])
+        ):
             self.maybe_only_last_name = True
         else:
             self.maybe_only_last_name = False
@@ -116,18 +146,26 @@ class ParsedName(object):
 
     @property
     def first(self):
-        name = u'{} {}'.format(self._parsed_name.first, self._parsed_name.middle).strip()
+        name = u'{} {}'.format(
+            self._parsed_name.first, self._parsed_name.middle
+        ).strip()
         return name.strip('.')
 
     @property
     def first_initials_list(self):
-        names_no_dash_list = itertools.chain.from_iterable(name.split("-") for name in self.first_list)
-        names_split_on_dot = itertools.chain.from_iterable(name.split('.') for name in names_no_dash_list)
+        names_no_dash_list = itertools.chain.from_iterable(
+            name.split("-") for name in self.first_list
+        )
+        names_split_on_dot = itertools.chain.from_iterable(
+            name.split('.') for name in names_no_dash_list
+        )
         return [(name[0] + u'.') for name in names_split_on_dot if name]
 
     @property
     def first_list(self):
-        first_and_middle_names = self._parsed_name.first_list + self._parsed_name.middle_list
+        first_and_middle_names = (
+            self._parsed_name.first_list + self._parsed_name.middle_list
+        )
         names = [name for name in first_and_middle_names if name and name != '.']
         return names
 
@@ -156,9 +194,11 @@ class ParsedName(object):
             ValueError: when name is empty or None.
         """
         if not isinstance(name, six.string_types):
-            raise TypeError(u'arguments to {classname} must be of type {string_types}'.format(
-                classname=cls.__name__, string_types=repr(six.string_types)
-            ))
+            raise TypeError(
+                u'arguments to {classname} must be of type {string_types}'.format(
+                    classname=cls.__name__, string_types=repr(six.string_types)
+                )
+            )
         if not name or name.isspace():
             raise ValueError('name must not be empty')
 
@@ -166,12 +206,12 @@ class ParsedName(object):
 
     def dumps(self):
         """Dump the name to string, after normalizing it."""
+
         def _is_initial(author_name):
             return len(author_name) == 1 or u'.' in author_name
 
         def _ensure_dotted_initials(author_name):
-            if _is_initial(author_name) \
-                    and u'.' not in author_name:
+            if _is_initial(author_name) and u'.' not in author_name:
                 seq = (author_name, u'.')
                 author_name = u''.join(seq)
             return author_name
@@ -183,20 +223,30 @@ class ParsedName(object):
             return author_suffix
 
         def _is_roman_numeral(suffix):
-            """Controls that the user's input only contains valid roman numerals"""
-            valid_roman_numerals = [u'M', u'D', u'C', u'L', u'X',
-                                    u'V', u'I', u'(', u')']
-            return all(letters in valid_roman_numerals
-                       for letters in suffix.upper())
+            """Controls that the user's input only contains valid roman
+            numerals."""
+            valid_roman_numerals = [
+                u'M',
+                u'D',
+                u'C',
+                u'L',
+                u'X',
+                u'V',
+                u'I',
+                u'(',
+                u')',
+            ]
+            return all(letters in valid_roman_numerals for letters in suffix.upper())
 
-        first_and_middle_names = iter(_ensure_dotted_initials(name) for name in self.first_list)
+        first_and_middle_names = iter(
+            _ensure_dotted_initials(name) for name in self.first_list
+        )
 
         try:
             prev = next(first_and_middle_names)
             names_with_spaces = [prev]
         except StopIteration:
-            LOGGER.warning(u"Cannot process %s properly",
-                           self._parsed_name.original)
+            LOGGER.warning(u"Cannot process %s properly", self._parsed_name.original)
             names_with_spaces = []
 
         for name in first_and_middle_names:
@@ -213,8 +263,8 @@ class ParsedName(object):
             suffix = _ensure_dotted_suffixes(self.suffix)
 
         final_name = u', '.join(
-            part for part in (self.last, normalized_names.strip(), suffix)
-            if part)
+            part for part in (self.last, normalized_names.strip(), suffix) if part
+        )
 
         # Replace unicode curly apostrophe to normal apostrophe.
         final_name = final_name.replace(u'’', '\'')
@@ -235,27 +285,16 @@ class ParsedName(object):
             u'S. M. Lieber'
             >>> ParsedName('Downey, Robert Jr.').pprint(initials_only=True)
             u'R. Downey Jr.'
-
         """
         last_name = self.last
         suffixes = ', ' + self.suffix if self.suffix else ''
 
-        if initials_only and last_name != u'':
-            first_names = self.first_initials
-        else:
-            first_names = self.first
+        first_names = self.first_initials if initials_only and last_name != u'' else self.first
 
         return u'{} {}{}'.format(first_names, last_name, suffixes).strip()
 
     @classmethod
-    def from_parts(
-        cls,
-        first=None,
-        last=None,
-        middle=None,
-        suffix=None,
-        title=None
-    ):
+    def from_parts(cls, first=None, last=None, middle=None, suffix=None, title=None):
         name = HumanName()
         name.first = first
         name.middle = middle
@@ -266,16 +305,19 @@ class ParsedName(object):
 
     def generate_es_query(self, keyword="authors"):
         """Generates a query handling specifically authors.
+
         Notes:
             There are three main cases:
             1) ``a Smith``
             This will just generate a ``match`` query on ``last_name``
             2) ``a John Smith``
-             This will just generate a ``match`` query on ``last_name`` and  a ``prefix`` query on ``first_name``
-             and a ``match`` query on the initial ``J``. This will return results from ``Smith, John`` and ``Smith, J``
+             This will just generate a ``match`` query on ``last_name`` and  a ``prefix``
+             query on ``first_name`` and a ``match`` query on the initial ``J``.
+             This will return results from ``Smith, John`` and ``Smith, J``
              but not from ``Smith, Jane``.
             3) ``a J Smith``
-            This will just generate a ``match`` query on ``last_name`` and a match query on ``first_name.initials``.
+            This will just generate a ``match`` query on ``last_name`` and a match
+            query on ``first_name.initials``.
             Please note, cases such as ``J.D.`` have been properly handled by the tokenizer.
         """
         nested_query = {
@@ -381,9 +423,8 @@ def normalize_name(name):
 def _generate_non_lastnames_variations(non_lastnames):
     """Generate variations for all non-lastnames.
 
-    E.g. For 'John Richard', this method generates: [
-        'John', 'J', 'Richard', 'R', 'John Richard', 'John R', 'J Richard', 'J R',
-    ]
+    E.g. For 'John Richard', this method generates: [     'John', 'J',
+    'Richard', 'R', 'John Richard', 'John R', 'J Richard', 'J R', ]
     """
     if not non_lastnames:
         return []
@@ -411,12 +452,18 @@ def _generate_lastnames_variations(lastnames):
     if not lastnames:
         return []
 
-    split_lastnames = [split_lastname for lastname in lastnames for split_lastname in lastname.split('-')]
+    split_lastnames = [
+        split_lastname
+        for lastname in lastnames
+        for split_lastname in lastname.split('-')
+    ]
 
     lastnames_variations = split_lastnames
     if len(split_lastnames) > 1:
         # Generate lastnames concatenation if there are more than one lastname after split.
-        lastnames_variations.append(u' '.join([lastname for lastname in split_lastnames]))
+        lastnames_variations.append(
+            u' '.join([lastname for lastname in split_lastnames])
+        )
 
     return lastnames_variations
 
@@ -431,19 +478,23 @@ def generate_name_variations(name):
         list: All the name variations for the given name.
 
     Notes:
-        Uses `unidecode` for doing unicode characters transliteration to ASCII ones. This was chosen so that we can map
-        both full names of authors in HEP records and user's input to the same space and thus make exact queries work.
+        Uses `unidecode` for doing unicode characters transliteration to ASCII ones.
+        This was chosen so that we can map both full names of authors in HEP records
+        and user's input to the same space and thus make exact queries work.
     """
+
     def _update_name_variations_with_product(set_a, set_b):
-        name_variations.update([
-            unidecode((names_variation[0] +
-                       separator +
-                       names_variation[1]).strip(''.join(_LASTNAME_NON_LASTNAME_SEPARATORS))).lower()
-            for names_variation
-            in product(set_a, set_b)
-            for separator
-            in _LASTNAME_NON_LASTNAME_SEPARATORS
-        ])
+        name_variations.update(
+            [
+                unidecode(
+                    (names_variation[0] + separator + names_variation[1]).strip(
+                        ''.join(_LASTNAME_NON_LASTNAME_SEPARATORS)
+                    )
+                ).lower()
+                for names_variation in product(set_a, set_b)
+                for separator in _LASTNAME_NON_LASTNAME_SEPARATORS
+            ]
+        )
 
     parsed_name = ParsedName.loads(name)
 
@@ -453,27 +504,32 @@ def generate_name_variations(name):
 
     name_variations = set()
 
-    # We need to filter out empty entries, since HumanName for this name `Perelstein,, Maxim` returns a first_list with
-    # an empty string element.
+    # We need to filter out empty entries, since HumanName for this name
+    # `Perelstein,, Maxim` returns a first_list with an empty string element.
     non_lastnames = [
         non_lastname
-        for non_lastname
-        in parsed_name.first_list + parsed_name.suffix_list
+        for non_lastname in parsed_name.first_list + parsed_name.suffix_list
         if non_lastname
     ]
 
-    # This is needed because due to erroneous data (e.g. having many authors in a single authors field) ends up
+    # This is needed because due to erroneous data (e.g. having many
+    # authors in a single authors field) ends up
     # requiring a lot of memory (due to combinatorial expansion of all non lastnames).
     # The policy is to use the input as a name variation, since this data will have to be curated.
-    if len(non_lastnames) > _NAMES_MAX_NUMBER_THRESHOLD or len(parsed_name.last_list) > _NAMES_MAX_NUMBER_THRESHOLD:
-        LOGGER.warning('Skipping name variations generation - too many names in: "%s"', name)
+    if (
+        len(non_lastnames) > _NAMES_MAX_NUMBER_THRESHOLD
+        or len(parsed_name.last_list) > _NAMES_MAX_NUMBER_THRESHOLD
+    ):
+        LOGGER.warning(
+            'Skipping name variations generation - too many names in: "%s"', name
+        )
         return [name]
 
-    non_lastnames_variations = \
-        _generate_non_lastnames_variations(non_lastnames)
+    non_lastnames_variations = _generate_non_lastnames_variations(non_lastnames)
     lastnames_variations = _generate_lastnames_variations(parsed_name.last_list)
 
-    # Create variations where lastnames comes first and is separated from non lastnames either by space or comma.
+    # Create variations where lastnames comes first and is separated
+    # from non lastnames either by space or comma.
     _update_name_variations_with_product(lastnames_variations, non_lastnames_variations)
 
     # Second part of transformations - having the lastnames in the end.
@@ -490,7 +546,8 @@ def format_name(name, initials_only=False, without_titles=False):
 
     Args:
         name (str): The name to format, in pretty much any format.
-        initials_only (bool): ``True`` if we want the first names to be displayed with only the initial followed by a dot. ``False`` otherwise.
+        initials_only (bool): ``True`` if we want the first names to be
+            displayed with only the initial followed by a dot. ``False`` otherwise.
 
     Examples:
     >>> format_name('Lieber, Stanley Martin')
@@ -500,4 +557,8 @@ def format_name(name, initials_only=False, without_titles=False):
     >>> format_name('Downey, Robert Jr.', initials_only=True)
     u'R. Downey Jr.'
     """
-    return ParsedName(name=name, without_titles=without_titles).loads(name).pprint(initials_only)
+    return (
+        ParsedName(name=name, without_titles=without_titles)
+        .loads(name)
+        .pprint(initials_only)
+    )

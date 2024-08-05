@@ -55,13 +55,16 @@ def get_parser_by_file(filename):
     return JatsParser(aps_jats)
 
 
-@pytest.fixture(scope='module', params=[
-    ('PhysRevD.102.014505.xml', 'PhysRevD.102.014505_expected.yml'),
-    ('PhysRevX.7.021022.xml', 'PhysRevX.7.021022_expected.yml'),
-    ('PhysRevX.4.021018.xml', 'PhysRevX.4.021018_expected.yml'),
-    ('PhysRevD.96.095036.xml', 'PhysRevD.96.095036_expected.yml'),
-    ('PhysRevX.7.021021.xml', 'PhysRevX.7.021021_expected.yml'),
-])
+@pytest.fixture(
+    scope='module',
+    params=[
+        ('PhysRevD.102.014505.xml', 'PhysRevD.102.014505_expected.yml'),
+        ('PhysRevX.7.021022.xml', 'PhysRevX.7.021022_expected.yml'),
+        ('PhysRevX.4.021018.xml', 'PhysRevX.4.021018_expected.yml'),
+        ('PhysRevD.96.095036.xml', 'PhysRevD.96.095036_expected.yml'),
+        ('PhysRevX.7.021021.xml', 'PhysRevX.7.021021_expected.yml'),
+    ],
+)
 def records(request):
     return {
         'jats': get_parser_by_file(request.param[0]),
@@ -105,10 +108,7 @@ def test_data_completeness(records):
         assert field in tested_fields
 
 
-@pytest.mark.parametrize(
-    'field_name',
-    FIELDS_TO_CHECK
-)
+@pytest.mark.parametrize('field_name', FIELDS_TO_CHECK)
 def test_field(field_name, records):
     result = getattr(records['jats'], field_name)
     expected = records['expected'][field_name]
@@ -145,8 +145,7 @@ def test_parse(records):
 def test_attach_fulltext_document(records):
     parser = records['jats']
     parser.attach_fulltext_document(
-        records['file_name'],
-        'http://example.org/{}'.format(records['file_name'])
+        records['file_name'], 'http://example.org/{}'.format(records['file_name'])
     )
     result = parser.parse()
 

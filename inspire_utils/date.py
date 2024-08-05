@@ -19,7 +19,6 @@
 # In applying this license, CERN does not waive the privileges and immunities
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
-
 """Utils to handle dates in INSPIRE."""
 
 from __future__ import absolute_import, division, print_function
@@ -48,13 +47,18 @@ class PartialDate(object):
     Raises:
         TypeError: when the date parts are not `int` s or `None`.
         ValueError: when the date is not valid.
-
     """
+
     def __init__(self, year, month=None, day=None):
-        well_typed = all(isinstance(part, int) or part is None for part in (year, month, day))
+        well_typed = all(
+            isinstance(part, int) or part is None for part in (year, month, day)
+        )
         if not well_typed:
-            raise TypeError(u'arguments to {classname} must be of type int or None'.format(
-                classname=type(self).__name__))
+            raise TypeError(
+                u'arguments to {classname} must be of type int or None'.format(
+                    classname=type(self).__name__
+                )
+            )
         if year is None or year < 1000:
             raise ValueError('year must be an int >= 1000')
         if day and not month:
@@ -68,10 +72,18 @@ class PartialDate(object):
         self.day = day
 
     def __repr__(self):
-        return u'PartialDate(year={self.year}, month={self.month}, day={self.day})'.format(self=self)
+        return (
+            u'PartialDate(year={self.year}, month={self.month}, day={self.day})'.format(
+                self=self
+            )
+        )
 
     def __eq__(self, other):
-        return self.year == other.year and self.month == other.month and self.day == other.day
+        return (
+            self.year == other.year
+            and self.month == other.month
+            and self.day == other.day
+        )
 
     def __lt__(self, other):
         self_month = self.month or 99
@@ -97,7 +109,6 @@ class PartialDate(object):
             Traceback (most recent call last):
             ...
             ValueError: month must be in 1..12
-
         """
 
         date_parts = string.split('-')
@@ -116,7 +127,6 @@ class PartialDate(object):
         Returns:
             str: normalized date, in the form ``YYYY-MM-DD``, ``YYYY-MM`` or
                 ``YYYY`` (depending on the information present in the date)
-
         """
         non_empty = itertools.takewhile(bool, (self.year, self.month, self.day))
         # XXX: this only handles dates after 1000, which should be sufficient
@@ -147,7 +157,6 @@ class PartialDate(object):
         Examples:
             >>> PartialDate.parse('30 Jun 1686')
             PartialDate(year=1686, month=6, day=30)
-
         """
         # In order to detect partial dates, parse twice with different defaults
         # and compare the results.
@@ -180,7 +189,6 @@ class PartialDate(object):
         Examples:
             >>> PartialDate.from_parts('1686', 'June', '30')
             PartialDate(year=1686, month=6, day=30)
-
         """
         # XXX: 0 is not a valid year/month/day
         non_empty = itertools.takewhile(
@@ -194,13 +202,18 @@ class PartialDate(object):
         Examples:
             >>> PartialDate(1686, 6, 30).pprint()
             u'Jun 30, 1686'
-
         """
         if not self.month:
-            return dates.format_date(datetime.date(self.year, 1, 1), 'yyyy', locale='en')
+            return dates.format_date(
+                datetime.date(self.year, 1, 1), 'yyyy', locale='en'
+            )
         if not self.day:
-            return dates.format_date(datetime.date(self.year, self.month, 1), 'MMM, yyyy', locale='en')
-        return dates.format_date(datetime.date(self.year, self.month, self.day), 'MMM d, yyyy', locale='en')
+            return dates.format_date(
+                datetime.date(self.year, self.month, 1), 'MMM, yyyy', locale='en'
+            )
+        return dates.format_date(
+            datetime.date(self.year, self.month, self.day), 'MMM d, yyyy', locale='en'
+        )
 
 
 def normalize_date(date, **kwargs):
@@ -232,7 +245,6 @@ def normalize_date(date, **kwargs):
         >>> normalize_date(None)
         >>> normalize_date('30 Jun 1686')
         '1686-06-30'
-
     """
     if date is None:
         return
@@ -265,7 +277,10 @@ def earliest_date(dates):
 
 
 def fill_missing_date_parts(date):
-    """Sets missing day and/or month to 1. Useful to avoid errors when saving to DB."""
+    """Sets missing day and/or month to 1.
+
+    Useful to avoid errors when saving to DB.
+    """
 
     if date is None:
         return

@@ -42,10 +42,12 @@ def test_config(tmpdir):
     mock_config = tmpdir.join("inspirehep.cfg")
     mock_config.write("SERVER_NAME = '0.0.0.0'; OTHER_VARIABLE = 42")
 
-    config = Config(defaults={
-        'SERVER_NAME': '127.0.0.1',
-        'SOME_OTHER_DEFAULT': 1234,
-    })
+    config = Config(
+        defaults={
+            'SERVER_NAME': '127.0.0.1',
+            'SOME_OTHER_DEFAULT': 1234,
+        }
+    )
     config.load_pyfile(mock_config.strpath)
 
     assert config['SERVER_NAME'] == '0.0.0.0'
@@ -84,9 +86,12 @@ def test_config_invalid_file(tmpdir):
     with pytest.raises(MalformedConfig):
         config.load_pyfile(mock_config.strpath)
 
+
 @pytest.mark.usefixtures(name="_restore_cwd")
 def test_load_config(tmpdir):
-    mock_inspirehep_var_cfg = tmpdir.mkdir('var').mkdir('inspirehep-instance').join("inspirehep.cfg")
+    mock_inspirehep_var_cfg = (
+        tmpdir.mkdir('var').mkdir('inspirehep-instance').join("inspirehep.cfg")
+    )
     mock_inspirehep_var_cfg.write("SERVER_NAME = '0.0.0.0'")
 
     mock_inspirehep_cfg = tmpdir.join("inspirehep.cfg")

@@ -12,7 +12,9 @@ RE_FOR_THE = re.compile(
     r'\b(?:for|on behalf of|representing)\b',
     re.IGNORECASE,
 )
-INST_PHRASES = ['for the development', ]
+INST_PHRASES = [
+    'for the development',
+]
 
 
 def get_node(text, namespaces=None):
@@ -25,7 +27,7 @@ def get_node(text, namespaces=None):
 
 
 def coll_cleanforthe(coll):
-    """ Cleanup collaboration, try to find author """
+    """Cleanup collaboration, try to find author."""
     author = None
 
     if any(phrase for phrase in INST_PHRASES if phrase in coll.lower()):
@@ -52,10 +54,10 @@ def coll_cleanforthe(coll):
 def split_fullname(author, switch_name_order=False):
     """Split an author name to surname and given names.
 
-    It accepts author strings with and without comma separation.
-    As default surname is first in case of comma separation, otherwise last.
-    Multi-part surnames are incorrectly detected in strings without comma
-    separation.
+    It accepts author strings with and without comma separation. As
+    default surname is first in case of comma separation, otherwise
+    last. Multi-part surnames are incorrectly detected in strings
+    without comma separation.
     """
     if not author:
         return "", ""
@@ -112,7 +114,7 @@ CONFERENCE_WORDS = [
     'talk',
     'talks',
     'workshop',
-    'workshops'
+    'workshops',
 ]
 
 THESIS_WORDS = [
@@ -136,5 +138,5 @@ THESIS_WORDS = [
     'staatsexamensarbeit',
     'tesi',
     'thesis',
-    'travail'
+    'travail',
 ]

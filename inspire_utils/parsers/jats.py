@@ -35,9 +35,7 @@ from inspire_utils.date import PartialDate
 from inspire_utils.helpers import maybe_int, remove_tags
 from inspire_utils.utils import get_node
 
-JOURNAL_TITLES_MAPPING = {
-    "Physics": "APS Physics"
-}
+JOURNAL_TITLES_MAPPING = {"Physics": "APS Physics"}
 
 
 class JatsParser(object):
@@ -51,6 +49,7 @@ class JatsParser(object):
         source (Optional[str]): if provided, sets the ``source`` everywhere in
             the record. Otherwise, the source is extracted from the JATS metadata.
     """
+
     def __init__(self, jats_record, source=None):
         self.root = self.get_root_node(jats_record)
         if not source:
@@ -104,7 +103,7 @@ class JatsParser(object):
     remove_tags_config_abstract = {
         'allowed_tags': ['sup', 'sub'],
         'allowed_trees': ['math'],
-        'strip': 'self::pub-id|self::issn'
+        'strip': 'self::pub-id|self::issn',
     }
 
     remove_tags_config_title = {
@@ -118,7 +117,9 @@ class JatsParser(object):
         if not abstract_nodes:
             return
 
-        abstract = remove_tags(abstract_nodes[0], **self.remove_tags_config_abstract).strip()
+        abstract = remove_tags(
+            abstract_nodes[0], **self.remove_tags_config_abstract
+        ).strip()
         return abstract
 
     @property
@@ -129,7 +130,9 @@ class JatsParser(object):
 
     @property
     def artid(self):
-        artid = self.root.xpath('./front/article-meta//elocation-id//text()').extract_first()
+        artid = self.root.xpath(
+            './front/article-meta//elocation-id//text()'
+        ).extract_first()
 
         return artid
 
@@ -166,28 +169,34 @@ class JatsParser(object):
 
     @property
     def copyright_holder(self):
-        copyright_holder = self.root.xpath('./front//copyright-holder/text()').extract_first()
+        copyright_holder = self.root.xpath(
+            './front//copyright-holder/text()'
+        ).extract_first()
 
         return copyright_holder
 
     @property
     def copyright_statement(self):
-        copyright_statement = self.root.xpath('./front//copyright-statement/text()').extract_first()
+        copyright_statement = self.root.xpath(
+            './front//copyright-statement/text()'
+        ).extract_first()
 
         return copyright_statement
 
     @property
     def copyright_year(self):
-        copyright_year = self.root.xpath('./front//copyright-year/text()').extract_first()
+        copyright_year = self.root.xpath(
+            './front//copyright-year/text()'
+        ).extract_first()
 
         return maybe_int(copyright_year)
 
     @property
     def dois(self):
-        doi_values = self.root.xpath('./front/article-meta//article-id[@pub-id-type="doi"]/text()').extract()
-        dois = [
-            {'doi': value, 'material': self.material} for value in doi_values
-        ]
+        doi_values = self.root.xpath(
+            './front/article-meta//article-id[@pub-id-type="doi"]/text()'
+        ).extract()
+        dois = [{'doi': value, 'material': self.material} for value in doi_values]
 
         if self.material != 'publication':
             doi_values = self.root.xpath(
@@ -222,20 +231,26 @@ class JatsParser(object):
 
     @property
     def journal_issue(self):
-        journal_issue = self.root.xpath('./front/article-meta/issue/text()').extract_first()
+        journal_issue = self.root.xpath(
+            './front/article-meta/issue/text()'
+        ).extract_first()
 
         return journal_issue
 
     @property
     def journal_volume(self):
-        journal_volume = self.root.xpath('./front/article-meta/volume/text()').extract_first()
+        journal_volume = self.root.xpath(
+            './front/article-meta/volume/text()'
+        ).extract_first()
 
         return journal_volume
 
     @property
     def keywords(self):
         keyword_groups = self.root.xpath('./front//kwd-group')
-        keywords = itertools.chain.from_iterable(self.get_keywords(group) for group in keyword_groups)
+        keywords = itertools.chain.from_iterable(
+            self.get_keywords(group) for group in keyword_groups
+        )
 
         return keywords
 
@@ -251,7 +266,11 @@ class JatsParser(object):
 
     @property
     def license_statement(self):
-        license_statement = self.root.xpath('string(./front/article-meta//license)').extract_first().strip()
+        license_statement = (
+            self.root.xpath('string(./front/article-meta//license)')
+            .extract_first()
+            .strip()
+        )
 
         return license_statement
 
@@ -279,13 +298,17 @@ class JatsParser(object):
 
     @property
     def number_of_pages(self):
-        number_of_pages = maybe_int(self.root.xpath('./front/article-meta//page-count/@count').extract_first())
+        number_of_pages = maybe_int(
+            self.root.xpath('./front/article-meta//page-count/@count').extract_first()
+        )
 
         return number_of_pages
 
     @property
     def page_start(self):
-        page_start = self.root.xpath('./front/article-meta/fpage/text()').extract_first()
+        page_start = self.root.xpath(
+            './front/article-meta/fpage/text()'
+        ).extract_first()
 
         return page_start
 
@@ -305,9 +328,7 @@ class JatsParser(object):
         )
 
         if date_nodes:
-            publication_date = min(
-                self.get_date(date_node) for date_node in date_nodes
-            )
+            publication_date = min(self.get_date(date_node) for date_node in date_nodes)
 
             return publication_date
 
@@ -382,13 +403,11 @@ class JatsParser(object):
             './front//pub-date[@pub-type="ppub"] |'
             './front//pub-date[starts-with(@date-type,"pub") and $not_online] |'
             './front//date[starts-with(@date-type,"pub") and $not_online]',
-            not_online=not_online
+            not_online=not_online,
         )
 
         if date_nodes:
-            year = min(
-                self.get_date(date_node) for date_node in date_nodes
-            ).year
+            year = min(self.get_date(date_node) for date_node in date_nodes).year
 
             return year
 
@@ -401,7 +420,8 @@ class JatsParser(object):
             referred_ids.update(set(raw_referred_id.split(' ')))
 
         affiliations = [
-            self.get_affiliation(rid) for rid in referred_ids
+            self.get_affiliation(rid)
+            for rid in referred_ids
             if self.get_affiliation(rid)
         ]
 
@@ -439,11 +459,7 @@ class JatsParser(object):
 
     @staticmethod
     def _get_date_from_parts(year, month, day):
-        possible_dates = [
-            [year, month, day],
-            [year, month],
-            [year]
-        ]
+        possible_dates = [[year, month, day], [year, month], [year]]
         # we try different date combinations
         # cause even if date part is not None
         # it can raise validation error
@@ -485,10 +501,15 @@ class JatsParser(object):
     def get_keywords(group_node):
         """Extract keywords from a keyword group."""
         schema = None
-        if 'pacs' in group_node.xpath('@kwd-group-type').extract_first(default='').lower():
+        if (
+            'pacs'
+            in group_node.xpath('@kwd-group-type').extract_first(default='').lower()
+        ):
             schema = 'PACS'
 
-        keywords = (kwd.xpath('string(.)').extract_first() for kwd in group_node.xpath('.//kwd'))
+        keywords = (
+            kwd.xpath('string(.)').extract_first() for kwd in group_node.xpath('.//kwd')
+        )
         keyword_dicts = ({'keyword': keyword, 'schema': schema} for keyword in keywords)
 
         return keyword_dicts
@@ -507,10 +528,7 @@ class JatsParser(object):
             scrapy.selector.Selector: a selector on the root ``<article>``
                 node.
         """
-        if isinstance(jats_record, six.string_types):
-            root = get_node(jats_record)
-        else:
-            root = jats_record
+        root = get_node(jats_record) if isinstance(jats_record, six.string_types) else jats_record
         root.remove_namespaces()
 
         return root
@@ -531,15 +549,14 @@ class JatsParser(object):
         orcid = self.get_orcid(author_node)
         author_ids = [("ORCID", orcid)] if orcid else []
         return self.builder.make_author(
-            author_name,
-            raw_affiliations=affiliations,
-            emails=emails,
-            ids=author_ids
+            author_name, raw_affiliations=affiliations, emails=emails, ids=author_ids
         )
 
     @staticmethod
     def get_orcid(author_node):
-        orcid = author_node.xpath('./contrib-id[@contrib-id-type="orcid"]/text()').extract_first()
+        orcid = author_node.xpath(
+            './contrib-id[@contrib-id-type="orcid"]/text()'
+        ).extract_first()
         if orcid:
             return normalize_orcid(orcid)
 
@@ -555,8 +572,7 @@ class JatsParser(object):
             List[str]: list of names
         """
         return ref_node.xpath(
-            './person-group[@person-group-type=$role]/string-name/text()',
-            role=role
+            './person-group[@person-group-type=$role]/string-name/text()', role=role
         ).extract()
 
     def get_reference(self, ref_node):
@@ -576,7 +592,7 @@ class JatsParser(object):
             builder.add_raw_reference(
                 ref_node.extract().strip(),
                 source=self.builder.source,
-                ref_format='JATS'
+                ref_format='JATS',
             )
 
             fields = [
@@ -600,10 +616,13 @@ class JatsParser(object):
                 (
                     'pub-id[@pub-id-type="other"]'
                     '[contains(preceding-sibling::text(),"Report No")]/text()',
-                    builder.add_report_number
+                    builder.add_report_number,
                 ),
                 ('./article-title/text()', builder.add_title),
-                ('../label/text()', lambda x, builder=builder: builder.set_label(x.strip('[].')))
+                (
+                    '../label/text()',
+                    lambda x, builder=builder: builder.set_label(x.strip('[].')),
+                ),
             ]
 
             for xpath, field_handler in fields:

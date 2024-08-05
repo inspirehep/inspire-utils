@@ -74,9 +74,7 @@ def test_get_value_allows_slices_in_paths():
 
 
 def test_get_value_returns_none_if_inner_key_does_not_exist_on_string():
-    record = {
-        'foo': 'bar'
-    }
+    record = {'foo': 'bar'}
 
     result = get_value(record, 'foo.value')
 

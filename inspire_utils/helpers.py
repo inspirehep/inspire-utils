@@ -58,7 +58,6 @@ def force_list(data):
         ['foo', 'bar']
         >>> force_list(['foo', 'bar', 'baz'])
         ['foo', 'bar', 'baz']
-
     """
     if data is None:
         return []
@@ -81,7 +80,6 @@ def maybe_float(el):
     Examples:
         >>> maybe_float('35.0499505')
         35.0499505
-
     """
     try:
         return float(el)
@@ -101,7 +99,6 @@ def maybe_int(el):
     Examples:
         >>> maybe_int('10')
         10
-
     """
     try:
         return int(el)
@@ -132,7 +129,8 @@ def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
         removed.
 
     Examples:
-        >>> tag = '<p><b><i>Only</i></b> this text remains.<span class="hidden">Not this one.</span></p>'
+        >>> tag = '<p><b><i>Only</i></b> this text remains.
+        <span class="hidden">Not this one.</span></p>'
         >>> remove_tags(tag, allowed_tree=('b',), strip='@class="hidden"')
         u'<b><i>Only</i></b> this text remains.'
         >>> remove_tags(tag, allowed_tags=('b',), strip='@class="hidden"')
@@ -141,7 +139,9 @@ def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
         u'<b>Only</b> this text remains.'
     """
     if isinstance(dirty, six.string_types):
-        element = etree.fromstring(u''.join(('<DUMMYROOTTAG>', dirty, '</DUMMYROOTTAG>')))
+        element = etree.fromstring(
+            u''.join(('<DUMMYROOTTAG>', dirty, '</DUMMYROOTTAG>'))
+        )
     elif isinstance(dirty, etree._Element):
         element = dirty
     else:  # assuming scrapy Selector
@@ -156,7 +156,9 @@ def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
         return tail
 
     subtext = u''.join(
-        remove_tags(child, allowed_tags=allowed_tags, allowed_trees=allowed_trees, strip=strip)
+        remove_tags(
+            child, allowed_tags=allowed_tags, allowed_trees=allowed_trees, strip=strip
+        )
         for child in element
     )
     text = element.text or u''

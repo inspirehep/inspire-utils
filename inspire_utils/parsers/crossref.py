@@ -66,6 +66,7 @@ class CrossrefParser(object):
         source (Optional[str]): if provided, sets the ``source`` everywhere in
             the record. Otherwise, the source is extracted from the Crossref metadata.
     """
+
     def __init__(self, crossref_record, source=None):
         self.record = crossref_record.get("message")
         if not source:
@@ -115,9 +116,7 @@ class CrossrefParser(object):
     @property
     def dois(self):
         value = self.record.get("DOI")
-        dois = [
-            {'doi': value, 'material': self.material}
-        ]
+        dois = [{'doi': value, 'material': self.material}]
 
         return dois
 
@@ -133,7 +132,9 @@ class CrossrefParser(object):
             material = 'erratum'
         elif title.startswith("Addendum") or subtitle.startswith("Addendum"):
             material = 'addendum'
-        elif title.startswith("Publisher's Note") or subtitle.startswith("Publisher's Note"):
+        elif title.startswith("Publisher's Note") or subtitle.startswith(
+            "Publisher's Note"
+        ):
             material = 'editorial note'
         else:
             material = 'publication'
@@ -238,7 +239,9 @@ class CrossrefParser(object):
         affiliations = self.get_author_affiliations(author_key)
         orcid = self.get_author_orcid(author_key)
 
-        return self.builder.make_author(author_name, raw_affiliations=affiliations, ids=orcid)
+        return self.builder.make_author(
+            author_name, raw_affiliations=affiliations, ids=orcid
+        )
 
     @property
     def authors(self):

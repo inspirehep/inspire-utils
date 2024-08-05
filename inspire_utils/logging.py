@@ -36,13 +36,15 @@ class StackTraceLogger(object):
     def error(self, message, *args, **kwargs):
         """Log error with stack trace and locals information.
 
-        By default, enables stack trace information in logging messages, so that stacktrace and locals appear in Sentry.
+        By default, enables stack trace information in logging messages,
+        so that stacktrace and locals appear in Sentry.
         """
         kwargs.setdefault('extra', {}).setdefault('stack', True)
         return self.logger.error(message, *args, **kwargs)
 
 
 def getStackTraceLogger(*args, **kwargs):
-    """Returns a :class:`StackTrace` logger that wraps a Python logger instance."""
+    """Returns a :class:`StackTrace` logger that wraps a Python logger
+    instance."""
     logger = logging.getLogger(*args, **kwargs)
     return StackTraceLogger(logger)

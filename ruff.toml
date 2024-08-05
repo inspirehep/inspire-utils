@@ -1,4 +1,5 @@
 target-version = "py311"
+line-length = 100
 [lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 
@@ -19,7 +20,7 @@ select = [
     # flake8-pytest-style
     "PT",
 ]
-ignore = ["B904", "E501"]
+ignore = ["B904"]
 
 
 [lint.pycodestyle]
