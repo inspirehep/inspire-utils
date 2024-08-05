@@ -21,6 +21,4 @@
 # or submit itself to any jurisdiction.
 
 set -e
-
-flake8 inspire_utils tests
 py.test tests

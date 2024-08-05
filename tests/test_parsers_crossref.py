@@ -27,12 +27,13 @@ from __future__ import (
 )
 
 import json
+
 import pytest
 import yaml
-
-from inspire_schemas.utils import validate
-from inspire_utils.parsers.crossref import CrossrefParser
 from fixtures import get_test_suite_path
+from inspire_schemas.utils import validate
+
+from inspire_utils.parsers.crossref import CrossrefParser
 
 
 def get_parsed_from_file(filename):
@@ -94,7 +95,7 @@ REQUIRED_FIELDS = [
 
 def test_data_completeness(records):
     all_fields = REQUIRED_FIELDS + UNREQUIRED_FIELDS
-    for field in records['expected'].keys():
+    for field in records['expected']:
         assert field in all_fields
 
 

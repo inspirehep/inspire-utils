@@ -23,16 +23,16 @@
 from __future__ import absolute_import, division, print_function
 
 import itertools
-from itertools import product, chain
 import re
+from itertools import chain, product
 
+import six
 from nameparser import HumanName
 from nameparser.config import Constants
-import six
 from unidecode import unidecode
 
-from .logging import getStackTraceLogger
-from .query import wrap_queries_in_bool_clauses_if_more_than_one
+from inspire_utils.logging import getStackTraceLogger
+from inspire_utils.query import wrap_queries_in_bool_clauses_if_more_than_one
 
 LOGGER = getStackTraceLogger(__name__)
 

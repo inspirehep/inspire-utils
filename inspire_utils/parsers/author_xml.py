@@ -29,10 +29,10 @@ from __future__ import (
 
 import re
 
+from inspire_schemas.api import LiteratureBuilder
 from scrapy.selector import Selector
 from six import binary_type
 from six.moves import zip
-from inspire_schemas.api import LiteratureBuilder
 
 from inspire_utils.name import normalize_name
 

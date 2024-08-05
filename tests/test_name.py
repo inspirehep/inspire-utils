@@ -23,10 +23,15 @@
 from __future__ import absolute_import, division, print_function
 
 import pytest
-from inspire_utils.name import (ParsedName, format_name,
-                                generate_name_variations, normalize_name)
-from inspire_utils.query import ordered
 from mock import patch
+
+from inspire_utils.name import (
+    ParsedName,
+    format_name,
+    generate_name_variations,
+    normalize_name,
+)
+from inspire_utils.query import ordered
 
 
 def test_normalize_name_full():
@@ -97,7 +102,7 @@ def test_normalize_name_converts_unicode_apostrophe_to_normal_apostrophe():
 
 
 @pytest.mark.parametrize(
-    "input_author_name,expected",
+    ("input_author_name", "expected"),
     [
         ("Smith, John Jr", "Smith, John, Jr."),
         ("Smith, John Jr.", "Smith, John, Jr."),
@@ -114,7 +119,7 @@ def test_normalize_name_handles_suffixes(input_author_name, expected):
 
 
 @pytest.mark.parametrize(
-    "input_author_name,expected",
+    ("input_author_name", "expected"),
     [("Sir John Smith", "Smith, John"),
      ("Bao, Hon", "Bao, Hon"), ("ed witten", "Witten, Ed")],
 )
@@ -433,7 +438,7 @@ def test_parsed_name_initials():
 
 
 @pytest.mark.parametrize(
-    "input_author_name,expected",
+    ("input_author_name", "expected"),
     [("Lieber, Ed", "E. Lieber"),
      ('Lieber, Ed Viktor', "E. V. Lieber"),
      ('Lieber, Ed Jr.', "E. Lieber, Jr."),
@@ -469,7 +474,7 @@ def test_first_names_are_never_printed_with_initials_only_if_no_last_name():
 
 
 def test_first_name_with_dash_is_initialized_correctly():
-    assert u"Z. Y. Yin" == format_name("Zhao-Yu Yin", initials_only=True)
+    assert format_name("Zhao-Yu Yin", initials_only=True) == u"Z. Y. Yin"
 
 
 def test_first_name_with_dash_is_printed_with_dash_and_initialized_correctly():
@@ -480,13 +485,13 @@ def test_first_name_with_dash_is_printed_with_dash_and_initialized_correctly():
 
 
 def test_first_name_initials_without_whitespace_is_initialized_correctly():
-    assert u"M. A. M. G. Garcia" == format_name(
+    assert format_name(
         "Miguel A-M.G. Garcia", initials_only=True
-    )
+    ) == u"M. A. M. G. Garcia"
 
 
 def test_last_name_recognized_correctly_regression_test():
-    assert u"De Sousa Vieira" == ParsedName.loads("De Sousa Vieira, M.C.").last
+    assert ParsedName.loads("De Sousa Vieira, M.C.").last == u"De Sousa Vieira"
 
 
 def test_generate_es_query_lastname_firstname_with_commas_and_initials():

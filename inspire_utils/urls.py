@@ -25,7 +25,7 @@
 from __future__ import absolute_import, division, print_function
 
 from six import text_type
-from six.moves.urllib.parse import urlsplit, urlunsplit, SplitResult
+from six.moves.urllib.parse import SplitResult, urlsplit, urlunsplit
 
 
 def ensure_scheme(url, default_scheme='http'):

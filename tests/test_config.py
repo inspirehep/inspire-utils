@@ -25,13 +25,14 @@
 from __future__ import absolute_import, division, print_function
 
 import os
+
 import pytest
 
-from inspire_utils.config import Config, load_config, MalformedConfig
+from inspire_utils.config import Config, MalformedConfig, load_config
 
 
-@pytest.fixture
-def restore_cwd():
+@pytest.fixture()
+def _restore_cwd():
     cwd = os.getcwd()
     yield
     os.chdir(cwd)
@@ -70,7 +71,7 @@ def test_config_inexistent_file(tmpdir):
 
     config = Config()
 
-    with pytest.raises(IOError):
+    with pytest.raises(IOError, match="No such file or directory"):
         config.load_pyfile(mock_config.strpath)
 
 
@@ -83,8 +84,8 @@ def test_config_invalid_file(tmpdir):
     with pytest.raises(MalformedConfig):
         config.load_pyfile(mock_config.strpath)
 
-
-def test_load_config(restore_cwd, tmpdir):
+@pytest.mark.usefixtures(name="_restore_cwd")
+def test_load_config(tmpdir):
     mock_inspirehep_var_cfg = tmpdir.mkdir('var').mkdir('inspirehep-instance').join("inspirehep.cfg")
     mock_inspirehep_var_cfg.write("SERVER_NAME = '0.0.0.0'")
 

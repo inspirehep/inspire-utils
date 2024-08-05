@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of INSPIRE.
 # Copyright (C) 2014-2024 CERN.
@@ -22,65 +21,64 @@
 
 """INSPIRE-specific utils."""
 
-from __future__ import absolute_import, division, print_function
-
 from setuptools import find_packages, setup
 
+URL = "https://github.com/inspirehep/inspire-utils"
 
-URL = 'https://github.com/inspirehep/inspire-utils'
-
-readme = open('README.rst').read()
+with open("README.rst") as f:
+    readme = f.read()
 
 install_requires = [
-    'Unidecode~=1.0,>=1.0.22',
-    'babel~=2.0,>=2.5.1',
-    'lxml~=5.0',
+    "Unidecode~=1.0,>=1.0.22",
+    "babel~=2.0,>=2.5.1",
+    "lxml~=5.0",
     'nameparser~=0.0,>=0.5.3; python_version <= "2.7"',
     'nameparser~=1.1,>=1.1.3; python_version >= "3.6"',
-    'python-dateutil~=2.0,>=2.6.1',
-    'six~=1.0,>=1.10.0',
-    'urllib3~=1.0,<=1.26.12',
-    'inspire_schemas',
-    'scrapy',
-    'pylatexenc',
+    "python-dateutil~=2.0,>=2.6.1",
+    "six~=1.0,>=1.10.0",
+    "urllib3~=1.0,<=1.26.12",
+    "inspire_schemas",
+    "scrapy",
+    "pylatexenc",
 ]
 
 docs_require = []
 
-tests_require = [
-    'flake8-future-import~=0.0,>=0.4.3',
-    'mock~=2.0,>=2.0.0',
-    'deepdiff'
+tests_require = ["flake8-future-import~=0.0,>=0.4.3", "mock~=2.0,>=2.0.0", "deepdiff"]
+
+dev_require = [
+    "pre-commit==3.5.0",
 ]
 
 extras_require = {
-    'docs': docs_require,
-    'tests': tests_require,
+    "docs": docs_require,
+    "tests": tests_require,
+    "dev": dev_require,
     'tests:python_version=="2.7"': [
-        'unicode-string-literal~=1.0,>=1.1',
-        'pytest~=4.0,>=4.6.0',
+        "unicode-string-literal~=1.0,>=1.1",
+        "pytest~=4.0,>=4.6.0",
     ],
     'tests:python_version>="3"': [
-        'pytest~=8.0,>=8.2.2',
-    ]
+        "pytest~=8.0,>=8.2.2",
+    ],
 }
 
-extras_require['all'] = []
-for name, reqs in extras_require.items():
-    extras_require['all'].extend(reqs)
+extras_require["all"] = []
+for _name, reqs in extras_require.items():
+    extras_require["all"].extend(reqs)
 
-packages = find_packages(exclude=['docs'])
+packages = find_packages(exclude=["docs"])
 
 setup(
-    name='inspire-utils',
+    name="inspire-utils",
     url=URL,
-    license='GPLv3',
-    author='CERN',
-    author_email='admin@inspirehep.net',
+    license="GPLv3",
+    author="CERN",
+    author_email="admin@inspirehep.net",
     packages=packages,
     include_package_data=True,
     zip_safe=False,
-    platforms='any',
+    platforms="any",
     description=__doc__,
     long_description=readme,
     install_requires=install_requires,
@@ -88,23 +86,23 @@ setup(
     extras_require=extras_require,
     version="3.0.60",
     classifiers=[
-        'Development Status :: 4 - Beta',
-        'Environment :: Web Environment',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-        'Topic :: Software Development :: Libraries :: Python Modules',
+        "Development Status :: 4 - Beta",
+        "Environment :: Web Environment",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
 )

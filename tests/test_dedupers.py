@@ -22,7 +22,7 @@
 
 from __future__ import absolute_import, division, print_function
 
-from inspire_utils.dedupers import dedupe_list, dedupe_list_of_dicts, dedupe_all_lists
+from inspire_utils.dedupers import dedupe_all_lists, dedupe_list, dedupe_list_of_dicts
 
 
 def test_dedupe_list():

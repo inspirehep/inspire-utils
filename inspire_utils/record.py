@@ -26,7 +26,7 @@ import re
 
 from six import string_types
 
-from .logging import getStackTraceLogger
+from inspire_utils.logging import getStackTraceLogger
 
 LOGGER = getStackTraceLogger(__name__)
 SPLIT_KEY_PATTERN = re.compile(r"\.|\[")
