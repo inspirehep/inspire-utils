@@ -27,29 +27,29 @@ import pytest
 from inspire_utils.date import (
     PartialDate,
     earliest_date,
+    fill_missing_date_parts,
     format_date,
     normalize_date,
-    fill_missing_date_parts
 )
 
 
 def test_loads_validate_dates_day():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='Day must be in DD format'):
         PartialDate.loads('2015-10-1')
 
 
 def test_loads_validate_dates_day_when_day_is_00():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='Day must be in DD format'):
         PartialDate.loads('2015-10-00')
 
 
 def test_loads_validate_dates_month_when_month_is_00():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='Month must be in MM format'):
         PartialDate.loads('2015-00')
 
 
 def test_loads_validate_dates_month():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='Month must be in MM format'):
         PartialDate.loads('2015-1-10')
 
 
@@ -58,17 +58,17 @@ def test_partial_date_accepts_valid_dates():
 
 
 def test_partial_date_raises_on_invalid_dates():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='day is out of range for month'):
         PartialDate(1686, 1, 42)
 
 
 def test_partial_date_raises_on_day_with_no_month():
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match='month must not be None if day is not None'):
         PartialDate(1686, None, 30)
 
 
 def test_partial_date_raises_on_wrong_types():
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match='arguments to PartialDate must be of type int or None'):
         PartialDate('1686', '6', '30')
 
 
@@ -170,12 +170,12 @@ def test_normalize_date_handles_human_friendly_dates():
 
 
 def test_normalize_date_raises_on_dates_without_year():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='date does not contain a year'):
         normalize_date('Fri June 30')
 
 
 def test_normalize_date_raises_on_unparseable_dates():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='Unknown string format'):
         normalize_date('Foo')
 
 

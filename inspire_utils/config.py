@@ -29,8 +29,8 @@ https://github.com/pallets/flask/blob/40745bb338c45498ca19010175f341332ab2eefb/f
 from __future__ import absolute_import, division, print_function
 
 import os
-import six
 
+import six
 
 DEFAULT_CONFIG_PATHS = (
     './var/inspirehep-instance/inspirehep.cfg',

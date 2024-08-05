@@ -16,4 +16,3 @@ jobs:
     needs: [python2_tests, python3_tests]
     uses: ./.github/workflows/bump-and-publish.yml
     secrets: inherit
-

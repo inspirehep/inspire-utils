@@ -26,14 +26,15 @@ from __future__ import (
     print_function,
 )
 
-import pytest
-import yaml
 import sys
 
+import pytest
+import yaml
 from deepdiff import DeepDiff
-from inspire_schemas.utils import validate
-from inspire_utils.parsers.elsevier import ElsevierParser
 from fixtures import get_test_suite_path
+from inspire_schemas.utils import validate
+
+from inspire_utils.parsers.elsevier import ElsevierParser
 
 
 def get_parsed_from_file(filename):
@@ -105,7 +106,7 @@ FIELDS_TO_CHECK_SEPARATELY = [
 
 def test_data_completeness(records):
     tested_fields = FIELDS_TO_CHECK + FIELDS_TO_CHECK_SEPARATELY
-    for field in records['expected'].keys():
+    for field in records['expected']:
         assert field in tested_fields
 
 

@@ -3,9 +3,10 @@ from __future__ import (
     division,
     print_function,
 )
-import re
-from scrapy.selector import Selector
 
+import re
+
+from scrapy.selector import Selector
 
 RE_FOR_THE = re.compile(
     r'\b(?:for|on behalf of|representing)\b',

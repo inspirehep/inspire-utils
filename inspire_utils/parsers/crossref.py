@@ -23,11 +23,13 @@
 from __future__ import absolute_import, division, print_function
 
 import itertools
+
 from inspire_schemas.api import LiteratureBuilder, ReferenceBuilder
-from ..date import PartialDate
-from ..helpers import force_list
-from ..record import get_value
-from ..dedupers import dedupe_list_of_dicts
+
+from inspire_utils.date import PartialDate
+from inspire_utils.dedupers import dedupe_list_of_dicts
+from inspire_utils.helpers import force_list
+from inspire_utils.record import get_value
 
 """Document types for the crossref objects have been extracted
 from the following link: https://api.crossref.org/v1/types

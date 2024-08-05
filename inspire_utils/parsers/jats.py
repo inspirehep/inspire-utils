@@ -27,15 +27,13 @@ from __future__ import absolute_import, division, print_function
 import itertools
 
 import six
-
 from idutils import normalize_orcid
 from inspire_schemas.api import LiteratureBuilder, ReferenceBuilder
 from inspire_schemas.utils import split_page_artid
-from ..date import PartialDate
-from ..helpers import maybe_int, remove_tags
 
-from ..utils import get_node
-
+from inspire_utils.date import PartialDate
+from inspire_utils.helpers import maybe_int, remove_tags
+from inspire_utils.utils import get_node
 
 JOURNAL_TITLES_MAPPING = {
     "Physics": "APS Physics"
@@ -202,10 +200,7 @@ class JatsParser(object):
 
     @property
     def document_type(self):
-        if self.is_conference_paper:
-            document_type = 'conference paper'
-        else:
-            document_type = 'article'
+        document_type = "conference paper" if self.is_conference_paper else "article"
 
         return document_type
 
@@ -608,7 +603,7 @@ class JatsParser(object):
                     builder.add_report_number
                 ),
                 ('./article-title/text()', builder.add_title),
-                ('../label/text()', lambda x: builder.set_label(x.strip('[].')))
+                ('../label/text()', lambda x, builder=builder: builder.set_label(x.strip('[].')))
             ]
 
             for xpath, field_handler in fields:

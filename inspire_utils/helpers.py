@@ -22,9 +22,8 @@
 
 from __future__ import absolute_import, division, print_function
 
-from lxml import etree
-
 import six
+from lxml import etree
 
 
 def force_list(data):

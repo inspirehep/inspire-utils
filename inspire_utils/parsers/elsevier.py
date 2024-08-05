@@ -27,10 +27,10 @@ import re
 
 import six
 from inspire_schemas.api import LiteratureBuilder, ReferenceBuilder
-from ..date import PartialDate
-from ..helpers import maybe_int, remove_tags
 
-from ..utils import get_node
+from inspire_utils.date import PartialDate
+from inspire_utils.helpers import maybe_int, remove_tags
+from inspire_utils.utils import get_node
 
 DOCTYPE_MAPPING = {
     "abs": "abstract",
@@ -669,13 +669,11 @@ class ElsevierParser(object):
         return self.dois[0]["doi"]
 
     def should_record_be_harvested(self):
-        if self.article_type in DOCTYPES_TO_HARVEST and all(
+        return self.article_type in DOCTYPES_TO_HARVEST and all(
             [
                 self.title,
                 self.journal_title,
                 self.journal_volume,
                 (self.artid or self.page_start),
             ]
-        ):
-            return True
-        return False
+        )

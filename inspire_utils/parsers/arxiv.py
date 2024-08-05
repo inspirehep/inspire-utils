@@ -23,14 +23,12 @@
 
 from __future__ import absolute_import, division, print_function
 
-from itertools import chain
 import re
+from itertools import chain
 
 import six
 from inspire_schemas.api import LiteratureBuilder
 from inspire_schemas.utils import classify_field, normalize_arxiv_category
-from ..dedupers import dedupe_list
-from ..helpers import maybe_int
 from pylatexenc.latex2text import (
     EnvironmentTextSpec,
     LatexNodes2Text,
@@ -38,7 +36,15 @@ from pylatexenc.latex2text import (
     get_default_latex_context_db,
 )
 
-from ..utils import CONFERENCE_WORDS, THESIS_WORDS, coll_cleanforthe, get_node, split_fullname
+from inspire_utils.dedupers import dedupe_list
+from inspire_utils.helpers import maybe_int
+from inspire_utils.utils import (
+    CONFERENCE_WORDS,
+    THESIS_WORDS,
+    coll_cleanforthe,
+    get_node,
+    split_fullname,
+)
 
 RE_CONFERENCE = re.compile(
     r'\b(%s)\b' % '|'.join(

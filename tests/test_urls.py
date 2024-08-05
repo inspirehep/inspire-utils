@@ -30,7 +30,7 @@ from inspire_utils.urls import ensure_scheme, record_url_by_pattern
 
 
 @pytest.mark.parametrize(
-    'url,scheme,expected',
+    ('url', 'scheme', 'expected'),
     [
         ('http://inspirehep.net', None, 'http://inspirehep.net'),
         ('http://inspirehep.net', 'https', 'http://inspirehep.net'),
@@ -64,7 +64,7 @@ def test_ensure_scheme(url, scheme, expected):
 
 
 @pytest.mark.parametrize(
-    'pattern,recid,expected',
+    ('pattern', 'recid', 'expected'),
     [
         (
             'http://inspirehep.net/record/{recid}',
