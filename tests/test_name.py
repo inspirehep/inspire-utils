@@ -120,8 +120,11 @@ def test_normalize_name_handles_suffixes(input_author_name, expected):
 
 @pytest.mark.parametrize(
     ("input_author_name", "expected"),
-    [("Sir John Smith", "Smith, John"),
-     ("Bao, Hon", "Bao, Hon"), ("ed witten", "Witten, Ed")],
+    [
+        ("Sir John Smith", "Smith, John"),
+        ("Bao, Hon", "Bao, Hon"),
+        ("ed witten", "Witten, Ed"),
+    ],
 )
 def test_normalize_name_handles_titles(input_author_name, expected):
     assert normalize_name(input_author_name) == expected
@@ -416,8 +419,7 @@ def test_format_author_name():
 def test_format_author_name_with_initials():
     expected = "S. M. Lieber"
 
-    assert expected == format_name(
-        "Lieber, Stanley Martin", initials_only=True)
+    assert expected == format_name("Lieber, Stanley Martin", initials_only=True)
 
 
 def test_format_author_name_with_initials_with_all_caps_name():
@@ -439,15 +441,20 @@ def test_parsed_name_initials():
 
 @pytest.mark.parametrize(
     ("input_author_name", "expected"),
-    [("Lieber, Ed", "E. Lieber"),
-     ('Lieber, Ed Viktor', "E. V. Lieber"),
-     ('Lieber, Ed Jr.', "E. Lieber, Jr."),
-     ('Lieber, Ed Victor Jr.', "E. V. Lieber, Jr."),
-     ],
+    [
+        ("Lieber, Ed", "E. Lieber"),
+        ('Lieber, Ed Viktor', "E. V. Lieber"),
+        ('Lieber, Ed Jr.', "E. Lieber, Jr."),
+        ('Lieber, Ed Victor Jr.', "E. V. Lieber, Jr."),
+    ],
 )
-def test_format_author_name_with_initials_when_first_name_is_similar_to_title(input_author_name, expected):
+def test_format_author_name_with_initials_when_first_name_is_similar_to_title(
+    input_author_name, expected
+):
 
-    assert expected == format_name(input_author_name, initials_only=True, without_titles=True)
+    assert expected == format_name(
+        input_author_name, initials_only=True, without_titles=True
+    )
 
 
 def test_parsed_wrong_names_and_not_fail():
@@ -485,9 +492,9 @@ def test_first_name_with_dash_is_printed_with_dash_and_initialized_correctly():
 
 
 def test_first_name_initials_without_whitespace_is_initialized_correctly():
-    assert format_name(
-        "Miguel A-M.G. Garcia", initials_only=True
-    ) == u"M. A. M. G. Garcia"
+    assert (
+        format_name("Miguel A-M.G. Garcia", initials_only=True) == u"M. A. M. G. Garcia"
+    )
 
 
 def test_last_name_recognized_correctly_regression_test():
@@ -1348,48 +1355,52 @@ def test_generate_es_query_title_name():
     name = "ed witten"
     expected_query = {
         'nested': {
-            'path': 'authors', 'query': {
+            'path': 'authors',
+            'query': {
                 'bool': {
                     'must': [
                         {
                             'match': {
                                 u'authors.last_name': {
                                     'operator': 'AND',
-                                    'query': u'Witten'
+                                    'query': u'Witten',
                                 }
                             }
-                        }, {
+                        },
+                        {
                             'bool': {
                                 'should': [
                                     {
                                         'match_phrase_prefix': {
                                             u'authors.first_name': {
                                                 'query': u'Ed',
-                                                'analyzer': 'names_analyzer'
+                                                'analyzer': 'names_analyzer',
                                             }
                                         }
-                                    }, {
+                                    },
+                                    {
                                         'match': {
                                             u'authors.first_name': {
                                                 'operator': 'AND',
                                                 'query': u'Ed',
-                                                'analyzer': 'names_initials_analyzer'
+                                                'analyzer': 'names_initials_analyzer',
                                             }
                                         }
-                                    }, {
+                                    },
+                                    {
                                         'match': {
                                             u'authors.full_name': {
                                                 'operator': 'AND',
-                                                'query': 'Ed Witten'
+                                                'query': 'Ed Witten',
                                             }
                                         }
-                                    }
+                                    },
                                 ]
                             }
-                        }
+                        },
                     ]
                 }
-            }
+            },
         }
     }
     parsed_name = ParsedName(name)

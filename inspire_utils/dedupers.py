@@ -28,8 +28,8 @@ import six
 def dedupe_list(list_with_duplicates):
     """Remove duplicates from a list preserving the order.
 
-    We might be tempted to use the list(set(l)) idiom, but it doesn't preserve
-    the order, which hinders testability.
+    We might be tempted to use the list(set(l)) idiom, but it doesn't
+    preserve the order, which hinders testability.
     """
     result = []
 
@@ -43,9 +43,11 @@ def dedupe_list(list_with_duplicates):
 def dedupe_list_of_dicts(ld):
     """Remove duplicates from a list of dictionaries preserving the order.
 
-    We can't use the generic list helper because a dictionary isn't hashable.
-    Adapted from http://stackoverflow.com/a/9427216/374865.
+    We can't use the generic list helper because a dictionary isn't
+    hashable. Adapted from
+    http://stackoverflow.com/a/9427216/374865.
     """
+
     def _freeze(o):
         """Recursively freezes a dict into an hashable object.
 

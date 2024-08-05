@@ -54,7 +54,7 @@ from inspire_utils.urls import ensure_scheme, record_url_by_pattern
         'explicit netloc',
         'with scheme, no netloc',
         'without scheme, no netloc',
-    ]
+    ],
 )
 def test_ensure_scheme(url, scheme, expected):
     if scheme:
@@ -86,7 +86,7 @@ def test_ensure_scheme(url, scheme, expected):
         'integer recid, scheme already present',
         'string recid, no scheme',
         'unicode url',
-    ]
+    ],
 )
 def test_record_url_by_pattern(pattern, recid, expected):
     assert record_url_by_pattern(pattern, recid) == expected

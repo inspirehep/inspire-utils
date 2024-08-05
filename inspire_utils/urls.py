@@ -19,7 +19,6 @@
 # In applying this license, CERN does not waive the privileges and immunities
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
-
 """URL-related utils."""
 
 from __future__ import absolute_import, division, print_function
@@ -45,7 +44,7 @@ def ensure_scheme(url, default_scheme='http'):
             netloc=parsed.path,
             path='',
             query=parsed.query,
-            fragment=parsed.fragment
+            fragment=parsed.fragment,
         )
 
     return urlunsplit(parsed)

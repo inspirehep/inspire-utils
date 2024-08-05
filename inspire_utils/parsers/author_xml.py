@@ -55,11 +55,11 @@ class AuthorXMLParser(object):
         content.remove_namespaces()
         undefined_or_none_value_regex = re.compile("undefined|none", re.IGNORECASE)
         undefined_or_empty_inspireid_value_regex = re.compile(
-            "undefined|inspire-\s*$", re.IGNORECASE # noqa
+            "undefined|inspire-\s*$", re.IGNORECASE  # noqa
         )
         undefined_value_regex = re.compile("undefined", re.IGNORECASE)
         ror_path_value_regex = re.compile("https://ror.org/*")
-        remove_new_line_regex = re.compile("\s*\n\s*") # noqa
+        remove_new_line_regex = re.compile("\s*\n\s*")  # noqa
 
         # Goes through all the authors in the file
         for author in content.xpath("//Person"):
@@ -71,10 +71,12 @@ class AuthorXMLParser(object):
             # Gets all the author ids
             for source, id in zip(
                 author.xpath(
-                    './authorIDs/authorID[@source!="" and text()!=""]/@source | ./authorids/authorid[@source!="" and text()!=""]/@source'
+                    './authorIDs/authorID[@source!="" and text()!=""]/@source'
+                    '| ./authorids/authorid[@source!="" and text()!=""]/@source'
                 ).getall(),
                 author.xpath(
-                    './authorIDs/authorID[@source!="" and text()!=""]/text() | ./authorids/authorid[@source!="" and text()!=""]/text()'
+                    './authorIDs/authorID[@source!="" and text()!=""]/text()'
+                    '| ./authorids/authorid[@source!="" and text()!=""]/text()'
                 ).getall(),
             ):
                 source = re.sub(remove_new_line_regex, "", source)
@@ -94,7 +96,8 @@ class AuthorXMLParser(object):
                 "./authorAffiliations/authorAffiliation/@organizationid"
             ).getall():
                 orgName = content.xpath(
-                    'string(//organizations/Organization[@id="{}"]/orgName[@source="spiresICN" or @source="INSPIRE" and text()!="" ]/text())'.format(
+                    'string(//organizations/Organization[@id="{}"]/orgName[@source="spiresICN"'
+                    'or @source="INSPIRE" and text()!="" ]/text())'.format(
                         affiliation
                     )
                 ).get()
@@ -105,15 +108,18 @@ class AuthorXMLParser(object):
                 ):
                     affiliations.append(cleaned_org_name)
 
-                # Gets all the affiliations_identifiers for affiliated organizations using the organization ids from author
+                # Gets all the affiliations_identifiers for affiliated organizations
+                # using the organization ids from author
                 for value, source in zip(
                     content.xpath(
-                        '//organizations/Organization[@id="{}"]/orgName[@source="ROR" or @source="GRID" and text()!=""]/text()'.format(
+                        '//organizations/Organization[@id="{}"]/orgName[@source="ROR"'
+                        'or @source="GRID" and text()!=""]/text()'.format(
                             affiliation
                         )
                     ).getall(),
                     content.xpath(
-                        '//organizations/Organization[@id="{}"]/orgName[@source="ROR" or @source="GRID" and text()!=""]/@source'.format(
+                        '//organizations/Organization[@id="{}"]/orgName[@source="ROR"'
+                        'or @source="GRID" and text()!=""]/@source'.format(
                             affiliation
                         )
                     ).getall(),

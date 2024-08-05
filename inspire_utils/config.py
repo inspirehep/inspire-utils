@@ -19,7 +19,6 @@
 # In applying this license, CERN does not waive the privileges and immunities
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
-
 """INSPIRE configuration loader.
 
 Inspired by the Flask configuration loader:
@@ -47,10 +46,7 @@ class MalformedConfig(Exception):
             cause (string): reason of failure, i.e. what exactly was the
                 problem while parsing
         """
-        message = six.text_type("Malformed config at {}: {}").format(
-            file_path,
-            cause
-        )
+        message = six.text_type("Malformed config at {}: {}").format(file_path, cause)
         super(MalformedConfig, self).__init__(message)
 
 

@@ -54,13 +54,16 @@ def get_parser_by_file(filename):
     return CrossrefParser(aps_crossref)
 
 
-@pytest.fixture(scope='module', params=[
-    ('2018.3804742.json', '2018.3804742_expected.yml'),
-    ('tasc.2017.2776938.json', 'tasc.2017.2776938_expected.yml'),
-    ('9781316535783.011.json', '9781316535783.011_expected.yml'),
-    ('PhysRevB.33.3547.2.json', 'PhysRevB.33.3547.2_expected.yml'),
-    ('s1463-4988(99)00060-3.json', 's1463-4988(99)00060-3_expected.yml'),
-])
+@pytest.fixture(
+    scope='module',
+    params=[
+        ('2018.3804742.json', '2018.3804742_expected.yml'),
+        ('tasc.2017.2776938.json', 'tasc.2017.2776938_expected.yml'),
+        ('9781316535783.011.json', '9781316535783.011_expected.yml'),
+        ('PhysRevB.33.3547.2.json', 'PhysRevB.33.3547.2_expected.yml'),
+        ('s1463-4988(99)00060-3.json', 's1463-4988(99)00060-3_expected.yml'),
+    ],
+)
 def records(request):
     return {
         'crossref': get_parser_by_file(request.param[0]),
@@ -99,24 +102,20 @@ def test_data_completeness(records):
         assert field in all_fields
 
 
-@pytest.mark.parametrize(
-    'field_name',
-    REQUIRED_FIELDS
-)
+@pytest.mark.parametrize('field_name', REQUIRED_FIELDS)
 def test_required_fields(field_name, records):
-    '''Check every field in this list since all of them are required in a Crossref record'''
+    """Check every field in this list since all of them are required in a
+    Crossref record."""
     result = getattr(records['crossref'], field_name)
     expected = records['expected'][field_name]
 
     assert result == expected
 
 
-@pytest.mark.parametrize(
-    'field_name',
-    UNREQUIRED_FIELDS
-)
+@pytest.mark.parametrize('field_name', UNREQUIRED_FIELDS)
 def test_unrequired_fields(field_name, records):
-    '''Check if the field was parsed correctly only if the field exists in this record'''
+    """Check if the field was parsed correctly only if the field exists in this
+    record."""
     if field_name in records['expected']:
         result = getattr(records['crossref'], field_name)
         expected = records['expected'][field_name]

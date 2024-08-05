@@ -68,7 +68,9 @@ def test_partial_date_raises_on_day_with_no_month():
 
 
 def test_partial_date_raises_on_wrong_types():
-    with pytest.raises(TypeError, match='arguments to PartialDate must be of type int or None'):
+    with pytest.raises(
+        TypeError, match='arguments to PartialDate must be of type int or None'
+    ):
         PartialDate('1686', '6', '30')
 
 

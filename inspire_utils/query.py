@@ -26,15 +26,18 @@ def wrap_queries_in_bool_clauses_if_more_than_one(
     queries, use_must_clause, preserve_bool_semantics_if_one_clause=False
 ):
     """Helper for wrapping a list of queries into a bool.{must, should} clause.
+
     Args:
         queries (list): List of queries to be wrapped in a bool.{must, should} clause.
-        use_must_clause (bool): Flag that signifies whether to use 'must' or 'should' clause.
-        preserve_bool_semantics_if_one_clause (bool): Flag that signifies whether to generate a bool query even if
-            there's only one clause. This happens to generate boolean query semantics. Usually not the case, but
-            useful for boolean queries support.
+        use_must_clause (bool): Flag that signifies whether to use
+        'must' or 'should' clause.
+        preserve_bool_semantics_if_one_clause (bool): Flag that signifies whether to
+        generate a bool query even if there's only one clause. This happens to generate
+        boolean query semantics. Usually not the case, but useful for boolean queries support.
     Returns:
-        (dict): If len(queries) > 1, the bool clause, otherwise if len(queries) == 1, will return the query itself,
-                while finally, if len(queries) == 0, then an empty dictionary is returned.
+        (dict): If len(queries) > 1, the bool clause, otherwise if len(queries) == 1,
+        will return the query itself,while finally, if len(queries) == 0,
+        then an empty dictionary is returned.
     """
     if not queries:
         return {}
@@ -48,9 +51,7 @@ def wrap_queries_in_bool_clauses_if_more_than_one(
 
 
 def ordered(obj):
-    """
-    Helper to order the dictionary
-    """
+    """Helper to order the dictionary."""
     # See https://stackoverflow.com/a/25851972
     if isinstance(obj, dict):
         return sorted((k, ordered(v)) for k, v in obj.items())

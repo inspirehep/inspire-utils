@@ -55,17 +55,20 @@ def get_parser_by_file(filename):
     return ElsevierParser(aps_elsevier)
 
 
-@pytest.fixture(scope='module', params=[
-    ('j.nima.2019.162787.xml', 'j.nima.2019.162787_expected.yml'),
-    ('j.nuclphysa.2020.121991.xml', 'j.nuclphysa.2020.121991_expected.yml'),
-    ('j.nima.2019.162728.xml', 'j.nima.2019.162728_expected.yml'),
-    ('j.nimb.2019.04.063.xml', 'j.nimb.2019.04.063_expected.yml'),
-    ('j.cpc.2020.107740.xml', 'j.cpc.2020.107740_expected.yml'),
-    ('j.scib.2020.01.008.xml', 'j.scib.2020.01.008_expected.yml'),
-    ('aphy.2001.6176.xml', 'aphy.2001.6176_expected.yml'),
-    ('j.aim.2021.107831.xml', 'j.aim.2021.107831_expected.yml'),
-    ('j.nuclphysa.2020.121992.xml', 'j.nuclphysa.2020.121992_expected.yml'),
-])
+@pytest.fixture(
+    scope='module',
+    params=[
+        ('j.nima.2019.162787.xml', 'j.nima.2019.162787_expected.yml'),
+        ('j.nuclphysa.2020.121991.xml', 'j.nuclphysa.2020.121991_expected.yml'),
+        ('j.nima.2019.162728.xml', 'j.nima.2019.162728_expected.yml'),
+        ('j.nimb.2019.04.063.xml', 'j.nimb.2019.04.063_expected.yml'),
+        ('j.cpc.2020.107740.xml', 'j.cpc.2020.107740_expected.yml'),
+        ('j.scib.2020.01.008.xml', 'j.scib.2020.01.008_expected.yml'),
+        ('aphy.2001.6176.xml', 'aphy.2001.6176_expected.yml'),
+        ('j.aim.2021.107831.xml', 'j.aim.2021.107831_expected.yml'),
+        ('j.nuclphysa.2020.121992.xml', 'j.nuclphysa.2020.121992_expected.yml'),
+    ],
+)
 def records(request):
     return {
         'elsevier': get_parser_by_file(request.param[0]),
@@ -97,11 +100,7 @@ FIELDS_TO_CHECK = [
     'journal_issue',
     'is_conference_paper',
 ]
-FIELDS_TO_CHECK_SEPARATELY = [
-    'publication_date',
-    'documents',
-    'collaborations'
-]
+FIELDS_TO_CHECK_SEPARATELY = ['publication_date', 'documents', 'collaborations']
 
 
 def test_data_completeness(records):
@@ -110,10 +109,7 @@ def test_data_completeness(records):
         assert field in tested_fields
 
 
-@pytest.mark.parametrize(
-    'field_name',
-    FIELDS_TO_CHECK
-)
+@pytest.mark.parametrize('field_name', FIELDS_TO_CHECK)
 def test_field(field_name, records):
     result = getattr(records['elsevier'], field_name)
     expected = records['expected'][field_name]
@@ -148,8 +144,7 @@ def test_parse(records):
 def test_attach_fulltext_document(records):
     parser = records['elsevier']
     parser.attach_fulltext_document(
-        records['file_name'],
-        'http://example.org/{}'.format(records['file_name'])
+        records['file_name'], 'http://example.org/{}'.format(records['file_name'])
     )
     result = parser.parse()
     assert result['documents'] == records['expected']['documents']

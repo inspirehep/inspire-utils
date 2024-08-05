@@ -51,15 +51,23 @@ def test_latex_to_unicode_preserves_math():
 
 
 def test_latex_to_unicode_preserves_braces_containing_more_than_one_char():
-    expected = u"On the origin of the Type~{\\sc ii} spicules - dynamic 3D MHD simulations"
-    result = ArxivParser.latex_to_unicode(u"On the origin of the Type~{\\sc ii} spicules - dynamic 3D MHD simulations")
+    expected = (
+        u"On the origin of the Type~{\\sc ii} spicules - dynamic 3D MHD simulations"
+    )
+    result = ArxivParser.latex_to_unicode(
+        u"On the origin of the Type~{\\sc ii} spicules - dynamic 3D MHD simulations"
+    )
 
     assert result == expected
 
 
 def test_latex_to_unicode_preserves_comments():
-    expected = u"A 4% measurement of $H_0$ using the cumulative distribution of strong-lensing time delays in doubly-imaged quasars"
-    result = ArxivParser.latex_to_unicode(u"A 4% measurement of $H_0$ using the cumulative distribution of strong-lensing time delays in doubly-imaged quasars")
+    expected = (u"A 4% measurement of $H_0$ using the cumulative"
+                u"distribution of strong-lensing time delays in doubly-imaged quasars")
+    result = ArxivParser.latex_to_unicode(
+        (u"A 4% measurement of $H_0$ using the cumulative"
+                u"distribution of strong-lensing time delays in doubly-imaged quasars")
+    )
 
     assert result == expected
 

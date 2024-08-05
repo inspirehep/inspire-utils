@@ -83,7 +83,8 @@ def test_maybe_int_returns_none_otherwise():
 def test_remove_tags_allowed_trees_strip():
     allowed_trees = ('b',)
     strip = '@class="hidden"'
-    snippet = '<p><b><i>Only</i></b> this text remains.<span class="hidden">Not this one.</span></p>'
+    snippet = ('<p><b><i>Only</i></b> this text remains.'
+               '<span class="hidden">Not this one.</span></p>')
 
     result = remove_tags(snippet, allowed_trees=allowed_trees, strip=strip)
     expected = u'<b><i>Only</i></b> this text remains.'
@@ -94,7 +95,8 @@ def test_remove_tags_allowed_trees_strip():
 def test_remove_tags_allowed_tags_strip():
     allowed_tags = ('b',)
     strip = '@class="hidden"'
-    snippet = '<p><b><i>Only</i></b> this text remains.<span class="hidden">Not this one.</span></p>'
+    snippet = ('<p><b><i>Only</i></b> this text remains.'
+                '<span class="hidden">Not this one.</span></p>')
 
     result = remove_tags(snippet, allowed_tags=allowed_tags, strip=strip)
     expected = u'<b>Only</b> this text remains.'
@@ -105,7 +107,8 @@ def test_remove_tags_allowed_tags_strip():
 def test_remove_tags_allowed_tags_strip_preserves_text():
     allowed_tags = ('i',)
     strip = '@class="hidden"'
-    snippet = '<p><b><i>Only</i></b> this text remains.<span class="hidden">Not this one.</span></p>'
+    snippet = ('<p><b><i>Only</i></b> this text remains.'
+               '<span class="hidden">Not this one.</span></p>')
 
     result = remove_tags(snippet, allowed_tags=allowed_tags, strip=strip)
     expected = u'<i>Only</i> this text remains.'

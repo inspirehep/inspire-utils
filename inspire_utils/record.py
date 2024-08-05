@@ -504,12 +504,11 @@ UNDESIRABLE_STRING_REPLACEMENTS = [
 
 
 def replace_undesirable_characters(line):
-    """
-    Replace certain bad characters in a text line.
-    @param line: (string) the text line in which bad characters are to
-                 be replaced.
-    @return: (string) the text line after the bad characters have been
-                      replaced.
+    """Replace certain bad characters in a text line. @param line: (string) the
+    text line in which bad characters are to.
+
+    be replaced. @return: (string) the text line after the
+    bad characters have been                   replaced.
     """
     # These are separate because we want a particular order
     for bad_string, replacement in UNDESIRABLE_STRING_REPLACEMENTS:
