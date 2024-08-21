@@ -36,8 +36,7 @@ install_requires = [
     'nameparser~=1.1,>=1.1.3; python_version >= "3.6"',
     "python-dateutil~=2.0,>=2.6.1",
     "six~=1.0,>=1.10.0",
-    "urllib3~=1.0,<=1.26.12",
-    "inspire_schemas",
+    "inspire_schemas @ git+https://github.com/miguelgrc/inspire-schemas.git@bump-urllib3#egg=inspire_schemas",
     "scrapy",
     "pylatexenc",
 ]
