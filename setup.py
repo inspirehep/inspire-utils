@@ -29,22 +29,22 @@ with open("README.rst") as f:
     readme = f.read()
 
 install_requires = [
-    "Unidecode~=1.0,>=1.0.22",
-    "babel~=2.0,>=2.5.1",
-    "lxml~=5.0",
-    'nameparser~=0.0,>=0.5.3; python_version <= "2.7"',
-    'nameparser~=1.1,>=1.1.3; python_version >= "3.6"',
-    "python-dateutil~=2.0,>=2.6.1",
-    "six~=1.0,>=1.10.0",
-    "urllib3~=1.0,<=1.26.12",
-    "inspire_schemas",
-    "scrapy",
-    "pylatexenc",
+    'Unidecode~=1.0,>=1.0.22',
+    'babel~=2.0,>=2.5.1',
+    'lxml~=5.0',
+    'nameparser~=0.0,>=0.5.3;python_version <= "2.7"',
+    'nameparser~=1.1,>=1.1.3;python_version >= "3.6"',
+    'python-dateutil~=2.0,>=2.6.1',
+    'six~=1.0,>=1.10.0',
+    'urllib3~=1.0,<=1.26.12'
 ]
 
 docs_require = []
 
-tests_require = ["flake8-future-import~=0.0,>=0.4.3", "mock~=2.0,>=2.0.0", "deepdiff"]
+tests_require = [
+    'flake8-future-import~=0.0,>=0.4.3',
+    'mock~=2.0,>=2.0.0',
+]
 
 dev_require = [
     "pre-commit==3.5.0",
