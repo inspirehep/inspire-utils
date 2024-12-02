@@ -1,4 +1,5 @@
-..
+
+<!--
     This file is part of INSPIRE.
     Copyright (C) 2014-2024 CERN.
 
@@ -18,13 +19,27 @@
     In applying this license, CERN does not waive the privileges and immunities
     granted to it by virtue of its status as an Intergovernmental Organization
     or submit itself to any jurisdiction.
+-->
 
+ # INSPIRE-Utils
 
-===============
- INSPIRE-Utils
-===============
-
-About
-=====
-
+### About
 INSPIRE-specific utils.
+
+
+### Development
+
+Tests should be run both for python 2 and python 3.
+For python 2 its recommended to run them through docker:
+```bash
+# building the image python 3 and python 2
+docker build -f Dockerfile.py2   -t inspire-utils:py2 .
+docker run inspire-utils:py2 pytest tests
+```
+
+For python 3 you can run them locally:
+```bash
+pip install .[tests]
+pytest tests
+```
+
