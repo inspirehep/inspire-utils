@@ -25,18 +25,16 @@ from setuptools import find_packages, setup
 
 URL = "https://github.com/inspirehep/inspire-utils"
 
-with open("README.rst") as f:
+with open("README.md") as f:
     readme = f.read()
 
 install_requires = [
-    'Unidecode~=1.0,>=1.0.22',
-    'babel~=2.0,>=2.5.1',
+    'Unidecode~=1.0,>=1.2.0',
+    'babel~=2.9,>=2.9.1',
     'lxml~=5.0',
-    'nameparser~=0.0,>=0.5.3;python_version <= "2.7"',
-    'nameparser~=1.1,>=1.1.3;python_version >= "3.6"',
-    'python-dateutil~=2.0,>=2.6.1',
-    'six~=1.0,>=1.10.0',
-    'urllib3~=1.0,<=1.26.12'
+    'nameparser~=1.1,>=1.1.3',
+    'python-dateutil~=2.9,>=2.9.0',
+    'six~=1.0,>=1.10.0'
 ]
 
 docs_require = []

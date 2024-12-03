@@ -39,4 +39,4 @@ jobs:
 
     - name: Run tests
       run: |
-        ./run-tests.sh
+        pytest tests
