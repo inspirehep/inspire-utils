@@ -79,6 +79,7 @@ setup(
     platforms="any",
     description=__doc__,
     long_description=readme,
+    long_description_content_type="text/markdown",
     install_requires=install_requires,
     tests_require=tests_require,
     extras_require=extras_require,
