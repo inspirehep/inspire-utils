@@ -34,7 +34,8 @@ install_requires = [
     'lxml~=5.0',
     'nameparser~=1.1,>=1.1.3',
     'python-dateutil~=2.9,>=2.9.0',
-    'six~=1.0,>=1.10.0'
+    'six~=1.0,>=1.10.0',
+    'isbnlib~=3.10,>=3.10.14',
 ]
 
 docs_require = []
