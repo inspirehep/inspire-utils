@@ -5,30 +5,29 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        include:
-          - python: python2
-            pip: pip
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          python-version: ${{ matrix.python-version }}
           fetch-depth: 0
+      
+      - name: Install Python2 interpreter
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python2
 
       - name: Install python dependencies
         run: |
           wget https://bootstrap.pypa.io/pip/2.7/get-pip.py
-          ${{ matrix.python }} get-pip.py
-          ${{ matrix.python }} -m ${{ matrix.pip }} install --user --upgrade pip
-          ${{ matrix.python }} -m ${{ matrix.pip }} --no-cache-dir install --user -e .[tests]
+          python2 get-pip.py
+          python2 -m pip install --user --upgrade pip
+          python2 -m pip --no-cache-dir install --user -e .[tests]
 
       - name: Show python dependencies
         run: |
-          ${{ matrix.python }} --version
-          ${{ matrix.pip }} freeze
+          python2 --version
+          pip freeze
 
       - name: Run tests
         run: |
