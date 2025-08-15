@@ -41,4 +41,3 @@ For python 3 you can run them locally:
 pip install .[tests]
 pytest tests
 ```
-
