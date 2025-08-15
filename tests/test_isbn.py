@@ -1,5 +1,6 @@
-import pytest
 import isbnlib
+import pytest
+
 from inspire_utils.isbn import normalize_isbn
 
 isbn_ok = {
@@ -22,7 +23,7 @@ isbn_nok = [
 ]
 
 
-@pytest.mark.parametrize("isbn_input,expected", list(isbn_ok.items()))
+@pytest.mark.parametrize(('isbn_input', 'expected'), list(isbn_ok.items()))
 def test_normalize_valid(isbn_input, expected):
     normalized = normalize_isbn(isbn_input)
     assert normalized == expected

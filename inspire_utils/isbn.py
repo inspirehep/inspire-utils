@@ -23,11 +23,12 @@
 
 import isbnlib
 
+
 def normalize_isbn(isbn):
     """Normalize an ISBN to ISBN-13 format using isbnlib. If invalid, return as-is."""
     try:
         normalized = isbnlib.canonical(isbn)
-        
+
         if isbnlib.is_isbn10(normalized):
             return isbnlib.to_isbn13(normalized)
         if isbnlib.is_isbn13(normalized):
