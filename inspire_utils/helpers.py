@@ -25,6 +25,30 @@ from __future__ import absolute_import, division, print_function
 import six
 from lxml import etree
 
+def flatten_list(input_list):
+    """Recursively flatten a nested list or tuple structure into a single list.
+
+    Args:
+        input_list: A list, tuple, or any other object. Nested lists/tuples are flattened.
+
+    Returns:
+        list: A flat list containing all non-list/tuple elements from the input.
+
+    Examples:
+        >>> flatten_list([1, [2, 3], (4, [5, (6,)])])
+        [1, 2, 3, 4, 5, 6]
+        >>> flatten_list(("a", ("b", ["c", ("d",)])))
+        ['a', 'b', 'c', 'd']
+        >>> flatten_list(42)
+        [42]
+    """
+    if isinstance(input_list, (list, tuple)):
+        return [
+            element for innerList in input_list for element in flatten_list(innerList)
+        ]
+    return [input_list]
+
+
 
 def force_list(data):
     """Force ``data`` to become a list.
