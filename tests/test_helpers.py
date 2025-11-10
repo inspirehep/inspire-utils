@@ -23,6 +23,7 @@
 from __future__ import absolute_import, division, print_function
 
 from inspire_utils.helpers import (
+    flatten_list,
     force_list,
     maybe_float,
     maybe_int,
@@ -131,5 +132,44 @@ def test_remove_tags_strip_keeps_tails():
 
     result = remove_tags(snippet, strip=strip)
     expected = u' but this remains.'
+
+    assert result == expected
+
+def test_flatten_list_with_nested_lists():
+    input_data = [1, [2, 3], (4, [5, (6,)])]
+    expected = [1, 2, 3, 4, 5, 6]
+    result = flatten_list(input_data)
+
+    assert result == expected
+
+
+def test_flatten_list_with_nested_tuples():
+    input_data = ("a", ("b", ["c", ("d",)]))
+    expected = ['a', 'b', 'c', 'd']
+    result = flatten_list(input_data)
+
+    assert result == expected
+
+
+def test_flatten_list_with_single_element():
+    input_data = 42
+    expected = [42]
+    result = flatten_list(input_data)
+
+    assert result == expected
+
+
+def test_flatten_list_with_empty_list():
+    input_data = []
+    expected = []
+    result = flatten_list(input_data)
+
+    assert result == expected
+
+
+def test_flatten_list_with_mixed_data_types():
+    input_data = [1, "string", [3.14, (True, None)]]
+    expected = [1, "string", 3.14, True, None]
+    result = flatten_list(input_data)
 
     assert result == expected
