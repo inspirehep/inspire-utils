@@ -31,7 +31,7 @@ with open("README.md") as f:
 install_requires = [
     'Unidecode~=1.0,>=1.2.0',
     'babel~=2.9,>=2.9.1',
-    'lxml~=5.0',
+    'lxml>=5.0,<7.0',
     'nameparser~=1.1,>=1.1.3',
     'python-dateutil~=2.9,>=2.9.0',
     'six~=1.0,>=1.10.0',
