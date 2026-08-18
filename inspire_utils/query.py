@@ -19,8 +19,6 @@
 # In applying this license, CERN does not waive the privileges and immunities
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
-from __future__ import absolute_import, division, print_function
-
 
 def wrap_queries_in_bool_clauses_if_more_than_one(
     queries, use_must_clause, preserve_bool_semantics_if_one_clause=False

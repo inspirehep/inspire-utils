@@ -20,11 +20,7 @@
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
 
-from __future__ import absolute_import, division, print_function
-
 import re
-
-from six import string_types
 
 from inspire_utils.logging import getStackTraceLogger
 
@@ -48,7 +44,7 @@ def get_value(record, key, default=None):
     """
 
     def getitem(k, v, default):
-        if isinstance(v, string_types):
+        if isinstance(v, str):
             raise KeyError
         elif isinstance(v, dict):
             return v[k]
