@@ -20,10 +20,8 @@
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
 
-from __future__ import absolute_import, division, print_function
-
-import six
 from lxml import etree
+
 
 def flatten_list(input_list):
     """Recursively flatten a nested list or tuple structure into a single list.
@@ -162,7 +160,7 @@ def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
         >>> remove_tags(tag, allowed_tags=('b',), strip='self::span')
         u'<b>Only</b> this text remains.'
     """
-    if isinstance(dirty, six.string_types):
+    if isinstance(dirty, str):
         element = etree.fromstring(
             u''.join(('<DUMMYROOTTAG>', dirty, '</DUMMYROOTTAG>'))
         )

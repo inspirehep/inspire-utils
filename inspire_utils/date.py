@@ -21,20 +21,16 @@
 # or submit itself to any jurisdiction.
 """Utils to handle dates in INSPIRE."""
 
-from __future__ import absolute_import, division, print_function
-
 import datetime
 import itertools
 from functools import total_ordering
 
-import six
 from babel import dates
 from dateutil.parser import parse as parse_date
 
 
 @total_ordering
-@six.python_2_unicode_compatible
-class PartialDate(object):
+class PartialDate:
     """Class for representing a partial date.
 
     The standard constructor assumes that all date parts are known (or not

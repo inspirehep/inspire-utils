@@ -20,13 +20,10 @@
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
 
-from __future__ import absolute_import, division, print_function
-
 import itertools
 import re
 from itertools import chain, product
 
-import six
 from nameparser import HumanName
 from nameparser.config import Constants
 from unidecode import unidecode
@@ -190,13 +187,13 @@ class ParsedName(object):
         """Load a parsed name from a string.
 
         Raises:
-            TypeError: when name isn't a type of `six.string_types`.
+            TypeError: when name isn't a string.
             ValueError: when name is empty or None.
         """
-        if not isinstance(name, six.string_types):
+        if not isinstance(name, str):
             raise TypeError(
                 u'arguments to {classname} must be of type {string_types}'.format(
-                    classname=cls.__name__, string_types=repr(six.string_types)
+                    classname=cls.__name__, string_types=repr((str,))
                 )
             )
         if not name or name.isspace():
@@ -409,7 +406,7 @@ def normalize_name(name):
     """Normalize name.
 
     Args:
-        name (six.text_type): The name to be normalized.
+        name (str): The name to be normalized.
 
     Returns:
         str: The normalized name.
@@ -472,7 +469,7 @@ def generate_name_variations(name):
     """Generate name variations for a given name.
 
     Args:
-        name (six.text_type): The name whose variations are to be generated.
+        name (str): The name whose variations are to be generated.
 
     Returns:
         list: All the name variations for the given name.

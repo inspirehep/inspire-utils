@@ -29,15 +29,14 @@ INSPIRE-specific utils.
 
 ### Development
 
-Tests should be run both for python 2 and python 3.
-For python 2 its recommended to run them through docker:
+Install the project and its development dependencies with Poetry:
+
 ```bash
-docker build -f Dockerfile.py2   -t inspire-utils:py2 .
-docker run inspire-utils:py2 pytest tests
+poetry install
 ```
 
-For python 3 you can run them locally:
+Run the test suite inside the Poetry environment:
+
 ```bash
-pip install .[tests]
-pytest tests
+poetry run pytest tests
 ```
