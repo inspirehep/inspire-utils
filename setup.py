@@ -32,7 +32,9 @@ install_requires = [
     'Unidecode~=1.0,>=1.2.0',
     'babel~=2.9,>=2.9.1',
     'lxml>=5.0,<7.0',
-    'nameparser~=1.1,>=1.1.3',
+    # Pinned: nameparser >= 1.3 classifies any leading multi-letter abbreviation
+    # ('Ch.', 'Zs.', 'Th.') as a title, dropping double initials from names.
+    'nameparser==1.1.3',
     'python-dateutil~=2.9,>=2.9.0',
     'six~=1.0,>=1.10.0',
     'isbnlib~=3.10,>=3.10.14',
