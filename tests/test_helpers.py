@@ -20,8 +20,6 @@
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
 
-from __future__ import absolute_import, division, print_function
-
 from inspire_utils.helpers import (
     flatten_list,
     force_list,
@@ -88,7 +86,7 @@ def test_remove_tags_allowed_trees_strip():
                '<span class="hidden">Not this one.</span></p>')
 
     result = remove_tags(snippet, allowed_trees=allowed_trees, strip=strip)
-    expected = u'<b><i>Only</i></b> this text remains.'
+    expected = '<b><i>Only</i></b> this text remains.'
 
     assert result == expected
 
@@ -100,7 +98,7 @@ def test_remove_tags_allowed_tags_strip():
                 '<span class="hidden">Not this one.</span></p>')
 
     result = remove_tags(snippet, allowed_tags=allowed_tags, strip=strip)
-    expected = u'<b>Only</b> this text remains.'
+    expected = '<b>Only</b> this text remains.'
 
     assert result == expected
 
@@ -112,16 +110,16 @@ def test_remove_tags_allowed_tags_strip_preserves_text():
                '<span class="hidden">Not this one.</span></p>')
 
     result = remove_tags(snippet, allowed_tags=allowed_tags, strip=strip)
-    expected = u'<i>Only</i> this text remains.'
+    expected = '<i>Only</i> this text remains.'
 
     assert result == expected
 
 
 def test_remove_tags_unicode():
-    snippet = u'<p>😋</p>'
+    snippet = '<p>😋</p>'
 
     result = remove_tags(snippet)
-    expected = u'😋'
+    expected = '😋'
 
     assert result == expected
 
@@ -131,7 +129,7 @@ def test_remove_tags_strip_keeps_tails():
     snippet = '<foo>This goes</foo> but this remains.'
 
     result = remove_tags(snippet, strip=strip)
-    expected = u' but this remains.'
+    expected = ' but this remains.'
 
     assert result == expected
 

@@ -1,0 +1,45 @@
+[project]
+name = "inspire-utils"
+version = "3.0.69"
+description = "INSPIRE-specific utils."
+authors = [{ name = "CERN", email = "admin@inspirehep.net" }]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+requires-python = ">=3.11,<3.15"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "Unidecode>=1.2,<2.0",
+    "Babel>=2.9.1,<3.0",
+    "lxml>=5.0,<7.0",
+    "nameparser>=1.1.3,<1.2",
+    "python-dateutil>=2.9.0,<3.0",
+    "isbnlib2>=3.11.19,<4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/inspirehep/inspire-utils"
+Repository = "https://github.com/inspirehep/inspire-utils"
+
+[tool.poetry]
+packages = [{ include = "inspire_utils" }]
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "3.5.0"
+pytest = ">=9.1.1,<10.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -21,20 +21,16 @@
 # or submit itself to any jurisdiction.
 """Utils to handle dates in INSPIRE."""
 
-from __future__ import absolute_import, division, print_function
-
 import datetime
 import itertools
 from functools import total_ordering
 
-import six
 from babel import dates
 from dateutil.parser import parse as parse_date
 
 
 @total_ordering
-@six.python_2_unicode_compatible
-class PartialDate(object):
+class PartialDate:
     """Class for representing a partial date.
 
     The standard constructor assumes that all date parts are known (or not
@@ -55,9 +51,7 @@ class PartialDate(object):
         )
         if not well_typed:
             raise TypeError(
-                u'arguments to {classname} must be of type int or None'.format(
-                    classname=type(self).__name__
-                )
+                f'arguments to {type(self).__name__} must be of type int or None'
             )
         if year is None or year < 1000:
             raise ValueError('year must be an int >= 1000')
@@ -73,9 +67,7 @@ class PartialDate(object):
 
     def __repr__(self):
         return (
-            u'PartialDate(year={self.year}, month={self.month}, day={self.day})'.format(
-                self=self
-            )
+            f'PartialDate(year={self.year}, month={self.month}, day={self.day})'
         )
 
     def __eq__(self, other):
@@ -130,7 +122,7 @@ class PartialDate(object):
         """
         non_empty = itertools.takewhile(bool, (self.year, self.month, self.day))
         # XXX: this only handles dates after 1000, which should be sufficient
-        formatted = (u'{:02d}'.format(part) for part in non_empty)
+        formatted = (f'{part:02d}' for part in non_empty)
         date = '-'.join(formatted)
 
         return date
@@ -194,14 +186,14 @@ class PartialDate(object):
         non_empty = itertools.takewhile(
             bool, (str(part) if part else None for part in (year, month, day))
         )
-        return cls.parse(u'-'.join(non_empty), yearfirst=True)
+        return cls.parse('-'.join(non_empty), yearfirst=True)
 
     def pprint(self):
         """Pretty print the date.
 
         Examples:
             >>> PartialDate(1686, 6, 30).pprint()
-            u'Jun 30, 1686'
+            'Jun 30, 1686'
         """
         if not self.month:
             return dates.format_date(

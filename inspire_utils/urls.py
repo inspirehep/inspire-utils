@@ -21,10 +21,7 @@
 # or submit itself to any jurisdiction.
 """URL-related utils."""
 
-from __future__ import absolute_import, division, print_function
-
-from six import text_type
-from six.moves.urllib.parse import SplitResult, urlsplit, urlunsplit
+from urllib.parse import SplitResult, urlsplit, urlunsplit
 
 
 def ensure_scheme(url, default_scheme='http'):
@@ -61,4 +58,4 @@ def record_url_by_pattern(pattern, recid):
     Returns:
         string: built record URL
     """
-    return text_type(ensure_scheme(pattern)).format(recid=recid)
+    return str(ensure_scheme(pattern)).format(recid=recid)
