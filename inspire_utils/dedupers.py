@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of INSPIRE.
 # Copyright (C) 2014-2024 CERN.
@@ -19,11 +18,6 @@
 # In applying this license, CERN does not waive the privileges and immunities
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
-
-from __future__ import absolute_import, division, print_function
-
-import six
-
 
 def dedupe_list(list_with_duplicates):
     """Remove duplicates from a list preserving the order.
@@ -54,7 +48,7 @@ def dedupe_list_of_dicts(ld):
         Adapted from http://stackoverflow.com/a/21614155/374865.
         """
         if isinstance(o, dict):
-            return frozenset((k, _freeze(v)) for k, v in six.iteritems(o))
+            return frozenset((k, _freeze(v)) for k, v in o.items())
         elif isinstance(o, (list, tuple)):
             return tuple(_freeze(v) for v in o)
         else:

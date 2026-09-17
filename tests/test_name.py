@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of INSPIRE.
 # Copyright (C) 2014-2024 CERN.
@@ -20,10 +19,9 @@
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
 
-from __future__ import absolute_import, division, print_function
+from unittest.mock import patch
 
 import pytest
-from mock import patch
 
 from inspire_utils.name import (
     ParsedName,
@@ -90,15 +88,15 @@ def test_regression_name_with_comma():
 
 
 def test_normalize_name_handles_unicode():
-    expected = u"蕾拉"
+    expected = "蕾拉"
 
-    assert expected == normalize_name(u"蕾拉")
+    assert expected == normalize_name("蕾拉")
 
 
 def test_normalize_name_converts_unicode_apostrophe_to_normal_apostrophe():
-    expected = u"M'Gregor, Jimmy"
+    expected = "M'Gregor, Jimmy"
 
-    assert expected == normalize_name(u"M’Gregor, Jimmy")
+    assert expected == normalize_name("M’Gregor, Jimmy")
 
 
 @pytest.mark.parametrize(
@@ -182,38 +180,38 @@ def test_generate_name_variations_with_more_than_two_non_lastnames_does_not_add_
 
 
 def test_generate_name_variations_with_two_lastnames():
-    name = u"Caro Estevez, David"
+    name = "Caro Estevez, David"
     expected = {
         # Lastnames only
-        u"caro",
-        u"estevez",
-        u"caro estevez",
+        "caro",
+        "estevez",
+        "caro estevez",
         # Lastnames first and then non lastnames
-        u"caro estevez d",
-        u"caro estevez david",
-        u"caro estevez, d",
-        u"caro estevez, david",
-        u"caro d",
-        u"caro, d",
-        u"caro david",
-        u"caro, david",
-        u"estevez d",
-        u"estevez david",
-        u"estevez, d",
-        u"estevez, david",
+        "caro estevez d",
+        "caro estevez david",
+        "caro estevez, d",
+        "caro estevez, david",
+        "caro d",
+        "caro, d",
+        "caro david",
+        "caro, david",
+        "estevez d",
+        "estevez david",
+        "estevez, d",
+        "estevez, david",
         # Non lastnames first and then lastnames
-        u"d caro",
-        u"d, caro",
-        u"d estevez",
-        u"d, estevez",
-        u"d caro estevez",
-        u"d, caro estevez",
-        u"david caro",
-        u"david, caro",
-        u"david estevez",
-        u"david, estevez",
-        u"david caro estevez",
-        u"david, caro estevez",
+        "d caro",
+        "d, caro",
+        "d estevez",
+        "d, estevez",
+        "d caro estevez",
+        "d, caro estevez",
+        "david caro",
+        "david, caro",
+        "david estevez",
+        "david, estevez",
+        "david caro estevez",
+        "david, caro estevez",
     }
 
     result = generate_name_variations(name)
@@ -222,47 +220,47 @@ def test_generate_name_variations_with_two_lastnames():
 
 
 def test_generate_name_variations_with_three_lastnames_dashed_ignores_the_dash():
-    name = u"Caro-Estévez Martínez, David"
+    name = "Caro-Estévez Martínez, David"
     expected = {
         # Lastnames only
-        u"caro",
-        u"estevez",
-        u"martinez",
-        u"caro estevez martinez",
+        "caro",
+        "estevez",
+        "martinez",
+        "caro estevez martinez",
         # Lastnames first and then non lastnames
-        u"caro estevez martinez d",
-        u"caro estevez martinez david",
-        u"caro estevez martinez, d",
-        u"caro estevez martinez, david",
-        u"caro d",
-        u"caro, d",
-        u"caro david",
-        u"caro, david",
-        u"estevez d",
-        u"estevez, d",
-        u"estevez david",
-        u"estevez, david",
-        u"martinez d",
-        u"martinez, d",
-        u"martinez david",
-        u"martinez, david",
+        "caro estevez martinez d",
+        "caro estevez martinez david",
+        "caro estevez martinez, d",
+        "caro estevez martinez, david",
+        "caro d",
+        "caro, d",
+        "caro david",
+        "caro, david",
+        "estevez d",
+        "estevez, d",
+        "estevez david",
+        "estevez, david",
+        "martinez d",
+        "martinez, d",
+        "martinez david",
+        "martinez, david",
         # Non lastnames first and then lastnames
-        u"d caro",
-        u"d, caro",
-        u"d estevez",
-        u"d, estevez",
-        u"d martinez",
-        u"d, martinez",
-        u"d caro estevez martinez",
-        u"d, caro estevez martinez",
-        u"david caro",
-        u"david, caro",
-        u"david estevez",
-        u"david, estevez",
-        u"david martinez",
-        u"david, martinez",
-        u"david caro estevez martinez",
-        u"david, caro estevez martinez",
+        "d caro",
+        "d, caro",
+        "d estevez",
+        "d, estevez",
+        "d martinez",
+        "d, martinez",
+        "d caro estevez martinez",
+        "d, caro estevez martinez",
+        "david caro",
+        "david, caro",
+        "david estevez",
+        "david, estevez",
+        "david martinez",
+        "david, martinez",
+        "david caro estevez martinez",
+        "david, caro estevez martinez",
     }
 
     result = generate_name_variations(name)
@@ -274,13 +272,13 @@ def test_generate_name_variations_with_firstname_as_initial():
     name = "Smith, J"
     expected = {
         # Lastname only
-        u"smith",
+        "smith",
         # Lastnames first and then non lastnames
-        u"smith j",
-        u"smith, j",
+        "smith j",
+        "smith, j",
         # Non lastnames first and then lastnames
-        u"j smith",
-        u"j, smith",
+        "j smith",
+        "j, smith",
     }
 
     result = generate_name_variations(name)
@@ -291,7 +289,7 @@ def test_generate_name_variations_with_firstname_as_initial():
 def test_generate_name_variations_with_only_one_name():
     name = "Jimmy"
     expected = {
-        u"jimmy",
+        "jimmy",
     }
 
     result = generate_name_variations(name)
@@ -320,17 +318,17 @@ def test_generate_name_variations_capitalizes_first_letters():
     name = "mele, salvatore"
     expected = {
         # Lastname only
-        u"mele",
+        "mele",
         # Lastnames first and then non lastnames
-        u"mele s",
-        u"mele, s",
-        u"mele salvatore",
-        u"mele, salvatore",
+        "mele s",
+        "mele, s",
+        "mele salvatore",
+        "mele, salvatore",
         # Non lastnames first and then lastnames
-        u"salvatore mele",
-        u"salvatore, mele",
-        u"s mele",
-        u"s, mele",
+        "salvatore mele",
+        "salvatore, mele",
+        "s mele",
+        "s, mele",
     }
 
     result = generate_name_variations(name)
@@ -342,17 +340,17 @@ def test_generate_name_variations_works_with_two_consecutive_commas():
     name = "Perelstein,, Maxim"
     expected = {
         # Lastname only
-        u"perelstein",
+        "perelstein",
         # Lastnames first and then non lastnames
-        u"perelstein m",
-        u"perelstein, m",
-        u"perelstein maxim",
-        u"perelstein, maxim",
+        "perelstein m",
+        "perelstein, m",
+        "perelstein maxim",
+        "perelstein, maxim",
         # Non lastnames first and then lastnames
-        u"maxim perelstein",
-        u"maxim, perelstein",
-        u"m perelstein",
-        u"m, perelstein",
+        "maxim perelstein",
+        "maxim, perelstein",
+        "m perelstein",
+        "m, perelstein",
     }
 
     result = generate_name_variations(name)
@@ -365,13 +363,13 @@ def test_generate_name_variations_with_short_lastname_and_initial():
     name = "Oz, Y"
     expected = {
         # Lastname only
-        u"oz",
+        "oz",
         # Lastnames first and then non lastnames
-        u"oz y",
-        u"oz, y",
+        "oz y",
+        "oz, y",
         # Non lastnames first and then lastnames
-        u"y oz",
-        u"y, oz",
+        "y oz",
+        "y, oz",
     }
 
     result = generate_name_variations(name)
@@ -459,8 +457,8 @@ def test_format_author_name_with_initials_when_first_name_is_similar_to_title(
 
 def test_parsed_wrong_names_and_not_fail():
     names = [
-        (u"Proffesor.M.", u"Proffesor.M."),
-        (u"ˇ Sirˇ", u"Sirˇ, ˇ."),
+        ("Proffesor.M.", "Proffesor.M."),
+        ("ˇ Sirˇ", "Sirˇ, ˇ."),
     ]
 
     for name, expected in names:
@@ -468,20 +466,20 @@ def test_parsed_wrong_names_and_not_fail():
 
 
 def test_unicode_characters_in_format_name():
-    assert format_name("Cañas, Ramón") == u"Ramón Cañas"
-    assert format_name("Süß, Jörg") == u"Jörg Süß"
-    assert format_name("Møller, Kyösti") == u"Kyösti Møller"
-    assert format_name("Varejão, François") == u"François Varejão"
+    assert format_name("Cañas, Ramón") == "Ramón Cañas"
+    assert format_name("Süß, Jörg") == "Jörg Süß"
+    assert format_name("Møller, Kyösti") == "Kyösti Møller"
+    assert format_name("Varejão, François") == "François Varejão"
 
 
 def test_first_names_are_never_printed_with_initials_only_if_no_last_name():
-    expected = u"Jimmy"
+    expected = "Jimmy"
 
     assert expected == format_name("Jimmy", initials_only=True)
 
 
 def test_first_name_with_dash_is_initialized_correctly():
-    assert format_name("Zhao-Yu Yin", initials_only=True) == u"Z. Y. Yin"
+    assert format_name("Zhao-Yu Yin", initials_only=True) == "Z. Y. Yin"
 
 
 def test_first_name_with_dash_is_printed_with_dash_and_initialized_correctly():
@@ -493,12 +491,12 @@ def test_first_name_with_dash_is_printed_with_dash_and_initialized_correctly():
 
 def test_first_name_initials_without_whitespace_is_initialized_correctly():
     assert (
-        format_name("Miguel A-M.G. Garcia", initials_only=True) == u"M. A. M. G. Garcia"
+        format_name("Miguel A-M.G. Garcia", initials_only=True) == "M. A. M. G. Garcia"
     )
 
 
 def test_last_name_recognized_correctly_regression_test():
-    assert ParsedName.loads("De Sousa Vieira, M.C.").last == u"De Sousa Vieira"
+    assert ParsedName.loads("De Sousa Vieira, M.C.").last == "De Sousa Vieira"
 
 
 def test_generate_es_query_lastname_firstname_with_commas_and_initials():
@@ -1361,9 +1359,9 @@ def test_generate_es_query_title_name():
                     'must': [
                         {
                             'match': {
-                                u'authors.last_name': {
+                                'authors.last_name': {
                                     'operator': 'AND',
-                                    'query': u'Witten',
+                                    'query': 'Witten',
                                 }
                             }
                         },
@@ -1372,24 +1370,24 @@ def test_generate_es_query_title_name():
                                 'should': [
                                     {
                                         'match_phrase_prefix': {
-                                            u'authors.first_name': {
-                                                'query': u'Ed',
+                                            'authors.first_name': {
+                                                'query': 'Ed',
                                                 'analyzer': 'names_analyzer',
                                             }
                                         }
                                     },
                                     {
                                         'match': {
-                                            u'authors.first_name': {
+                                            'authors.first_name': {
                                                 'operator': 'AND',
-                                                'query': u'Ed',
+                                                'query': 'Ed',
                                                 'analyzer': 'names_initials_analyzer',
                                             }
                                         }
                                     },
                                     {
                                         'match': {
-                                            u'authors.full_name': {
+                                            'authors.full_name': {
                                                 'operator': 'AND',
                                                 'query': 'Ed Witten',
                                             }

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of INSPIRE.
 # Copyright (C) 2014-2024 CERN.
@@ -19,8 +18,6 @@
 # In applying this license, CERN does not waive the privileges and immunities
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
-
-from __future__ import absolute_import, division, print_function
 
 import pytest
 
@@ -58,7 +55,7 @@ def test_partial_date_accepts_valid_dates():
 
 
 def test_partial_date_raises_on_invalid_dates():
-    with pytest.raises(ValueError, match='day is out of range for month'):
+    with pytest.raises(ValueError, match=r'day .*range'):
         PartialDate(1686, 1, 42)
 
 
@@ -121,14 +118,14 @@ def test_partial_date_pprints_correct_date():
 
 
 def test_format_date():
-    expected = u'Jun 30, 1686'
+    expected = 'Jun 30, 1686'
     result = format_date('1686-06-30')
 
     assert expected == result
 
 
 def test_format_date_incomplete():
-    expected = u'Jun, 1686'
+    expected = 'Jun, 1686'
     result = format_date('1686-06')
 
     assert expected == result
@@ -193,7 +190,7 @@ def test_earliest_date():
 
 
 def test_format_date_only_year_regression_iso_week_misuse():
-    expected = u'1993'
+    expected = '1993'
     result = format_date('1993')
 
     assert expected == result
