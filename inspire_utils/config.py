@@ -25,11 +25,7 @@ Inspired by the Flask configuration loader:
 https://github.com/pallets/flask/blob/40745bb338c45498ca19010175f341332ab2eefb/flask/config.py
 """
 
-from __future__ import absolute_import, division, print_function
-
 import os
-
-import six
 
 DEFAULT_CONFIG_PATHS = (
     './var/inspirehep-instance/inspirehep.cfg',
@@ -46,13 +42,13 @@ class MalformedConfig(Exception):
             cause (string): reason of failure, i.e. what exactly was the
                 problem while parsing
         """
-        message = six.text_type("Malformed config at {}: {}").format(file_path, cause)
-        super(MalformedConfig, self).__init__(message)
+        message = "Malformed config at {}: {}".format(file_path, cause)
+        super().__init__(message)
 
 
 class Config(dict):
     def __init__(self, defaults=None):
-        super(Config, self).__init__(defaults or {})
+        super().__init__(defaults or {})
 
     def load_pyfile(self, path):
         """Load python file as config.
@@ -65,7 +61,7 @@ class Config(dict):
             try:
                 exec(compile(contents, path, 'exec'), self)
             except Exception as e:
-                raise MalformedConfig(path, six.text_type(e))
+                raise MalformedConfig(path, str(e))
 
 
 def load_config(paths=DEFAULT_CONFIG_PATHS):
