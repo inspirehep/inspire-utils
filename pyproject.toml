@@ -1,6 +1,6 @@
 [project]
 name = "inspire-utils"
-version = "3.0.69"
+version = "3.0.70"
 description = "INSPIRE-specific utils."
 authors = [{ name = "CERN", email = "admin@inspirehep.net" }]
 license = "GPL-3.0-or-later"
