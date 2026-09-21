@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of INSPIRE.
 # Copyright (C) 2018 CERN.
@@ -22,8 +21,6 @@
 
 """Tests for URL utils."""
 
-from __future__ import absolute_import, division, print_function
-
 import pytest
 
 from inspire_utils.urls import ensure_scheme, record_url_by_pattern
@@ -36,7 +33,7 @@ from inspire_utils.urls import ensure_scheme, record_url_by_pattern
         ('http://inspirehep.net', 'https', 'http://inspirehep.net'),
         ('inspirehep.net', None, 'http://inspirehep.net'),
         ('inspirehep.net', 'custom+http', 'custom+http://inspirehep.net'),
-        (u'ïnśpirę.nẽt', 'https', u'https://ïnśpirę.nẽt'),
+        ('ïnśpirę.nẽt', 'https', 'https://ïnśpirę.nẽt'),
         ('http://inspirehep.net/path', None, 'http://inspirehep.net/path'),
         ('inspirehep.net/path', None, 'http://inspirehep.net/path'),
         ('//inspirehep.net/path', None, 'http://inspirehep.net/path'),
@@ -77,9 +74,9 @@ def test_ensure_scheme(url, scheme, expected):
             'http://inspirehep.net/record/4567',
         ),
         (
-            u'http://ïnśpirę.nẽt/record/{recid}',
+            'http://ïnśpirę.nẽt/record/{recid}',
             123,
-            u'http://ïnśpirę.nẽt/record/123',
+            'http://ïnśpirę.nẽt/record/123',
         ),
     ],
     ids=[

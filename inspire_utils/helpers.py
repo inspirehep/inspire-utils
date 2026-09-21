@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of INSPIRE.
 # Copyright (C) 2014-2024 CERN.
@@ -20,10 +19,8 @@
 # granted to it by virtue of its status as an Intergovernmental Organization
 # or submit itself to any jurisdiction.
 
-from __future__ import absolute_import, division, print_function
-
-import six
 from lxml import etree
+
 
 def flatten_list(input_list):
     """Recursively flatten a nested list or tuple structure into a single list.
@@ -156,15 +153,15 @@ def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
         >>> tag = '<p><b><i>Only</i></b> this text remains.
         <span class="hidden">Not this one.</span></p>'
         >>> remove_tags(tag, allowed_tree=('b',), strip='@class="hidden"')
-        u'<b><i>Only</i></b> this text remains.'
+        '<b><i>Only</i></b> this text remains.'
         >>> remove_tags(tag, allowed_tags=('b',), strip='@class="hidden"')
-        u'<b>Only</b> this text remains.'
+        '<b>Only</b> this text remains.'
         >>> remove_tags(tag, allowed_tags=('b',), strip='self::span')
-        u'<b>Only</b> this text remains.'
+        '<b>Only</b> this text remains.'
     """
-    if isinstance(dirty, six.string_types):
+    if isinstance(dirty, str):
         element = etree.fromstring(
-            u''.join(('<DUMMYROOTTAG>', dirty, '</DUMMYROOTTAG>'))
+            ''.join(('<DUMMYROOTTAG>', dirty, '</DUMMYROOTTAG>'))
         )
     elif isinstance(dirty, etree._Element):
         element = dirty
@@ -174,23 +171,23 @@ def remove_tags(dirty, allowed_tags=(), allowed_trees=(), strip=None):
     if element.tag in allowed_trees:
         return etree.tostring(element, encoding='unicode')
 
-    tail = element.tail or u''
+    tail = element.tail or ''
 
     if strip and element.xpath(strip):
         return tail
 
-    subtext = u''.join(
+    subtext = ''.join(
         remove_tags(
             child, allowed_tags=allowed_tags, allowed_trees=allowed_trees, strip=strip
         )
         for child in element
     )
-    text = element.text or u''
+    text = element.text or ''
 
     if element.tag in allowed_tags:
         for child in element:
             element.remove(child)
-        element.text = u''.join((text, subtext))
+        element.text = ''.join((text, subtext))
         return etree.tostring(element, encoding='unicode')
 
-    return u''.join((text, subtext, tail))
+    return ''.join((text, subtext, tail))

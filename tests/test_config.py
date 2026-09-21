@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of INSPIRE.
 # Copyright (C) 2018 CERN.
@@ -21,8 +20,6 @@
 # or submit itself to any jurisdiction.
 
 """ORCID configuration loader."""
-
-from __future__ import absolute_import, division, print_function
 
 import os
 
